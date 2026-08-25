@@ -3,28 +3,41 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, MeshWobbleMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
-// Global window mouse listener for smooth 3D motion regardless of DOM overlays
+// Global window mouse & touch listener for smooth 3D motion
 const windowMouse = { x: 0, y: 0 };
 
 if (typeof window !== 'undefined') {
-  window.addEventListener('mousemove', (e) => {
-    windowMouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    windowMouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  const updatePointer = (clientX, clientY) => {
+    windowMouse.x = (clientX / window.innerWidth) * 2 - 1;
+    windowMouse.y = -(clientY / window.innerHeight) * 2 + 1;
+  };
+
+  window.addEventListener('mousemove', (e) => updatePointer(e.clientX, e.clientY), { passive: true });
+  window.addEventListener('touchmove', (e) => {
+    if (e.touches && e.touches[0]) {
+      updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+    }
   }, { passive: true });
 }
 
-// Central 3D Spatial Portal
+// Central 3D Spatial Portal with Mobile Scaling
 function SpatialPortal({ scrollProgress }) {
   const portalRef = useRef();
   const innerRingRef = useRef();
   const coreSphereRef = useRef();
   const fragmentGroupRef = useRef();
 
-  useFrame((_, delta) => {
-    const mouseX = windowMouse.x * 0.8;
-    const mouseY = windowMouse.y * 0.8;
+  const { viewport } = useThree();
+  const isMobile = viewport.width < 5.5;
 
-    // Continuous smooth rotation + mouse tilt
+  // Responsive scale: compact 0.48x on mobile screens so it frames cleanly, 1.0x on desktop
+  const portalScale = isMobile ? 0.48 : 1.0;
+
+  useFrame((_, delta) => {
+    const mouseX = windowMouse.x * (isMobile ? 0.4 : 0.8);
+    const mouseY = windowMouse.y * (isMobile ? 0.4 : 0.8);
+
+    // Continuous smooth rotation + mouse/touch tilt
     if (portalRef.current) {
       portalRef.current.rotation.z += delta * 0.15;
       portalRef.current.rotation.x = THREE.MathUtils.lerp(portalRef.current.rotation.x, -mouseY * 0.6, 0.05);
@@ -49,11 +62,11 @@ function SpatialPortal({ scrollProgress }) {
   });
 
   // Position morphing based on scroll
-  const portalY = -scrollProgress * 4;
-  const portalZ = -scrollProgress * 5;
+  const portalY = (isMobile ? 0.5 : 0) - scrollProgress * 4;
+  const portalZ = (isMobile ? -0.8 : 0) - scrollProgress * 5;
 
   return (
-    <group position={[0, portalY, portalZ]}>
+    <group position={[0, portalY, portalZ]} scale={[portalScale, portalScale, portalScale]}>
       {/* Outer Holographic Torus Ring */}
       <mesh ref={portalRef}>
         <torusGeometry args={[2.8, 0.08, 32, 100]} />
@@ -211,7 +224,7 @@ export default function Scene3D({ scrollProgress = 0 }) {
         <directionalLight position={[10, 10, 5]} intensity={1} color="#00f0ff" />
         <pointLight position={[-10, -10, -5]} intensity={1.5} color="#8a2be2" />
 
-        {/* Camera Rig & Mouse parallax */}
+        {/* Camera Rig & Pointer parallax */}
         <CameraRig />
 
         {/* 3D Scene Elements */}

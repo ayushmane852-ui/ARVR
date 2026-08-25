@@ -20,7 +20,7 @@ export default function Hero({ onExploreClick }) {
   return (
     <section 
       id="hero" 
-      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-6 overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center pt-24 sm:pt-28 pb-16 px-4 sm:px-6 overflow-hidden"
     >
       {/* Background HUD Decor & Grid overlay */}
       <div className="absolute inset-0 spatial-grid-bg opacity-20 pointer-events-none" />
@@ -34,20 +34,20 @@ export default function Hero({ onExploreClick }) {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-panel border-cyan-500/30 mb-8"
+          className="inline-flex items-center gap-2 sm:gap-3 px-3.5 py-1.5 rounded-full glass-panel border-cyan-500/30 mb-6 sm:mb-8 max-w-[92vw]"
         >
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-          <span className="font-mono text-xs text-cyan-300 tracking-wider uppercase font-semibold">
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping shrink-0" />
+          <span className="font-mono text-[10px] sm:text-xs text-cyan-300 tracking-wider uppercase font-semibold truncate">
             SPATIAL COMPUTING & IMMERSIVE LAB
           </span>
-          <span className="text-slate-600">|</span>
+          <span className="text-slate-600 hidden sm:inline">|</span>
           <span className="font-mono text-[10px] text-slate-400 uppercase tracking-widest hidden sm:inline">
             EST. 2026
           </span>
         </motion.div>
 
         {/* AR vs VR Split Interactive HUD Indicators */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 items-center mb-8">
+        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 items-center mb-6 sm:mb-8">
           
           {/* Left Side: AUGMENTED Reality Tag */}
           <motion.div
@@ -81,13 +81,13 @@ export default function Hero({ onExploreClick }) {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
-            className="flex flex-col items-center"
+            className="flex flex-col items-center px-2"
           >
-            <span className="font-orbitron text-sm tracking-[0.4em] text-cyan-400/90 font-semibold mb-3 uppercase text-glow-cyan">
+            <span className="font-orbitron text-[10px] sm:text-sm tracking-[0.2em] sm:tracking-[0.4em] text-cyan-400/90 font-semibold mb-2.5 uppercase text-glow-cyan">
               AUGMENTED REALITY + VIRTUAL REALITY
             </span>
 
-            <h1 className="font-orbitron font-black text-5xl sm:text-7xl md:text-8xl tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-cyan-400 text-glow-cyan mb-4">
+            <h1 className="font-orbitron font-black text-4xl sm:text-7xl md:text-8xl tracking-tight leading-tight sm:leading-none text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-cyan-400 text-glow-cyan mb-3 sm:mb-4">
               STEP BEYOND<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-white to-purple-500">
                 REALITY
@@ -124,26 +124,28 @@ export default function Hero({ onExploreClick }) {
         </div>
 
         {/* Subtext */}
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="font-space text-slate-300 text-base sm:text-xl max-w-2xl mx-auto font-light leading-relaxed mb-10"
+          className="w-full max-w-2xl mx-auto mb-8 sm:mb-10 px-4 py-3 sm:py-0 rounded-2xl bg-slate-950/40 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-cyan-500/15 sm:border-none"
         >
-          Explore Augmented Reality, Virtual Reality, Spatial Computing and the emerging technologies shaping the future of human-computer interaction.
-        </motion.p>
+          <p className="font-space text-slate-300 text-sm sm:text-xl font-light leading-relaxed">
+            Explore Augmented Reality, Virtual Reality, Spatial Computing and the emerging technologies shaping the future of human-computer interaction.
+          </p>
+        </motion.div>
 
         {/* Action Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center w-full max-w-md"
+          className="flex flex-col sm:flex-row gap-3.5 sm:gap-6 items-center justify-center w-full max-w-md px-2"
         >
           {/* Primary CTA */}
           <button
             onClick={scrollToAbout}
-            className="w-full sm:w-auto px-8 py-4 rounded-xl font-orbitron font-bold text-xs tracking-widest uppercase glass-button-primary flex items-center justify-center gap-3 group"
+            className="w-full sm:w-auto px-7 py-3.5 sm:py-4 rounded-xl font-orbitron font-bold text-xs tracking-widest uppercase glass-button-primary flex items-center justify-center gap-3 group"
           >
             <span>ENTER THE EXPERIENCE</span>
             <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
@@ -152,7 +154,7 @@ export default function Hero({ onExploreClick }) {
           {/* Secondary CTA */}
           <button
             onClick={scrollToContact}
-            className="w-full sm:w-auto px-8 py-4 rounded-xl font-orbitron font-bold text-xs tracking-widest uppercase glass-button-secondary flex items-center justify-center gap-3"
+            className="w-full sm:w-auto px-7 py-3.5 sm:py-4 rounded-xl font-orbitron font-bold text-xs tracking-widest uppercase glass-button-secondary flex items-center justify-center gap-3"
           >
             <Sparkles size={16} className="text-cyan-400" />
             <span>EXPLORE ARVR</span>
@@ -164,10 +166,10 @@ export default function Hero({ onExploreClick }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1 }}
-          className="mt-16 sm:mt-24 flex flex-col items-center gap-2 cursor-pointer group"
+          className="mt-12 sm:mt-24 flex flex-col items-center gap-2 cursor-pointer group"
           onClick={scrollToAbout}
         >
-          <span className="font-mono text-[10px] text-cyan-400/60 uppercase tracking-[0.3em] group-hover:text-cyan-300">
+          <span className="font-mono text-[10px] text-cyan-400/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] group-hover:text-cyan-300">
             SCROLL TO EXPLORE SPATIAL REALM
           </span>
           <div className="w-6 h-10 rounded-full border border-cyan-500/30 flex items-start justify-center p-1.5 glass-panel">

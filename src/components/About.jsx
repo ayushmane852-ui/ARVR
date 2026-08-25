@@ -83,7 +83,7 @@ export default function About() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="lg:col-span-5 h-[380px] sm:h-[450px] glass-panel rounded-3xl border-cyan-500/20 relative flex items-center justify-center p-4 overflow-hidden group hover:border-cyan-400/40"
+            className="lg:col-span-5 h-[280px] sm:h-[450px] glass-panel rounded-3xl border-cyan-500/20 relative flex items-center justify-center p-4 overflow-hidden group hover:border-cyan-400/40"
           >
             {/* Corner HUD Markers */}
             <div className="absolute top-4 left-4 font-mono text-[10px] text-cyan-400/70">
