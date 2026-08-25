@@ -1,0 +1,185 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Sparkles, Eye, ArrowDown, ChevronRight, Scan, ShieldAlert, Cpu } from 'lucide-react';
+
+export default function Hero({ onExploreClick }) {
+  const scrollToAbout = () => {
+    const element = document.getElementById('about');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const scrollToContact = () => {
+    const element = document.getElementById('contact');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <section 
+      id="hero" 
+      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-6 overflow-hidden"
+    >
+      {/* Background HUD Decor & Grid overlay */}
+      <div className="absolute inset-0 spatial-grid-bg opacity-20 pointer-events-none" />
+      <div className="absolute inset-0 scanlines opacity-40 pointer-events-none" />
+
+      {/* Main Container */}
+      <div className="relative z-10 max-w-6xl w-full mx-auto flex flex-col items-center text-center">
+
+        {/* Top Status HUD Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-panel border-cyan-500/30 mb-8"
+        >
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+          <span className="font-mono text-xs text-cyan-300 tracking-wider uppercase font-semibold">
+            SPATIAL COMPUTING & IMMERSIVE LAB
+          </span>
+          <span className="text-slate-600">|</span>
+          <span className="font-mono text-[10px] text-slate-400 uppercase tracking-widest hidden sm:inline">
+            EST. 2026
+          </span>
+        </motion.div>
+
+        {/* AR vs VR Split Interactive HUD Indicators */}
+        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 items-center mb-8">
+          
+          {/* Left Side: AUGMENTED Reality Tag */}
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="hidden md:flex flex-col items-start text-left glass-panel p-5 rounded-2xl border-cyan-500/20 relative group hover:border-cyan-400/50"
+          >
+            <div className="flex items-center gap-2 mb-2 text-cyan-400">
+              <Scan size={18} className="animate-pulse" />
+              <span className="font-orbitron font-bold text-xs tracking-widest uppercase">
+                AUGMENTED
+              </span>
+            </div>
+            <p className="font-space text-xs text-slate-400 mb-3">
+              Spatial overlay, Passthrough HUDs, Real-time tracking reticles & digital twins.
+            </p>
+            <div className="font-mono text-[10px] text-cyan-400/80 flex items-center justify-between w-full border-t border-cyan-500/15 pt-2">
+              <span>FOV // 110°</span>
+              <span>PASSTHROUGH: ACTIVE</span>
+            </div>
+
+            {/* Target Reticle Accent */}
+            <div className="absolute top-2 right-2 text-cyan-400/30 group-hover:text-cyan-400/70 transition-colors">
+              [+]
+            </div>
+          </motion.div>
+
+          {/* Center Brand & Main Headline */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col items-center"
+          >
+            <span className="font-orbitron text-sm tracking-[0.4em] text-cyan-400/90 font-semibold mb-3 uppercase text-glow-cyan">
+              AUGMENTED REALITY + VIRTUAL REALITY
+            </span>
+
+            <h1 className="font-orbitron font-black text-5xl sm:text-7xl md:text-8xl tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-cyan-400 text-glow-cyan mb-4">
+              STEP BEYOND<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-white to-purple-500">
+                REALITY
+              </span>
+            </h1>
+          </motion.div>
+
+          {/* Right Side: VIRTUAL Reality Tag */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="hidden md:flex flex-col items-start text-left glass-panel p-5 rounded-2xl border-purple-500/20 relative group hover:border-purple-400/50"
+          >
+            <div className="flex items-center gap-2 mb-2 text-purple-400">
+              <Cpu size={18} className="animate-pulse" />
+              <span className="font-orbitron font-bold text-xs tracking-widest uppercase">
+                VIRTUAL
+              </span>
+            </div>
+            <p className="font-space text-xs text-slate-400 mb-3">
+              Full-immersion 3D environments, spatial audio & volumetric spatial rendering.
+            </p>
+            <div className="font-mono text-[10px] text-purple-400/80 flex items-center justify-between w-full border-t border-purple-500/15 pt-2">
+              <span>6DOF // SYNC</span>
+              <span>RENDER: 90 FPS</span>
+            </div>
+
+            {/* Target Reticle Accent */}
+            <div className="absolute top-2 right-2 text-purple-400/30 group-hover:text-purple-400/70 transition-colors">
+              [•]
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Subtext */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="font-space text-slate-300 text-base sm:text-xl max-w-2xl mx-auto font-light leading-relaxed mb-10"
+        >
+          Explore Augmented Reality, Virtual Reality, Spatial Computing and the emerging technologies shaping the future of human-computer interaction.
+        </motion.p>
+
+        {/* Action Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center w-full max-w-md"
+        >
+          {/* Primary CTA */}
+          <button
+            onClick={scrollToAbout}
+            className="w-full sm:w-auto px-8 py-4 rounded-xl font-orbitron font-bold text-xs tracking-widest uppercase glass-button-primary flex items-center justify-center gap-3 group"
+          >
+            <span>ENTER THE EXPERIENCE</span>
+            <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
+          </button>
+
+          {/* Secondary CTA */}
+          <button
+            onClick={scrollToContact}
+            className="w-full sm:w-auto px-8 py-4 rounded-xl font-orbitron font-bold text-xs tracking-widest uppercase glass-button-secondary flex items-center justify-center gap-3"
+          >
+            <Sparkles size={16} className="text-cyan-400" />
+            <span>EXPLORE ARVR</span>
+          </button>
+        </motion.div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1 }}
+          className="mt-16 sm:mt-24 flex flex-col items-center gap-2 cursor-pointer group"
+          onClick={scrollToAbout}
+        >
+          <span className="font-mono text-[10px] text-cyan-400/60 uppercase tracking-[0.3em] group-hover:text-cyan-300">
+            SCROLL TO EXPLORE SPATIAL REALM
+          </span>
+          <div className="w-6 h-10 rounded-full border border-cyan-500/30 flex items-start justify-center p-1.5 glass-panel">
+            <motion.div
+              animate={{ y: [0, 14, 0] }}
+              transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+              className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f0ff]"
+            />
+          </div>
+        </motion.div>
+
+      </div>
+    </section>
+  );
+}
