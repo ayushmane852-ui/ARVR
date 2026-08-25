@@ -3,6 +3,16 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, MeshWobbleMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
+// Global window mouse listener for smooth 3D motion regardless of DOM overlays
+const windowMouse = { x: 0, y: 0 };
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('mousemove', (e) => {
+    windowMouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    windowMouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  }, { passive: true });
+}
+
 // Central 3D Spatial Portal
 function SpatialPortal({ scrollProgress }) {
   const portalRef = useRef();
@@ -10,28 +20,31 @@ function SpatialPortal({ scrollProgress }) {
   const coreSphereRef = useRef();
   const fragmentGroupRef = useRef();
 
-  useFrame((state, delta) => {
-    const mouseX = state.pointer.x * 0.4;
-    const mouseY = state.pointer.y * 0.4;
+  useFrame((_, delta) => {
+    const mouseX = windowMouse.x * 0.8;
+    const mouseY = windowMouse.y * 0.8;
 
-    // Continuous smooth rotation
+    // Continuous smooth rotation + mouse tilt
     if (portalRef.current) {
       portalRef.current.rotation.z += delta * 0.15;
-      portalRef.current.rotation.x = THREE.MathUtils.lerp(portalRef.current.rotation.x, mouseY * 0.3, 0.05);
-      portalRef.current.rotation.y = THREE.MathUtils.lerp(portalRef.current.rotation.y, mouseX * 0.3, 0.05);
+      portalRef.current.rotation.x = THREE.MathUtils.lerp(portalRef.current.rotation.x, -mouseY * 0.6, 0.05);
+      portalRef.current.rotation.y = THREE.MathUtils.lerp(portalRef.current.rotation.y, mouseX * 0.6, 0.05);
     }
 
     if (innerRingRef.current) {
       innerRingRef.current.rotation.z -= delta * 0.25;
       innerRingRef.current.rotation.y += delta * 0.1;
+      innerRingRef.current.rotation.x = THREE.MathUtils.lerp(innerRingRef.current.rotation.x, mouseY * 0.4, 0.05);
     }
 
     if (fragmentGroupRef.current) {
       fragmentGroupRef.current.rotation.y += delta * 0.2;
+      fragmentGroupRef.current.rotation.x = THREE.MathUtils.lerp(fragmentGroupRef.current.rotation.x, mouseY * 0.4, 0.05);
     }
 
     if (coreSphereRef.current) {
       coreSphereRef.current.rotation.x += delta * 0.3;
+      coreSphereRef.current.rotation.y += delta * 0.15;
     }
   });
 
@@ -133,15 +146,15 @@ function ParticleField({ count = 800 }) {
     return [pos, col];
   }, [count]);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     if (pointsRef.current) {
       pointsRef.current.rotation.y += delta * 0.03;
       pointsRef.current.rotation.x += delta * 0.015;
 
-      const mouseX = state.pointer.x * 0.2;
-      const mouseY = state.pointer.y * 0.2;
+      const mouseX = windowMouse.x * 0.6;
+      const mouseY = windowMouse.y * 0.6;
       pointsRef.current.position.x = THREE.MathUtils.lerp(pointsRef.current.position.x, mouseX, 0.05);
-      pointsRef.current.position.y = THREE.MathUtils.lerp(pointsRef.current.position.y, -mouseY, 0.05);
+      pointsRef.current.position.y = THREE.MathUtils.lerp(pointsRef.current.position.y, mouseY, 0.05);
     }
   });
 
@@ -172,9 +185,9 @@ function ParticleField({ count = 800 }) {
 function CameraRig() {
   const { camera } = useThree();
 
-  useFrame((state) => {
-    const mouseX = state.pointer.x * 0.3;
-    const mouseY = state.pointer.y * 0.3;
+  useFrame(() => {
+    const mouseX = windowMouse.x * 0.6;
+    const mouseY = windowMouse.y * 0.6;
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouseX, 0.04);
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, mouseY, 0.04);
     camera.lookAt(0, 0, 0);
