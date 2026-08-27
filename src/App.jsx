@@ -10,6 +10,7 @@ import Events from './components/Events';
 import Workshops from './components/Workshops';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import SocialSidebar from './components/SocialSidebar';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -55,7 +56,10 @@ export default function App() {
       {/* 2. Interactive 3D Background Canvas */}
       <Scene3D scrollProgress={scrollProgress} />
 
-      {/* 3. Main Interface Overlay */}
+      {/* 3. Floating Social Sidebar Dock */}
+      <SocialSidebar />
+
+      {/* 4. Main Interface Overlay */}
       <div className="relative z-10">
         <Navbar activeSection={activeSection} />
         
