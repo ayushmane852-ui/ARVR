@@ -77,6 +77,9 @@ export default function Logo3D({ size = 'hero', className = '' }) {
       className={`relative group cursor-pointer select-none ${dimensions} ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onTouchStart={() => setIsHovered(true)}
+      onTouchEnd={() => setIsHovered(false)}
+      onTouchCancel={() => setIsHovered(false)}
       style={{ perspective: '1200px' }}
     >
       {/* 3D Motion Container */}
