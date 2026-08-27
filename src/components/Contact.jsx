@@ -25,8 +25,9 @@ export default function Contact() {
     {
       icon: AtSign,
       label: 'Instagram',
-      value: '@arvr_club',
-      subText: 'Visual updates & AR filters'
+      value: '@arvrkitcoek',
+      subText: 'Visual updates & spatial stories',
+      url: 'https://www.instagram.com/arvrkitcoek?igsi=MWI5dm55Z3Rmc25oNA=='
     },
     {
       icon: Globe,
@@ -99,10 +100,14 @@ export default function Contact() {
             <div className="space-y-3">
               {contactDetails.map((item, idx) => {
                 const IconComp = item.icon;
+                const Container = item.url ? 'a' : 'div';
                 return (
-                  <div
+                  <Container
                     key={idx}
-                    className="glass-panel p-4 rounded-2xl border-cyan-500/15 flex items-start gap-4 group hover:border-cyan-400/40 transition-colors"
+                    href={item.url}
+                    target={item.url ? '_blank' : undefined}
+                    rel={item.url ? 'noreferrer' : undefined}
+                    className="glass-panel p-4 rounded-2xl border-cyan-500/15 flex items-start gap-4 group hover:border-cyan-400/40 transition-colors cursor-pointer block"
                   >
                     <div className="p-3 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 group-hover:scale-110 transition-transform">
                       <IconComp size={20} />
@@ -118,7 +123,7 @@ export default function Contact() {
                         {item.subText}
                       </span>
                     </div>
-                  </div>
+                  </Container>
                 );
               })}
             </div>

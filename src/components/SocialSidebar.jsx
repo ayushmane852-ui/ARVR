@@ -26,7 +26,7 @@ export default function SocialSidebar() {
       id: 'instagram',
       label: 'Instagram',
       icon: InstagramIcon,
-      url: 'https://instagram.com',
+      url: 'https://www.instagram.com/arvrkitcoek?igsi=MWI5dm55Z3Rmc25oNA==',
       color: 'hover:text-pink-400 hover:border-pink-500/60 hover:shadow-[0_0_20px_rgba(236,72,153,0.6)]',
     },
     {
