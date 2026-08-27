@@ -123,11 +123,11 @@ export default function Logo3D({ size = 'hero', className = '' }) {
         {/* Layer 3: Glass HUD Container */}
         <div
           className={`w-full h-full glass-panel relative overflow-hidden flex items-center justify-center border transition-all duration-500 ${
-            isNav ? 'rounded-xl p-0.5' : 'rounded-2xl sm:rounded-3xl p-1.5 sm:p-2 border-2'
+            isNav ? 'rounded-xl p-0.5' : 'rounded-2xl sm:rounded-3xl p-1 sm:p-1.5 border-2'
           } ${
             isHovered
-              ? 'border-cyan-400 shadow-[0_0_30px_rgba(0,240,255,0.7)]'
-              : 'border-cyan-500/30 shadow-[0_0_12px_rgba(0,240,255,0.15)]'
+              ? 'border-cyan-400 shadow-[0_0_50px_rgba(0,240,255,0.7)]'
+              : 'border-cyan-500/30 shadow-[0_0_15px_rgba(0,240,255,0.1)]'
           }`}
           style={{ transform: 'translateZ(15px)' }}
         >
@@ -152,7 +152,7 @@ export default function Logo3D({ size = 'hero', className = '' }) {
           {/* Inner Image Frame */}
           <div
             className={`w-full h-full overflow-hidden relative bg-slate-950/90 flex items-center justify-center shadow-inner ${
-              isNav ? 'rounded-lg p-0' : 'rounded-xl sm:rounded-2xl p-1 sm:p-1.5'
+              isNav ? 'rounded-lg p-0' : 'rounded-xl sm:rounded-2xl p-0.5 sm:p-1'
             }`}
             style={{ transform: 'translateZ(30px)' }}
           >
@@ -165,7 +165,7 @@ export default function Logo3D({ size = 'hero', className = '' }) {
               }}
               alt="ARVR Club Logo"
               className={`w-full h-full object-cover rounded-md sm:rounded-xl transition-transform duration-500 ${
-                isNav ? 'scale-140 group-hover:scale-160' : 'scale-105 group-hover:scale-115'
+                isNav ? 'scale-140 group-hover:scale-160' : 'scale-140 group-hover:scale-155'
               }`}
             />
 
