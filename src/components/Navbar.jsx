@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Radio } from 'lucide-react';
+import Logo3D from './Logo3D';
 
 export default function Navbar({ activeSection }) {
   const [scrolled, setScrolled] = useState(false);
@@ -44,21 +45,25 @@ export default function Navbar({ activeSection }) {
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
         
-        {/* Left Side: Brand Typography */}
+        {/* Left Side: Brand Typography & Logo */}
         <div 
           onClick={() => scrollToSection('hero')}
-          className="cursor-pointer group flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3"
+          className="cursor-pointer group flex items-center gap-3"
         >
-          <div className="flex items-center gap-2">
-            <span className="font-orbitron font-black text-2xl md:text-3xl tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-white to-purple-400 group-hover:text-glow-cyan transition-all duration-300">
-              ARVR
-            </span>
-            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping hidden sm:block" />
-          </div>
+          <Logo3D size="nav" />
 
-          <span className="font-rajdhani text-[11px] md:text-xs tracking-[0.25em] text-cyan-400/70 font-semibold uppercase group-hover:text-cyan-300 transition-colors">
-            AR • VR • IMMERSIVE TECHNOLOGY
-          </span>
+          <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+            <div className="flex items-center gap-2">
+              <span className="font-orbitron font-black text-2xl md:text-3xl tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-white to-purple-400 group-hover:text-glow-cyan transition-all duration-300">
+                ARVR
+              </span>
+              <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping hidden sm:block" />
+            </div>
+
+            <span className="font-rajdhani text-[11px] md:text-xs tracking-[0.25em] text-cyan-400/70 font-semibold uppercase group-hover:text-cyan-300 transition-colors">
+              AR • VR • IMMERSIVE TECHNOLOGY
+            </span>
+          </div>
         </div>
 
         {/* Right Side: Desktop Nav */}
