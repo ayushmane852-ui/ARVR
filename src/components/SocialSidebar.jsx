@@ -61,23 +61,35 @@ export default function SocialSidebar() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 40 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 1, delay: 0.8 }}
-      className="fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center select-none"
-    >
-      {/* Vertical Glowing Connecting Accent Line */}
-      <div className="absolute top-2 bottom-2 w-[1.5px] bg-gradient-to-b from-transparent via-cyan-500/50 to-transparent pointer-events-none" />
+    <div className="fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center select-none">
+      
+      {/* Vertical Glowing Connecting Line with Slide/Scale Entrance */}
+      <motion.div
+        initial={{ scaleY: 0, opacity: 0 }}
+        animate={{ scaleY: 1, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 1 }}
+        className="absolute top-2 bottom-2 w-[1.5px] bg-gradient-to-b from-transparent via-cyan-500/50 to-transparent pointer-events-none origin-top"
+      />
 
-      {/* Social Media Circular Buttons */}
+      {/* Social Media Circular Buttons Container */}
       <div className="flex flex-col gap-4 py-4 relative">
         {socialLinks.map((social, idx) => {
           const IconComp = social.icon;
           const isHovered = hoveredIdx === idx;
 
           return (
-            <div key={social.id} className="relative flex items-center justify-end">
+            <motion.div
+              key={social.id}
+              initial={{ opacity: 0, x: 90, scale: 0.4 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              transition={{
+                type: 'spring',
+                stiffness: 260,
+                damping: 18,
+                delay: 1.1 + idx * 0.14,
+              }}
+              className="relative flex items-center justify-end"
+            >
               
               {/* Sliding Glass Tooltip Label on Left */}
               <motion.div
@@ -93,7 +105,7 @@ export default function SocialSidebar() {
                 {social.label}
               </motion.div>
 
-              {/* Circular Social Icon Button */}
+              {/* Circular Social Icon Button with Interactive Hover & Levitation */}
               <motion.a
                 href={social.url}
                 target={social.url.startsWith('http') ? '_blank' : '_self'}
@@ -101,8 +113,19 @@ export default function SocialSidebar() {
                 onClick={(e) => handleClick(e, social.url)}
                 onMouseEnter={() => setHoveredIdx(idx)}
                 onMouseLeave={() => setHoveredIdx(null)}
-                whileHover={{ scale: 1.25, rotate: 6 }}
-                whileTap={{ scale: 0.95 }}
+                animate={{
+                  y: [0, -4, 0, 4, 0],
+                }}
+                transition={{
+                  y: {
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                    delay: idx * 0.4,
+                  },
+                }}
+                whileHover={{ scale: 1.28, rotate: 6 }}
+                whileTap={{ scale: 0.92 }}
                 className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full glass-panel border border-cyan-500/25 flex items-center justify-center text-slate-300 transition-all duration-300 cursor-pointer relative bg-[#050917]/85 backdrop-blur-md ${social.color}`}
               >
                 <IconComp className="transition-transform duration-300" />
@@ -112,10 +135,10 @@ export default function SocialSidebar() {
                   <span className="absolute inset-0 rounded-full border border-current animate-ping opacity-30" />
                 )}
               </motion.a>
-            </div>
+            </motion.div>
           );
         })}
       </div>
-    </motion.div>
+    </div>
   );
 }
