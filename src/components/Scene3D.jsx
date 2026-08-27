@@ -1,6 +1,5 @@
 import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Float, MeshWobbleMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
 // Global window mouse & touch listener for smooth 3D motion
@@ -20,171 +19,174 @@ if (typeof window !== 'undefined') {
   }, { passive: true });
 }
 
-// Central 3D Spatial Portal with Mobile Scaling
-function SpatialPortal({ scrollProgress }) {
-  const portalRef = useRef();
-  const innerRingRef = useRef();
-  const coreSphereRef = useRef();
-  const fragmentGroupRef = useRef();
+// 3D Spiral Galaxy Component
+function SpiralGalaxy({ scrollProgress }) {
+  const galaxyRef = useRef();
+  const coreRef = useRef();
 
-  const { viewport } = useThree();
-  const isMobile = viewport.width < 5.5;
+  const parameters = {
+    count: 8000,
+    size: 0.045,
+    radius: 13,
+    branches: 4,
+    spin: 1.3,
+    randomness: 0.65,
+    power: 2.8,
+    insideColor: '#ffd700',
+    midColor: '#00f0ff',
+    outsideColor: '#8a2be2',
+  };
 
-  // Responsive scale: compact 0.48x on mobile screens so it frames cleanly, 1.0x on desktop
-  const portalScale = isMobile ? 0.48 : 1.0;
+  const [positions, colors] = useMemo(() => {
+    const pos = new Float32Array(parameters.count * 3);
+    const col = new Float32Array(parameters.count * 3);
+
+    const colorInside = new THREE.Color(parameters.insideColor);
+    const colorMid = new THREE.Color(parameters.midColor);
+    const colorOutside = new THREE.Color(parameters.outsideColor);
+    const colorMagenta = new THREE.Color('#ff007f');
+
+    for (let i = 0; i < parameters.count; i++) {
+      // Logarithmic spiral position calculation
+      const radius = Math.pow(Math.random(), parameters.power) * parameters.radius;
+      const spinAngle = radius * parameters.spin;
+      const branchAngle = ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
+
+      const randomX = (Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius);
+      const randomY = (Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius);
+      const randomZ = (Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius);
+
+      pos[i * 3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+      pos[i * 3 + 1] = randomY * 0.45; // Cosmic galaxy disk height
+      pos[i * 3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+
+      // Color gradient from central golden core to blue/violet/magenta spiral arms
+      const mixedColor = colorInside.clone();
+      const radiusRatio = radius / parameters.radius;
+
+      if (radiusRatio < 0.25) {
+        mixedColor.lerp(colorMid, radiusRatio / 0.25);
+      } else if (radiusRatio < 0.65) {
+        mixedColor.copy(colorMid).lerp(colorOutside, (radiusRatio - 0.25) / 0.4);
+      } else {
+        mixedColor.copy(colorOutside).lerp(colorMagenta, (radiusRatio - 0.65) / 0.35);
+      }
+
+      col[i * 3] = mixedColor.r;
+      col[i * 3 + 1] = mixedColor.g;
+      col[i * 3 + 2] = mixedColor.b;
+    }
+
+    return [pos, col];
+  }, []);
 
   useFrame((_, delta) => {
-    const mouseX = windowMouse.x * (isMobile ? 0.4 : 0.8);
-    const mouseY = windowMouse.y * (isMobile ? 0.4 : 0.8);
+    if (galaxyRef.current) {
+      // Continuous slow galactic rotation
+      galaxyRef.current.rotation.y += delta * 0.04;
+      galaxyRef.current.rotation.z += delta * 0.005;
 
-    // Continuous smooth rotation + mouse/touch tilt
-    if (portalRef.current) {
-      portalRef.current.rotation.z += delta * 0.15;
-      portalRef.current.rotation.x = THREE.MathUtils.lerp(portalRef.current.rotation.x, -mouseY * 0.6, 0.05);
-      portalRef.current.rotation.y = THREE.MathUtils.lerp(portalRef.current.rotation.y, mouseX * 0.6, 0.05);
+      // Smooth 3D Cursor tilt
+      const mouseX = windowMouse.x * 0.35;
+      const mouseY = windowMouse.y * 0.35;
+      galaxyRef.current.rotation.x = THREE.MathUtils.lerp(galaxyRef.current.rotation.x, 0.45 - mouseY * 0.35, 0.05);
+      galaxyRef.current.rotation.z = THREE.MathUtils.lerp(galaxyRef.current.rotation.z, mouseX * 0.25, 0.05);
+
+      // Scroll effect - journey through galaxy depth
+      galaxyRef.current.position.z = THREE.MathUtils.lerp(galaxyRef.current.position.z, -scrollProgress * 5, 0.05);
+      galaxyRef.current.position.y = THREE.MathUtils.lerp(galaxyRef.current.position.y, -1 + scrollProgress * 1.5, 0.05);
     }
 
-    if (innerRingRef.current) {
-      innerRingRef.current.rotation.z -= delta * 0.25;
-      innerRingRef.current.rotation.y += delta * 0.1;
-      innerRingRef.current.rotation.x = THREE.MathUtils.lerp(innerRingRef.current.rotation.x, mouseY * 0.4, 0.05);
-    }
-
-    if (fragmentGroupRef.current) {
-      fragmentGroupRef.current.rotation.y += delta * 0.2;
-      fragmentGroupRef.current.rotation.x = THREE.MathUtils.lerp(fragmentGroupRef.current.rotation.x, mouseY * 0.4, 0.05);
-    }
-
-    if (coreSphereRef.current) {
-      coreSphereRef.current.rotation.x += delta * 0.3;
-      coreSphereRef.current.rotation.y += delta * 0.15;
+    if (coreRef.current) {
+      coreRef.current.rotation.y -= delta * 0.08;
     }
   });
 
-  // Position morphing based on scroll
-  const portalY = (isMobile ? 0.5 : 0) - scrollProgress * 4;
-  const portalZ = (isMobile ? -0.8 : 0) - scrollProgress * 5;
-
   return (
-    <group position={[0, portalY, portalZ]} scale={[portalScale, portalScale, portalScale]}>
-      {/* Outer Holographic Torus Ring */}
-      <mesh ref={portalRef}>
-        <torusGeometry args={[2.8, 0.08, 32, 100]} />
-        <meshStandardMaterial
-          color="#00f0ff"
-          emissive="#00f0ff"
-          emissiveIntensity={1.5}
-          wireframe
-          roughness={0.1}
-        />
-      </mesh>
-
-      {/* Inner Concentric Ring */}
-      <mesh ref={innerRingRef}>
-        <torusGeometry args={[2.2, 0.04, 16, 80]} />
-        <meshStandardMaterial
-          color="#8a2be2"
-          emissive="#8a2be2"
-          emissiveIntensity={2}
-          wireframe
-        />
-      </mesh>
-
-      {/* Central Holographic Core Sphere */}
-      <mesh ref={coreSphereRef}>
-        <icosahedronGeometry args={[1.1, 2]} />
-        <MeshWobbleMaterial
-          color="#00d2ff"
-          emissive="#0088ff"
-          emissiveIntensity={0.8}
-          wireframe
-          factor={0.4}
-          speed={2}
+    <group ref={galaxyRef} position={[0, -1, 0]} rotation={[0.45, 0, 0]}>
+      {/* Central Galactic Core Star Cluster */}
+      <points ref={coreRef}>
+        <sphereGeometry args={[1.5, 32, 32]} />
+        <pointsMaterial
+          size={0.065}
+          color="#ffd700"
           transparent
-          opacity={0.7}
+          opacity={0.85}
+          blending={THREE.AdditiveBlending}
         />
-      </mesh>
+      </points>
 
-      {/* Orbiting Spatial Fragments */}
-      <group ref={fragmentGroupRef}>
-        {[...Array(8)].map((_, i) => {
-          const angle = (i / 8) * Math.PI * 2;
-          const radius = 3.6;
-          const x = Math.cos(angle) * radius;
-          const y = Math.sin(angle) * radius;
-          return (
-            <mesh key={i} position={[x, y, (i % 2 === 0 ? 0.4 : -0.4)]}>
-              <octahedronGeometry args={[0.22]} />
-              <meshStandardMaterial
-                color={i % 2 === 0 ? "#00f0ff" : "#ff007f"}
-                emissive={i % 2 === 0 ? "#00f0ff" : "#ff007f"}
-                emissiveIntensity={1.2}
-                wireframe
-              />
-            </mesh>
-          );
-        })}
-      </group>
+      {/* Main Spiral Galaxy Stars */}
+      <points>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            args={[positions, 3]}
+          />
+          <bufferAttribute
+            attach="attributes-color"
+            args={[colors, 3]}
+          />
+        </bufferGeometry>
+        <pointsMaterial
+          size={parameters.size}
+          sizeAttenuation={true}
+          depthWrite={false}
+          vertexColors={true}
+          transparent={true}
+          opacity={0.85}
+          blending={THREE.AdditiveBlending}
+        />
+      </points>
     </group>
   );
 }
 
-// Interactive 3D Particle Field
-function ParticleField({ count = 800 }) {
-  const pointsRef = useRef();
+// Deep Space Distant Starfield
+function DistantStarfield({ count = 3000 }) {
+  const starsRef = useRef();
 
   const [positions, colors] = useMemo(() => {
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
 
-    const colorCyan = new THREE.Color("#00f0ff");
-    const colorViolet = new THREE.Color("#8a2be2");
-    const colorWhite = new THREE.Color("#ffffff");
+    const cCyan = new THREE.Color("#00f0ff");
+    const cViolet = new THREE.Color("#a855f7");
+    const cWhite = new THREE.Color("#ffffff");
 
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 24;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 24;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 24;
+      pos[i * 3] = (Math.random() - 0.5) * 40;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 40;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 40;
 
-      const mixFactor = Math.random();
-      let particleColor = colorCyan.clone();
-      if (mixFactor > 0.6) particleColor = colorViolet.clone();
-      if (mixFactor > 0.9) particleColor = colorWhite.clone();
+      const rand = Math.random();
+      let starColor = cWhite;
+      if (rand < 0.35) starColor = cCyan;
+      else if (rand < 0.65) starColor = cViolet;
 
-      col[i * 3] = particleColor.r;
-      col[i * 3 + 1] = particleColor.g;
-      col[i * 3 + 2] = particleColor.b;
+      col[i * 3] = starColor.r;
+      col[i * 3 + 1] = starColor.g;
+      col[i * 3 + 2] = starColor.b;
     }
 
     return [pos, col];
   }, [count]);
 
   useFrame((_, delta) => {
-    if (pointsRef.current) {
-      pointsRef.current.rotation.y += delta * 0.03;
-      pointsRef.current.rotation.x += delta * 0.015;
-
-      const mouseX = windowMouse.x * 0.6;
-      const mouseY = windowMouse.y * 0.6;
-      pointsRef.current.position.x = THREE.MathUtils.lerp(pointsRef.current.position.x, mouseX, 0.05);
-      pointsRef.current.position.y = THREE.MathUtils.lerp(pointsRef.current.position.y, mouseY, 0.05);
+    if (starsRef.current) {
+      starsRef.current.rotation.y += delta * 0.01;
+      starsRef.current.rotation.x += delta * 0.005;
     }
   });
 
   return (
-    <points ref={pointsRef}>
+    <points ref={starsRef}>
       <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-        />
-        <bufferAttribute
-          attach="attributes-color"
-          args={[colors, 3]}
-        />
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute attach="attributes-color" args={[colors, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.06}
+        size={0.035}
         vertexColors
         transparent
         opacity={0.7}
@@ -194,15 +196,15 @@ function ParticleField({ count = 800 }) {
   );
 }
 
-// Spatial Environment Lighting & Camera Rig
+// Camera Parallax Rig
 function CameraRig() {
   const { camera } = useThree();
 
   useFrame(() => {
-    const mouseX = windowMouse.x * 0.6;
-    const mouseY = windowMouse.y * 0.6;
+    const mouseX = windowMouse.x * 0.4;
+    const mouseY = windowMouse.y * 0.4;
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouseX, 0.04);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, mouseY, 0.04);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, 2 + mouseY, 0.04);
     camera.lookAt(0, 0, 0);
   });
 
@@ -213,29 +215,24 @@ export default function Scene3D({ scrollProgress = 0 }) {
   return (
     <div className="fixed inset-0 pointer-events-none z-0">
       <Canvas
-        camera={{ position: [0, 0, 7], fov: 60 }}
+        camera={{ position: [0, 2, 9], fov: 60 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
-        <color attach="background" args={['#030712']} />
-        <fog attach="fog" args={['#030712', 6, 18]} />
+        <color attach="background" args={['#02040a']} />
+        <fog attach="fog" args={['#02040a', 8, 24]} />
 
-        {/* Ambient & Directional Lights */}
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[10, 10, 5]} intensity={1} color="#00f0ff" />
+        {/* Ambient & Cosmic Point Lights */}
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[10, 10, 5]} intensity={1.2} color="#00f0ff" />
         <pointLight position={[-10, -10, -5]} intensity={1.5} color="#8a2be2" />
 
-        {/* Camera Rig & Pointer parallax */}
         <CameraRig />
 
-        {/* 3D Scene Elements */}
-        <Float speed={1.5} rotationIntensity={0.5} floatIntensity={0.8}>
-          <SpatialPortal scrollProgress={scrollProgress} />
-        </Float>
+        {/* 3D Spiral Galaxy Scene (Circles Removed) */}
+        <SpiralGalaxy scrollProgress={scrollProgress} />
 
-        <ParticleField count={900} />
-
-        {/* Spatial 3D Grid Floor */}
-        <gridHelper args={[30, 30, '#00f0ff', '#1e1b4b']} position={[0, -5, 0]} />
+        {/* Deep Space Background Starfield */}
+        <DistantStarfield count={3000} />
       </Canvas>
     </div>
   );
