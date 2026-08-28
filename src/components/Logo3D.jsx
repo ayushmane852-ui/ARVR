@@ -3,15 +3,15 @@ import React, { useState } from 'react';
 export default function Logo3D({ size = 'hero', className = '' }) {
   const [imgSrc, setImgSrc] = useState('/Images/arvr logo.png');
 
-  // Larger dimensions mapping for direct logo presentation
+  // Balanced dimensions for hero logo to fit perfectly above-the-fold without scroll
   const isNav = size === 'nav';
   const dimensions = isNav
-    ? 'w-14 h-14 sm:w-16 sm:h-16'
-    : 'w-72 h-72 sm:w-96 sm:h-96 md:w-[480px] md:h-[480px] lg:w-[560px] lg:h-[560px]';
+    ? 'w-12 h-12 sm:w-14 sm:h-14'
+    : 'w-52 h-52 sm:w-68 sm:h-68 md:w-80 md:h-80 lg:w-[360px] lg:h-[360px]';
 
   return (
     <div className={`relative group flex items-center justify-center select-none ${dimensions} ${className}`}>
-      {/* Glow Aura - ONLY visible on hover (opacity-0 by default) */}
+      {/* Glow Aura - ONLY visible on hover */}
       <div 
         className={`absolute inset-0 rounded-full blur-3xl pointer-events-none transition-opacity duration-500 opacity-0 group-hover:opacity-90 ${
           isNav 
@@ -20,7 +20,7 @@ export default function Logo3D({ size = 'hero', className = '' }) {
         }`} 
       />
 
-      {/* Direct Transparent ARVR Logo - Clean by default, glows on hover */}
+      {/* Direct Transparent ARVR Logo */}
       <img
         src={imgSrc}
         onError={() => {
