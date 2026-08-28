@@ -7,7 +7,7 @@ export default function Logo3D({ size = 'hero', className = '' }) {
   const isNav = size === 'nav';
   const dimensions = isNav
     ? 'w-12 h-12 sm:w-14 sm:h-14'
-    : 'w-52 h-52 sm:w-68 sm:h-68 md:w-80 md:h-80 lg:w-[360px] lg:h-[360px]';
+    : 'w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-[360px] lg:h-[360px]';
 
   return (
     <div className={`relative group flex items-center justify-center select-none ${dimensions} ${className}`}>
