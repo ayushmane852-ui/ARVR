@@ -84,14 +84,10 @@ export default function Hero({ onExploreClick }) {
             transition={{ duration: 0.8 }}
             className="flex flex-col items-center px-2"
           >
-            {/* Interactive 3D Parallax Club Logo */}
-            <motion.div
-              animate={{ y: [-6, 6, -6] }}
-              transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
-              className="mb-4 sm:mb-6"
-            >
+            {/* Stable Fixed ARVR Logo */}
+            <div className="mb-4 sm:mb-6 relative">
               <Logo3D size="hero" />
-            </motion.div>
+            </div>
 
             <span className="font-orbitron text-[10px] sm:text-sm tracking-[0.2em] sm:tracking-[0.4em] text-cyan-400/90 font-semibold mb-2.5 uppercase text-glow-cyan">
               AUGMENTED REALITY + VIRTUAL REALITY
