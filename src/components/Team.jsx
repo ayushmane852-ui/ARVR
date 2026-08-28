@@ -495,7 +495,7 @@ export default function Team() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedMember(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/85 backdrop-blur-2xl cursor-zoom-out overflow-y-auto"
+            className="fixed inset-0 z-60 flex items-center justify-center p-4 sm:p-6 bg-slate-950/90 backdrop-blur-2xl cursor-zoom-out overflow-y-auto"
           >
             <motion.div
               initial={{ scale: 0.85, opacity: 0, y: 20 }}
@@ -518,7 +518,7 @@ export default function Team() {
               </button>
 
               <div className="mt-4 mb-5">
-                <span className={`inline-block font-mono text-xs tracking-wider font-semibold uppercase px-3 py-1 rounded-full ${selectedMember.badgeColor} border mb-2`}>
+                <span className={`inline-block font-mono text-xs tracking-wider font-semibold uppercase px-3 py-1 rounded-full ${selectedMember.badgeColor || 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40'} border mb-2`}>
                   {selectedMember.tag}
                 </span>
                 <h3 className="font-orbitron font-black text-2xl sm:text-3xl text-white text-glow-cyan">
@@ -567,7 +567,7 @@ export default function Team() {
                     DEPARTMENT TEAM MEMBERS // {viewingTeamForDomain.rank}
                   </span>
                   <h3 className="font-orbitron font-black text-2xl sm:text-3xl text-white text-glow-cyan mt-1">
-                    {viewingTeamForDomain.role} TEAM
+                    {viewingTeamForDomain.role.replace(/\s+Head$/i, '')} TEAM
                   </h3>
                 </div>
 
@@ -603,7 +603,7 @@ export default function Team() {
                       </div>
 
                       <div className="text-left flex-grow">
-                        <span className={`inline-block font-mono text-[9px] tracking-wider font-semibold uppercase px-2 py-0.5 rounded-full ${member.badgeColor} border mb-1`}>
+                        <span className={`inline-block font-mono text-[9px] tracking-wider font-semibold uppercase px-2 py-0.5 rounded-full ${member.badgeColor || 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40'} border mb-1`}>
                           {member.tag}
                         </span>
                         <h4 className="font-orbitron font-bold text-base text-white group-hover:text-cyan-300 transition-colors">
@@ -612,10 +612,6 @@ export default function Team() {
                         <span className="font-mono text-[10px] text-slate-400 block mt-0.5">
                           {member.rank}
                         </span>
-                      </div>
-
-                      <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 group-hover:translate-x-1 transition-transform">
-                        <ArrowRight size={18} />
                       </div>
                     </motion.div>
                   ))}
