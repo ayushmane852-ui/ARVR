@@ -1,21 +1,17 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Sparkles } from 'lucide-react';
 
 export default function Footer() {
-  const scrollToSection = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const navigate = useNavigate();
 
   const navLinks = [
-    { id: 'hero', label: 'Home' },
-    { id: 'about', label: 'About' },
-    { id: 'events', label: 'Events' },
-    { id: 'workshops', label: 'Workshops' },
-    { id: 'team', label: 'Team' },
-    { id: 'contact', label: 'Contact' },
+    { id: 'hero', label: 'Home', path: '/' },
+    { id: 'about', label: 'About', path: '/about' },
+    { id: 'events', label: 'Events', path: '/events' },
+    { id: 'workshops', label: 'Workshops', path: '/workshops' },
+    { id: 'team', label: 'Team', path: '/team' },
+    { id: 'contact', label: 'Contact', path: '/contact' },
   ];
 
   return (
@@ -37,7 +33,7 @@ export default function Footer() {
           {navLinks.map((link, idx) => (
             <React.Fragment key={link.id}>
               <button
-                onClick={() => scrollToSection(link.id)}
+                onClick={() => navigate(link.path)}
                 className="hover:text-cyan-300 transition-colors cursor-pointer"
               >
                 {link.label}

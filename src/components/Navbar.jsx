@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Radio } from 'lucide-react';
 import Logo3D from './Logo3D';
 
-export default function Navbar({ activeSection }) {
+export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,20 +23,17 @@ export default function Navbar({ activeSection }) {
   }, []);
 
   const navItems = [
-    { id: 'hero', label: 'Home' },
-    { id: 'about', label: 'About' },
-    { id: 'events', label: 'Events' },
-    { id: 'workshops', label: 'Workshops' },
-    { id: 'team', label: 'Team' },
-    { id: 'contact', label: 'Contact' },
+    { id: 'hero', label: 'Home', path: '/' },
+    { id: 'about', label: 'About', path: '/about' },
+    { id: 'events', label: 'Events', path: '/events' },
+    { id: 'workshops', label: 'Workshops', path: '/workshops' },
+    { id: 'team', label: 'Team', path: '/team' },
+    { id: 'contact', label: 'Contact', path: '/contact' },
   ];
 
-  const scrollToSection = (id) => {
+  const handleNavClick = (path) => {
     setMobileMenuOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    navigate(path);
   };
 
   return (
@@ -48,8 +48,8 @@ export default function Navbar({ activeSection }) {
         
         {/* Left Side: Brand Typography & Logo */}
         <div 
-          onClick={() => scrollToSection('hero')}
-          className="cursor-pointer group flex items-center gap-3"
+          onClick={() => handleNavClick('/')}
+          className="cursor-pointer group flex items-center gap-3 select-none"
         >
           <Logo3D size="nav" />
 
@@ -70,12 +70,12 @@ export default function Navbar({ activeSection }) {
         {/* Right Side: Desktop Nav */}
         <nav className="hidden md:flex items-center gap-1 glass-panel px-6 py-2 rounded-full border-cyan-500/20">
           {navItems.map((item) => {
-            const isActive = activeSection === item.id;
+            const isActive = location.pathname === item.path;
             return (
               <button
                 key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`relative px-4 py-1.5 rounded-full font-space text-sm tracking-wider transition-all duration-300 flex items-center gap-2 ${
+                onClick={() => handleNavClick(item.path)}
+                className={`relative px-4 py-1.5 rounded-full font-space text-sm tracking-wider transition-all duration-300 flex items-center gap-2 cursor-pointer ${
                   isActive
                     ? 'text-white font-medium bg-cyan-500/10 border border-cyan-500/30 text-glow-cyan'
                     : 'text-slate-300 hover:text-cyan-300 hover:bg-white/5'
@@ -94,7 +94,7 @@ export default function Navbar({ activeSection }) {
         <div className="md:hidden">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-lg text-slate-300 hover:text-white glass-panel border-cyan-500/20 focus:outline-none"
+            className="p-2 rounded-lg text-slate-300 hover:text-white glass-panel border-cyan-500/20 focus:outline-none cursor-pointer"
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? <X size={24} className="text-cyan-400" /> : <Menu size={24} />}
@@ -106,12 +106,12 @@ export default function Navbar({ activeSection }) {
       {mobileMenuOpen && (
         <div className="md:hidden glass-panel border-t border-b border-cyan-500/30 px-6 py-6 mt-3 space-y-3 bg-[#050917]/95 backdrop-blur-2xl">
           {navItems.map((item) => {
-            const isActive = activeSection === item.id;
+            const isActive = location.pathname === item.path;
             return (
               <button
                 key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`w-full text-left px-4 py-3 rounded-lg font-space text-base tracking-wider flex items-center justify-between ${
+                onClick={() => handleNavClick(item.path)}
+                className={`w-full text-left px-4 py-3 rounded-lg font-space text-base tracking-wider flex items-center justify-between cursor-pointer ${
                   isActive
                     ? 'text-cyan-300 font-semibold bg-cyan-500/15 border border-cyan-500/30'
                     : 'text-slate-300 hover:bg-white/5'

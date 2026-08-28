@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 
+import ScrollToTop from './components/ScrollToTop';
 import LoadingScreen from './components/LoadingScreen';
 import Navbar from './components/Navbar';
 import Scene3D from './components/Scene3D';
@@ -15,38 +17,36 @@ import SocialSidebar from './components/SocialSidebar';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [activeSection, setActiveSection] = useState('hero');
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const location = useLocation();
 
-  // Track active section and scroll progress for 3D spatial transformations
-  useEffect(() => {
-    const handleScroll = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const currentScroll = window.scrollY;
-      const progress = Math.min(1, Math.max(0, currentScroll / (totalHeight || 1)));
-      setScrollProgress(progress);
+  // Calculate 3D scene transformation progress based on active page route
+  const getRouteScrollProgress = (path) => {
+    switch (path) {
+      case '/':
+        return 0;
+      case '/about':
+        return 0.25;
+      case '/events':
+        return 0.45;
+      case '/workshops':
+        return 0.65;
+      case '/team':
+        return 0.85;
+      case '/contact':
+        return 1.0;
+      default:
+        return 0;
+    }
+  };
 
-      // Section detection
-      const sections = ['hero', 'about', 'events', 'workshops', 'team', 'contact'];
-      for (const sectionId of sections) {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= window.innerHeight * 0.4 && rect.bottom >= window.innerHeight * 0.2) {
-            setActiveSection(sectionId);
-            break;
-          }
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const scrollProgress = getRouteScrollProgress(location.pathname);
 
   return (
     <div className="relative min-h-screen bg-[#030712] text-slate-100 selection:bg-cyan-500/30 selection:text-cyan-200">
       
+      {/* Scroll to top automatically on route changes */}
+      <ScrollToTop />
+
       {/* 1. Loading Screen */}
       <AnimatePresence>
         {isLoading && (
@@ -60,17 +60,94 @@ export default function App() {
       {/* 3. Floating Social Sidebar Dock */}
       <SocialSidebar />
 
-      {/* 4. Main Interface Overlay */}
-      <div className="relative z-10">
-        <Navbar activeSection={activeSection} />
+      {/* 4. Main Multi-Page Interface Overlay */}
+      <div className="relative z-10 flex flex-col min-h-screen justify-between">
+        <Navbar />
         
-        <main>
-          <Hero />
-          <About />
-          <Events />
-          <Workshops />
-          <Team />
-          <Contact />
+        <main className="flex-grow pt-16">
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route 
+                path="/" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -15 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Hero />
+                  </motion.div>
+                } 
+              />
+              <Route 
+                path="/about" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -15 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <About />
+                  </motion.div>
+                } 
+              />
+              <Route 
+                path="/events" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -15 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Events />
+                  </motion.div>
+                } 
+              />
+              <Route 
+                path="/workshops" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -15 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Workshops />
+                  </motion.div>
+                } 
+              />
+              <Route 
+                path="/team" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -15 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Team />
+                  </motion.div>
+                } 
+              />
+              <Route 
+                path="/contact" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -15 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Contact />
+                  </motion.div>
+                } 
+              />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </AnimatePresence>
         </main>
 
         <Footer />

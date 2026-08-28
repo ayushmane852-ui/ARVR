@@ -1,22 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Sparkles, ChevronRight, Scan, Cpu } from 'lucide-react';
 import Logo3D from './Logo3D';
 
-export default function Hero({ onExploreClick }) {
-  const scrollToAbout = () => {
-    const element = document.getElementById('about');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const scrollToContact = () => {
-    const element = document.getElementById('contact');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+export default function Hero() {
+  const navigate = useNavigate();
 
   return (
     <section 
@@ -134,8 +123,8 @@ export default function Hero({ onExploreClick }) {
         >
           {/* Primary CTA */}
           <button
-            onClick={scrollToAbout}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl font-orbitron font-bold text-[11px] sm:text-xs tracking-widest uppercase glass-button-primary flex items-center justify-center gap-2.5 group"
+            onClick={() => navigate('/about')}
+            className="w-full sm:w-auto px-6 py-3 rounded-xl font-orbitron font-bold text-[11px] sm:text-xs tracking-widest uppercase glass-button-primary flex items-center justify-center gap-2.5 group cursor-pointer"
           >
             <span>ENTER THE EXPERIENCE</span>
             <ChevronRight size={15} className="group-hover:translate-x-1 transition-transform" />
@@ -143,8 +132,8 @@ export default function Hero({ onExploreClick }) {
 
           {/* Secondary CTA */}
           <button
-            onClick={scrollToContact}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl font-orbitron font-bold text-[11px] sm:text-xs tracking-widest uppercase glass-button-secondary flex items-center justify-center gap-2.5"
+            onClick={() => navigate('/events')}
+            className="w-full sm:w-auto px-6 py-3 rounded-xl font-orbitron font-bold text-[11px] sm:text-xs tracking-widest uppercase glass-button-secondary flex items-center justify-center gap-2.5 cursor-pointer"
           >
             <Sparkles size={15} className="text-cyan-400" />
             <span>EXPLORE ARVR</span>
@@ -157,7 +146,7 @@ export default function Hero({ onExploreClick }) {
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
           className="flex flex-col items-center gap-1.5 cursor-pointer group"
-          onClick={scrollToAbout}
+          onClick={() => navigate('/about')}
         >
           <span className="font-mono text-[9px] text-cyan-400/60 uppercase tracking-[0.2em] group-hover:text-cyan-300">
             SCROLL TO EXPLORE SPATIAL REALM
