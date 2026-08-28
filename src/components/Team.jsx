@@ -1,9 +1,20 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Sparkles, Shield, Cpu, Layers, Crown, Terminal, Compass, Zap, Scan, Code2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, Shield, Cpu, Layers, Crown, Terminal, Compass, Zap, Scan, Code2, X, Maximize2 } from 'lucide-react';
 
 export default function Team() {
-  const [activeTab, setActiveTab] = useState('all');
+  const [selectedMember, setSelectedMember] = useState(null);
+
+  // Close modal when pressing Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setSelectedMember(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Exact sequence of positions requested by user
   const teamMembers = [
@@ -224,12 +235,12 @@ export default function Team() {
             OUR TEAM
           </h2>
           <p className="font-space text-slate-300 text-sm sm:text-base max-w-2xl mt-3 font-light leading-relaxed">
-            The visionary engineers, designers, and strategic leads driving the AR/VR Spatial Computing Lab.
+            The visionary engineers, designers, and strategic leads driving the AR/VR Spatial Computing Lab. Click any photo to view in high resolution.
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 via-white to-purple-500 rounded-full mt-4" />
         </div>
 
-        {/* TIER 1: EXECUTIVE COMMAND (President, Club Coordinator, Vice Presidents) */}
+        {/* TIER 1: EXECUTIVE COMMAND */}
         <div className="mb-16 sm:mb-20">
           <div className="flex items-center justify-center gap-3 mb-8">
             <Crown size={18} className="text-cyan-400" />
@@ -249,7 +260,8 @@ export default function Team() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
-                  className={`glass-panel rounded-3xl p-5 sm:p-6 border ${member.borderColor} transition-all duration-500 relative group flex flex-col justify-between hover:-translate-y-2`}
+                  onClick={() => setSelectedMember(member)}
+                  className={`glass-panel rounded-3xl p-5 sm:p-6 border ${member.borderColor} transition-all duration-500 relative group flex flex-col justify-between hover:-translate-y-2 cursor-pointer`}
                   style={{
                     boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
                   }}
@@ -265,9 +277,9 @@ export default function Team() {
                   {/* Corner Status Marker */}
                   <div className="flex items-center justify-between font-mono text-[9px] text-cyan-400/70 mb-4 border-b border-cyan-500/15 pb-2">
                     <span className="tracking-widest uppercase">{member.rank}</span>
-                    <span className="flex items-center gap-1 text-emerald-400">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                      ACTIVE
+                    <span className="flex items-center gap-1 text-cyan-400 opacity-80 group-hover:opacity-100">
+                      <Maximize2 size={11} />
+                      CLICK TO VIEW
                     </span>
                   </div>
 
@@ -283,8 +295,12 @@ export default function Team() {
                             e.target.style.display = 'none';
                           }}
                         />
-                        {/* Overlay Gradient */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity" />
+                        {/* Hover Overlay with Zoom Icon */}
+                        <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <div className="p-3 rounded-full bg-cyan-500/30 border border-cyan-400/50 text-cyan-300 shadow-[0_0_15px_rgba(0,240,255,0.5)]">
+                            <Maximize2 size={22} />
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -309,7 +325,7 @@ export default function Team() {
           </div>
         </div>
 
-        {/* TIER 2: CORE BOARD (Secretary, Treasurer, Technical Head) */}
+        {/* TIER 2: CORE BOARD */}
         <div className="mb-16 sm:mb-20">
           <div className="flex items-center justify-center gap-3 mb-8">
             <Cpu size={18} className="text-purple-400" />
@@ -329,11 +345,14 @@ export default function Team() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
-                  className={`glass-panel rounded-3xl p-5 border ${member.borderColor} transition-all duration-500 relative group flex flex-col justify-between hover:-translate-y-2`}
+                  onClick={() => setSelectedMember(member)}
+                  className={`glass-panel rounded-3xl p-5 border ${member.borderColor} transition-all duration-500 relative group flex flex-col justify-between hover:-translate-y-2 cursor-pointer`}
                 >
                   <div className="flex items-center justify-between font-mono text-[9px] text-slate-400 mb-4 border-b border-cyan-500/15 pb-2">
                     <span className="tracking-widest uppercase">{member.rank}</span>
-                    <span className="text-cyan-400">{member.status}</span>
+                    <span className="text-purple-400 opacity-80 group-hover:opacity-100 flex items-center gap-1">
+                      <Maximize2 size={10} /> VIEW PHOTO
+                    </span>
                   </div>
 
                   <div className="relative mb-4 flex justify-center">
@@ -344,6 +363,11 @@ export default function Team() {
                           alt={member.role}
                           className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
                         />
+                        <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <div className="p-2.5 rounded-full bg-purple-500/30 border border-purple-400/50 text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.5)]">
+                            <Maximize2 size={20} />
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -366,7 +390,7 @@ export default function Team() {
           </div>
         </div>
 
-        {/* TIER 3: DOMAIN HEADS & LEADS (Developer, Doc Head, Media Head, Design Head, Logistic Head) */}
+        {/* TIER 3: DOMAIN HEADS & LEADS */}
         <div>
           <div className="flex items-center justify-center gap-3 mb-8">
             <Layers size={18} className="text-pink-400" />
@@ -386,11 +410,14 @@ export default function Team() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.08 }}
-                  className={`glass-panel rounded-2xl p-4 border ${member.borderColor} transition-all duration-500 relative group flex flex-col justify-between hover:-translate-y-1.5`}
+                  onClick={() => setSelectedMember(member)}
+                  className={`glass-panel rounded-2xl p-4 border ${member.borderColor} transition-all duration-500 relative group flex flex-col justify-between hover:-translate-y-1.5 cursor-pointer`}
                 >
                   <div className="font-mono text-[9px] text-slate-500 mb-3 border-b border-cyan-500/10 pb-1.5 flex justify-between">
                     <span>{member.rank}</span>
-                    <span className="text-pink-400/80">LEAD</span>
+                    <span className="text-pink-400 opacity-80 group-hover:opacity-100 flex items-center gap-1">
+                      <Maximize2 size={9} /> VIEW
+                    </span>
                   </div>
 
                   <div className="relative mb-3 flex justify-center">
@@ -401,6 +428,11 @@ export default function Team() {
                           alt={member.role}
                           className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
                         />
+                        <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <div className="p-2 rounded-full bg-pink-500/30 border border-pink-400/50 text-pink-300 shadow-[0_0_15px_rgba(244,63,94,0.5)]">
+                            <Maximize2 size={18} />
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -424,6 +456,68 @@ export default function Team() {
         </div>
 
       </div>
+
+      {/* FULL-SCREEN SPATIAL IMAGE LIGHTBOX MODAL */}
+      <AnimatePresence>
+        {selectedMember && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedMember(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/85 backdrop-blur-2xl cursor-zoom-out"
+          >
+            <motion.div
+              initial={{ scale: 0.85, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.85, opacity: 0, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-3xl w-full glass-panel border border-cyan-500/40 rounded-3xl p-6 sm:p-8 overflow-hidden shadow-[0_0_80px_rgba(0,240,255,0.25)] flex flex-col items-center text-center cursor-default"
+            >
+              {/* Corner HUD Markers */}
+              <div className="absolute top-4 left-6 font-mono text-[10px] text-cyan-400/70 tracking-widest uppercase">
+                SYSTEM // FULL_IMAGE_VIEW
+              </div>
+
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedMember(null)}
+                className="absolute top-4 right-6 p-2 rounded-full glass-panel border-cyan-500/30 text-slate-300 hover:text-white hover:border-cyan-400 transition-all cursor-pointer group"
+                aria-label="Close Lightbox"
+              >
+                <X size={20} className="group-hover:rotate-90 transition-transform duration-300 text-cyan-400" />
+              </button>
+
+              {/* Header Title */}
+              <div className="mt-4 mb-6">
+                <span className={`inline-block font-mono text-xs tracking-wider font-semibold uppercase px-3 py-1 rounded-full ${selectedMember.badgeColor} border mb-2`}>
+                  {selectedMember.tag}
+                </span>
+                <h3 className="font-orbitron font-black text-2xl sm:text-4xl text-white text-glow-cyan">
+                  {selectedMember.role}
+                </h3>
+              </div>
+
+              {/* High-Res Full Image Container */}
+              <div className="relative max-h-[60vh] sm:max-h-[65vh] w-full flex items-center justify-center overflow-hidden rounded-2xl bg-slate-950/80 p-2 border border-cyan-500/20 shadow-2xl">
+                <img
+                  src={selectedMember.image}
+                  alt={selectedMember.role}
+                  className="max-h-[55vh] sm:max-h-[60vh] w-auto max-w-full object-contain rounded-xl shadow-lg border border-cyan-500/20"
+                />
+              </div>
+
+              {/* Footer Indicator */}
+              <div className="mt-6 flex items-center justify-between w-full font-mono text-xs text-slate-400 border-t border-cyan-500/15 pt-4">
+                <span>RANK: {selectedMember.rank}</span>
+                <span className="text-cyan-400 font-semibold uppercase">PRESS ESC OR CLICK OUTSIDE TO CLOSE</span>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </section>
   );
 }
