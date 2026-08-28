@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Shield, Cpu, Layers, Crown, Terminal, Compass, Zap, Scan, Code2, X, Maximize2 } from 'lucide-react';
+import { Sparkles, Shield, Cpu, Layers, Crown, Terminal, Compass, Zap, Scan, Code2, X, Maximize2, Users, ArrowRight } from 'lucide-react';
 
 export default function Team() {
   const [selectedMember, setSelectedMember] = useState(null);
@@ -16,7 +16,6 @@ export default function Team() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Exact sequence of positions requested by user
   const teamMembers = [
     // 1. President
     {
@@ -102,7 +101,7 @@ export default function Team() {
       id: 'treasurer',
       role: 'Treasurer',
       category: 'board',
-      image: '/Images/Team/Treasure.png',
+      image: '/Images/Team/Treasure.jpeg',
       tag: 'FINANCE & ASSETS',
       status: 'TREASURY_LEAD',
       color: 'from-amber-400 to-yellow-600',
@@ -112,26 +111,13 @@ export default function Team() {
       rank: '06 // TREASURER',
       icon: Zap,
     },
-    // 7. Developer
-    {
-      id: 'developer',
-      role: 'Developer',
-      category: 'board',
-      image: '/Images/Team/Developer.jpeg',
-      tag: 'CORE DEVELOPER',
-      status: 'SPATIAL_DEV',
-      color: 'from-cyan-400 to-blue-600',
-      glowColor: 'rgba(6, 182, 212, 0.35)',
-      borderColor: 'border-cyan-500/40 hover:border-cyan-300',
-      badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
-      rank: '07 // DEVELOPER',
-      icon: Scan,
-    },
-    // 8. Technical Head
+
+    // TECHNICAL DEPARTMENT
+    // 7. Technical Head
     {
       id: 'technical_head',
       role: 'Technical Head',
-      category: 'domain',
+      category: 'technical',
       image: '/Images/Team/Technical head.jpeg',
       tag: 'TECHNICAL LEAD',
       status: 'TECH_ARCHITECTURE',
@@ -139,10 +125,44 @@ export default function Team() {
       glowColor: 'rgba(244, 63, 94, 0.35)',
       borderColor: 'border-pink-500/40 hover:border-pink-300',
       badgeColor: 'bg-pink-500/20 text-pink-300 border-pink-400/40',
-      rank: '08 // TECH_HEAD',
+      rank: '07 // TECH_HEAD',
       icon: Code2,
+      subMemberId: 'technical_co_head',
     },
-    // 9. Doc Head
+    // 8. Technical Co-head
+    {
+      id: 'technical_co_head',
+      role: 'Technical Co-head',
+      category: 'technical',
+      image: '/Images/Team/Technical Co-head.jpeg',
+      tag: 'TECHNICAL CO-LEAD',
+      status: 'SPATIAL_ENGINEERING',
+      color: 'from-cyan-400 to-blue-600',
+      glowColor: 'rgba(6, 182, 212, 0.35)',
+      borderColor: 'border-cyan-500/40 hover:border-cyan-300',
+      badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+      rank: '08 // TECH_CO_HEAD',
+      icon: Scan,
+      parentMemberId: 'technical_head',
+    },
+
+    // DOMAIN LEADS
+    // 9. Content & Creativity Head
+    {
+      id: 'content_creativity_head',
+      role: 'Content & Creativity Head',
+      category: 'domain',
+      image: '/Images/Team/Content and Creativity head.jpeg',
+      tag: 'CREATIVE LEAD',
+      status: 'CREATIVE_DIRECTION',
+      color: 'from-amber-400 via-orange-500 to-red-500',
+      glowColor: 'rgba(245, 158, 11, 0.35)',
+      borderColor: 'border-amber-500/40 hover:border-amber-300',
+      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-400/40',
+      rank: '09 // CREATIVE_HEAD',
+      icon: Sparkles,
+    },
+    // 10. Doc Head
     {
       id: 'doc_head',
       role: 'Doc Head',
@@ -154,10 +174,10 @@ export default function Team() {
       glowColor: 'rgba(56, 189, 248, 0.35)',
       borderColor: 'border-sky-500/40 hover:border-sky-300',
       badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-400/40',
-      rank: '09 // DOC_HEAD',
+      rank: '10 // DOC_HEAD',
       icon: Terminal,
     },
-    // 10. Media Head
+    // 11. Media Head
     {
       id: 'media_head',
       role: 'Media Head',
@@ -169,25 +189,25 @@ export default function Team() {
       glowColor: 'rgba(232, 121, 249, 0.35)',
       borderColor: 'border-fuchsia-500/40 hover:border-fuchsia-300',
       badgeColor: 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-400/40',
-      rank: '10 // MEDIA_HEAD',
+      rank: '11 // MEDIA_HEAD',
       icon: Sparkles,
     },
-    // 11. Design Head
+    // 12. Design Head
     {
       id: 'design_head',
       role: 'Design Head',
       category: 'domain',
       image: '/Images/Team/Design head.jpeg',
       tag: 'DESIGN & UI/UX HEAD',
-      status: 'CREATIVE_DIRECTION',
+      status: 'CREATIVE_DESIGN',
       color: 'from-violet-400 to-purple-600',
       glowColor: 'rgba(167, 139, 250, 0.35)',
       borderColor: 'border-violet-500/40 hover:border-violet-300',
       badgeColor: 'bg-violet-500/20 text-violet-300 border-violet-400/40',
-      rank: '11 // DESIGN_HEAD',
+      rank: '12 // DESIGN_HEAD',
       icon: Compass,
     },
-    // 12. Logistic Head
+    // 13. Logistic Head
     {
       id: 'logistic_head',
       role: 'Logistic Head',
@@ -199,14 +219,24 @@ export default function Team() {
       glowColor: 'rgba(45, 212, 191, 0.35)',
       borderColor: 'border-teal-500/40 hover:border-teal-300',
       badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-400/40',
-      rank: '12 // LOGISTIC_HEAD',
+      rank: '13 // LOGISTIC_HEAD',
       icon: Shield,
     },
   ];
 
   const executiveMembers = teamMembers.filter((m) => m.category === 'executive');
   const boardMembers = teamMembers.filter((m) => m.category === 'board');
+  const technicalMembers = teamMembers.filter((m) => m.category === 'technical');
   const domainMembers = teamMembers.filter((m) => m.category === 'domain');
+
+  // Linked member for modal lookup
+  const linkedMember = selectedMember
+    ? teamMembers.find(
+        (m) =>
+          m.id === selectedMember.subMemberId ||
+          m.id === selectedMember.parentMemberId
+      )
+    : null;
 
   return (
     <section id="team" className="relative py-20 sm:py-28 px-4 sm:px-6 overflow-hidden">
@@ -262,28 +292,20 @@ export default function Team() {
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
                   onClick={() => setSelectedMember(member)}
                   className={`glass-panel rounded-3xl p-5 sm:p-6 border ${member.borderColor} transition-all duration-500 relative group flex flex-col justify-between hover:-translate-y-2 cursor-pointer`}
-                  style={{
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-                  }}
+                  style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}
                 >
-                  {/* Glowing aura on hover */}
                   <div 
                     className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{
-                      boxShadow: `0 0 40px ${member.glowColor}`,
-                    }}
+                    style={{ boxShadow: `0 0 40px ${member.glowColor}` }}
                   />
 
-                  {/* Corner Status Marker */}
                   <div className="flex items-center justify-between font-mono text-[9px] text-cyan-400/70 mb-4 border-b border-cyan-500/15 pb-2">
                     <span className="tracking-widest uppercase">{member.rank}</span>
                     <span className="flex items-center gap-1 text-cyan-400 opacity-80 group-hover:opacity-100">
-                      <Maximize2 size={11} />
-                      CLICK TO VIEW
+                      <Maximize2 size={11} /> CLICK TO VIEW
                     </span>
                   </div>
 
-                  {/* Creative Profile Image Frame */}
                   <div className="relative mb-5 flex justify-center">
                     <div className={`relative w-44 h-44 sm:w-48 sm:h-48 rounded-2xl p-1 bg-gradient-to-tr ${member.color} shadow-xl group-hover:scale-105 transition-transform duration-500`}>
                       <div className="w-full h-full rounded-xl overflow-hidden bg-slate-950/90 relative">
@@ -291,11 +313,8 @@ export default function Team() {
                           src={member.image}
                           alt={member.role}
                           className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 filter contrast-105"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                          }}
+                          onError={(e) => { e.target.style.display = 'none'; }}
                         />
-                        {/* Hover Overlay with Zoom Icon */}
                         <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                           <div className="p-3 rounded-full bg-cyan-500/30 border border-cyan-400/50 text-cyan-300 shadow-[0_0_15px_rgba(0,240,255,0.5)]">
                             <Maximize2 size={22} />
@@ -304,13 +323,11 @@ export default function Team() {
                       </div>
                     </div>
 
-                    {/* Cyber Badge Icon */}
                     <div className="absolute -bottom-2 right-4 p-2 rounded-xl bg-slate-950 border border-cyan-500/40 text-cyan-400 shadow-lg group-hover:rotate-12 transition-transform">
                       <IconComp size={18} />
                     </div>
                   </div>
 
-                  {/* Title & Tag */}
                   <div className="text-center">
                     <span className={`inline-block font-mono text-[10px] tracking-wider font-semibold uppercase px-3 py-1 rounded-full ${member.badgeColor} border mb-2`}>
                       {member.tag}
@@ -325,7 +342,7 @@ export default function Team() {
           </div>
         </div>
 
-        {/* TIER 2: CORE BOARD */}
+        {/* TIER 2: CORE OPERATIONS BOARD (Secretary & Treasurer) */}
         <div className="mb-16 sm:mb-20">
           <div className="flex items-center justify-center gap-3 mb-8">
             <Cpu size={18} className="text-purple-400" />
@@ -335,7 +352,7 @@ export default function Team() {
             <div className="w-12 h-[1px] bg-purple-500/30" />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
             {boardMembers.map((member, idx) => {
               const IconComp = member.icon;
               return (
@@ -356,7 +373,7 @@ export default function Team() {
                   </div>
 
                   <div className="relative mb-4 flex justify-center">
-                    <div className={`relative w-40 h-40 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform duration-500`}>
+                    <div className={`relative w-44 h-44 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform duration-500`}>
                       <div className="w-full h-full rounded-[14px] overflow-hidden bg-slate-950 relative">
                         <img
                           src={member.image}
@@ -390,14 +407,79 @@ export default function Team() {
           </div>
         </div>
 
-        {/* TIER 3: DOMAIN HEADS & LEADS */}
-        <div>
+        {/* TIER 3: TECHNICAL DEPARTMENT (Technical Head & Technical Co-head) */}
+        <div className="mb-16 sm:mb-20">
           <div className="flex items-center justify-center gap-3 mb-8">
-            <Layers size={18} className="text-pink-400" />
+            <Code2 size={18} className="text-pink-400" />
             <h3 className="font-orbitron font-bold text-lg sm:text-xl tracking-wider uppercase text-pink-300">
-              DOMAIN LEADERSHIP
+              TECHNICAL DEPARTMENT
             </h3>
             <div className="w-12 h-[1px] bg-pink-500/30" />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            {technicalMembers.map((member, idx) => {
+              const IconComp = member.icon;
+              return (
+                <motion.div
+                  key={member.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+                  onClick={() => setSelectedMember(member)}
+                  className={`glass-panel rounded-3xl p-6 border ${member.borderColor} transition-all duration-500 relative group flex flex-col justify-between hover:-translate-y-2 cursor-pointer shadow-[0_10px_35px_rgba(244,63,94,0.15)]`}
+                >
+                  <div className="flex items-center justify-between font-mono text-[9px] text-pink-400/80 mb-4 border-b border-pink-500/20 pb-2">
+                    <span className="tracking-widest uppercase">{member.rank}</span>
+                    <span className="flex items-center gap-1 text-pink-300">
+                      <Users size={11} /> TECH TEAM
+                    </span>
+                  </div>
+
+                  <div className="relative mb-5 flex justify-center">
+                    <div className={`relative w-44 h-44 rounded-2xl p-1 bg-gradient-to-tr ${member.color} shadow-xl group-hover:scale-105 transition-transform duration-500`}>
+                      <div className="w-full h-full rounded-xl overflow-hidden bg-slate-950 relative">
+                        <img
+                          src={member.image}
+                          alt={member.role}
+                          className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <div className="p-3 rounded-full bg-pink-500/30 border border-pink-400/50 text-pink-300 shadow-[0_0_15px_rgba(244,63,94,0.5)]">
+                            <Maximize2 size={22} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="absolute -bottom-2 right-4 p-2 rounded-xl bg-slate-950 border border-pink-500/40 text-pink-400 shadow-lg">
+                      <IconComp size={18} />
+                    </div>
+                  </div>
+
+                  <div className="text-center">
+                    <span className={`inline-block font-mono text-[10px] tracking-wider font-semibold uppercase px-3 py-1 rounded-full ${member.badgeColor} border mb-2`}>
+                      {member.tag}
+                    </span>
+                    <h4 className="font-orbitron font-black text-xl text-white group-hover:text-pink-300 transition-colors">
+                      {member.role}
+                    </h4>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* TIER 4: DOMAIN LEADS (Content & Creativity, Doc, Media, Design, Logistic) */}
+        <div>
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <Layers size={18} className="text-amber-400" />
+            <h3 className="font-orbitron font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300">
+              DOMAIN LEADERSHIP
+            </h3>
+            <div className="w-12 h-[1px] bg-amber-500/30" />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
@@ -415,7 +497,7 @@ export default function Team() {
                 >
                   <div className="font-mono text-[9px] text-slate-500 mb-3 border-b border-cyan-500/10 pb-1.5 flex justify-between">
                     <span>{member.rank}</span>
-                    <span className="text-pink-400 opacity-80 group-hover:opacity-100 flex items-center gap-1">
+                    <span className="text-amber-400 opacity-80 group-hover:opacity-100 flex items-center gap-1">
                       <Maximize2 size={9} /> VIEW
                     </span>
                   </div>
@@ -429,14 +511,14 @@ export default function Team() {
                           className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
                         />
                         <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="p-2 rounded-full bg-pink-500/30 border border-pink-400/50 text-pink-300 shadow-[0_0_15px_rgba(244,63,94,0.5)]">
+                          <div className="p-2 rounded-full bg-amber-500/30 border border-amber-400/50 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.5)]">
                             <Maximize2 size={18} />
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="absolute -bottom-1.5 right-4 p-1.5 rounded-lg bg-slate-950 border border-pink-500/40 text-pink-400">
+                    <div className="absolute -bottom-1.5 right-4 p-1.5 rounded-lg bg-slate-950 border border-amber-500/40 text-amber-400">
                       <IconComp size={14} />
                     </div>
                   </div>
@@ -445,7 +527,7 @@ export default function Team() {
                     <span className={`inline-block font-mono text-[8px] tracking-wider font-semibold uppercase px-2 py-0.5 rounded-full ${member.badgeColor} border mb-1`}>
                       {member.tag}
                     </span>
-                    <h4 className="font-orbitron font-bold text-base text-white group-hover:text-pink-300 transition-colors">
+                    <h4 className="font-orbitron font-bold text-base text-white group-hover:text-amber-300 transition-colors">
                       {member.role}
                     </h4>
                   </div>
@@ -465,7 +547,7 @@ export default function Team() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedMember(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/85 backdrop-blur-2xl cursor-zoom-out"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/85 backdrop-blur-2xl cursor-zoom-out overflow-y-auto"
           >
             <motion.div
               initial={{ scale: 0.85, opacity: 0, y: 20 }}
@@ -473,7 +555,7 @@ export default function Team() {
               exit={{ scale: 0.85, opacity: 0, y: 20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-w-3xl w-full glass-panel border border-cyan-500/40 rounded-3xl p-6 sm:p-8 overflow-hidden shadow-[0_0_80px_rgba(0,240,255,0.25)] flex flex-col items-center text-center cursor-default"
+              className="relative max-w-3xl w-full glass-panel border border-cyan-500/40 rounded-3xl p-6 sm:p-8 overflow-hidden shadow-[0_0_80px_rgba(0,240,255,0.25)] flex flex-col items-center text-center cursor-default my-auto"
             >
               {/* Corner HUD Markers */}
               <div className="absolute top-4 left-6 font-mono text-[10px] text-cyan-400/70 tracking-widest uppercase">
@@ -490,26 +572,63 @@ export default function Team() {
               </button>
 
               {/* Header Title */}
-              <div className="mt-4 mb-6">
+              <div className="mt-4 mb-5">
                 <span className={`inline-block font-mono text-xs tracking-wider font-semibold uppercase px-3 py-1 rounded-full ${selectedMember.badgeColor} border mb-2`}>
                   {selectedMember.tag}
                 </span>
-                <h3 className="font-orbitron font-black text-2xl sm:text-4xl text-white text-glow-cyan">
+                <h3 className="font-orbitron font-black text-2xl sm:text-3xl text-white text-glow-cyan">
                   {selectedMember.role}
                 </h3>
               </div>
 
               {/* High-Res Full Image Container */}
-              <div className="relative max-h-[60vh] sm:max-h-[65vh] w-full flex items-center justify-center overflow-hidden rounded-2xl bg-slate-950/80 p-2 border border-cyan-500/20 shadow-2xl">
+              <div className="relative max-h-[50vh] sm:max-h-[55vh] w-full flex items-center justify-center overflow-hidden rounded-2xl bg-slate-950/80 p-2 border border-cyan-500/20 shadow-2xl">
                 <img
                   src={selectedMember.image}
                   alt={selectedMember.role}
-                  className="max-h-[55vh] sm:max-h-[60vh] w-auto max-w-full object-contain rounded-xl shadow-lg border border-cyan-500/20"
+                  className="max-h-[45vh] sm:max-h-[50vh] w-auto max-w-full object-contain rounded-xl shadow-lg border border-cyan-500/20"
                 />
               </div>
 
+              {/* LINKED TECHNICAL TEAM MEMBER SECTION */}
+              {linkedMember && (
+                <div className="mt-6 w-full glass-panel p-4 rounded-2xl border border-pink-500/30 bg-pink-500/5">
+                  <div className="flex items-center justify-between font-mono text-xs text-pink-300 mb-3 px-1">
+                    <span className="flex items-center gap-1.5 uppercase font-bold tracking-wider">
+                      <Users size={14} className="text-pink-400" />
+                      {selectedMember.subMemberId ? 'TECHNICAL TEAM CO-HEAD' : 'TECHNICAL HEAD'}
+                    </span>
+                    <span className="text-[10px] text-slate-400">CLICK BELOW TO SWITCH IMAGE</span>
+                  </div>
+
+                  <div 
+                    onClick={() => setSelectedMember(linkedMember)}
+                    className="flex items-center gap-4 p-3 rounded-xl bg-slate-950/80 border border-pink-500/20 hover:border-pink-400/60 cursor-pointer group transition-all"
+                  >
+                    <div className="w-14 h-14 rounded-lg overflow-hidden border border-pink-400/40 flex-shrink-0">
+                      <img 
+                        src={linkedMember.image} 
+                        alt={linkedMember.role} 
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform" 
+                      />
+                    </div>
+                    <div className="text-left flex-grow">
+                      <h4 className="font-orbitron font-bold text-sm text-white group-hover:text-pink-300 transition-colors">
+                        {linkedMember.role}
+                      </h4>
+                      <span className="font-mono text-[10px] text-pink-400/80 uppercase">
+                        {linkedMember.tag}
+                      </span>
+                    </div>
+                    <div className="p-2 rounded-lg bg-pink-500/20 text-pink-300 group-hover:translate-x-1 transition-transform">
+                      <ArrowRight size={16} />
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Footer Indicator */}
-              <div className="mt-6 flex items-center justify-between w-full font-mono text-xs text-slate-400 border-t border-cyan-500/15 pt-4">
+              <div className="mt-5 flex items-center justify-between w-full font-mono text-xs text-slate-400 border-t border-cyan-500/15 pt-3">
                 <span>RANK: {selectedMember.rank}</span>
                 <span className="text-cyan-400 font-semibold uppercase">PRESS ESC OR CLICK OUTSIDE TO CLOSE</span>
               </div>
