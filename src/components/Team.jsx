@@ -112,26 +112,11 @@ export default function Team() {
       rank: '06 // TREASURER',
       icon: Zap,
     },
-    // 7. Technical Head
-    {
-      id: 'technical_head',
-      role: 'Technical Head',
-      category: 'board',
-      image: '/Images/Team/Technical head.jpeg',
-      tag: 'TECHNICAL LEAD',
-      status: 'TECH_ARCHITECTURE',
-      color: 'from-pink-400 to-rose-600',
-      glowColor: 'rgba(244, 63, 94, 0.35)',
-      borderColor: 'border-pink-500/40 hover:border-pink-300',
-      badgeColor: 'bg-pink-500/20 text-pink-300 border-pink-400/40',
-      rank: '07 // TECH_HEAD',
-      icon: Code2,
-    },
-    // 8. Developer
+    // 7. Developer
     {
       id: 'developer',
       role: 'Developer',
-      category: 'domain',
+      category: 'board',
       image: '/Images/Team/Developer.jpeg',
       tag: 'CORE DEVELOPER',
       status: 'SPATIAL_DEV',
@@ -139,8 +124,23 @@ export default function Team() {
       glowColor: 'rgba(6, 182, 212, 0.35)',
       borderColor: 'border-cyan-500/40 hover:border-cyan-300',
       badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
-      rank: '08 // DEVELOPER',
+      rank: '07 // DEVELOPER',
       icon: Scan,
+    },
+    // 8. Technical Head
+    {
+      id: 'technical_head',
+      role: 'Technical Head',
+      category: 'domain',
+      image: '/Images/Team/Technical head.jpeg',
+      tag: 'TECHNICAL LEAD',
+      status: 'TECH_ARCHITECTURE',
+      color: 'from-pink-400 to-rose-600',
+      glowColor: 'rgba(244, 63, 94, 0.35)',
+      borderColor: 'border-pink-500/40 hover:border-pink-300',
+      badgeColor: 'bg-pink-500/20 text-pink-300 border-pink-400/40',
+      rank: '08 // TECH_HEAD',
+      icon: Code2,
     },
     // 9. Doc Head
     {
