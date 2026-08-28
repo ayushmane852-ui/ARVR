@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Shield, Cpu, Layers, Crown, Terminal, Compass, Zap, Scan, Code2, X, Maximize2, Users, ArrowRight } from 'lucide-react';
+import { Sparkles, Shield, Cpu, Layers, Crown, Terminal, Compass, Zap, Scan, Code2, X, Maximize2, Users, ArrowRight, UserPlus } from 'lucide-react';
 
 export default function Team() {
   const [selectedMember, setSelectedMember] = useState(null);
+  const [viewingTeamForDomain, setViewingTeamForDomain] = useState(null);
 
-  // Close modal when pressing Escape key
+  // Close modals on Escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         setSelectedMember(null);
+        setViewingTeamForDomain(null);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -17,7 +19,7 @@ export default function Team() {
   }, []);
 
   const teamMembers = [
-    // 1. President
+    // 1. Executive Command
     {
       id: 'president',
       role: 'President',
@@ -31,9 +33,7 @@ export default function Team() {
       badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/50',
       rank: '01 // EXECUTIVE',
       icon: Crown,
-      featured: true,
     },
-    // 2. Club Coordinator
     {
       id: 'club_coordinator',
       role: 'Club Coordinator',
@@ -47,9 +47,7 @@ export default function Team() {
       badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-400/50',
       rank: '02 // COORDINATION',
       icon: Shield,
-      featured: true,
     },
-    // 3. Vice President 1
     {
       id: 'vp1',
       role: 'Vice President',
@@ -63,9 +61,7 @@ export default function Team() {
       badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-400/50',
       rank: '03 // VP_CORE',
       icon: Cpu,
-      featured: true,
     },
-    // 4. Vice President 2
     {
       id: 'vp2',
       role: 'Vice President',
@@ -79,9 +75,9 @@ export default function Team() {
       badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-400/50',
       rank: '04 // VP_TECH',
       icon: Layers,
-      featured: true,
     },
-    // 5. Secretary
+
+    // 2. Core Operations Board (2 Treasurers + Secretary)
     {
       id: 'secretary',
       role: 'Secretary',
@@ -96,28 +92,40 @@ export default function Team() {
       rank: '05 // SECRETARY',
       icon: Terminal,
     },
-    // 6. Treasurer
     {
-      id: 'treasurer',
+      id: 'treasurer1',
       role: 'Treasurer',
       category: 'board',
-      image: '/Images/Team/Treasure.jpeg',
+      image: '/Images/Team/Treasure.png',
       tag: 'FINANCE & ASSETS',
       status: 'TREASURY_LEAD',
       color: 'from-amber-400 to-yellow-600',
       glowColor: 'rgba(251, 191, 36, 0.35)',
       borderColor: 'border-amber-500/40 hover:border-amber-300',
       badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-400/40',
-      rank: '06 // TREASURER',
+      rank: '06 // TREASURER I',
+      icon: Zap,
+    },
+    {
+      id: 'treasurer2',
+      role: 'Treasurer',
+      category: 'board',
+      image: '/Images/Team/Treasure.jpeg',
+      tag: 'FINANCE & ASSETS',
+      status: 'TREASURY_LEAD',
+      color: 'from-amber-400 to-yellow-500',
+      glowColor: 'rgba(251, 191, 36, 0.35)',
+      borderColor: 'border-amber-500/40 hover:border-amber-300',
+      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-400/40',
+      rank: '07 // TREASURER II',
       icon: Zap,
     },
 
-    // TECHNICAL DEPARTMENT
-    // 7. Technical Head
+    // 3. Domain Leadership
     {
       id: 'technical_head',
       role: 'Technical Head',
-      category: 'technical',
+      category: 'domain',
       image: '/Images/Team/Technical head.jpeg',
       tag: 'TECHNICAL LEAD',
       status: 'TECH_ARCHITECTURE',
@@ -125,29 +133,20 @@ export default function Team() {
       glowColor: 'rgba(244, 63, 94, 0.35)',
       borderColor: 'border-pink-500/40 hover:border-pink-300',
       badgeColor: 'bg-pink-500/20 text-pink-300 border-pink-400/40',
-      rank: '07 // TECH_HEAD',
+      rank: '08 // TECH_HEAD',
       icon: Code2,
-      subMemberId: 'technical_co_head',
+      subTeam: [
+        {
+          id: 'technical_co_head',
+          role: 'Technical Co-head',
+          image: '/Images/Team/Technical Co-head.jpeg',
+          tag: 'TECHNICAL CO-LEAD',
+          rank: 'TECH_MEMBER_01',
+          status: 'SPATIAL_DEV',
+          badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+        }
+      ]
     },
-    // 8. Technical Co-head
-    {
-      id: 'technical_co_head',
-      role: 'Technical Co-head',
-      category: 'technical',
-      image: '/Images/Team/Technical Co-head.jpeg',
-      tag: 'TECHNICAL CO-LEAD',
-      status: 'SPATIAL_ENGINEERING',
-      color: 'from-cyan-400 to-blue-600',
-      glowColor: 'rgba(6, 182, 212, 0.35)',
-      borderColor: 'border-cyan-500/40 hover:border-cyan-300',
-      badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
-      rank: '08 // TECH_CO_HEAD',
-      icon: Scan,
-      parentMemberId: 'technical_head',
-    },
-
-    // DOMAIN LEADS
-    // 9. Content & Creativity Head
     {
       id: 'content_creativity_head',
       role: 'Content & Creativity Head',
@@ -161,8 +160,8 @@ export default function Team() {
       badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-400/40',
       rank: '09 // CREATIVE_HEAD',
       icon: Sparkles,
+      subTeam: []
     },
-    // 10. Doc Head
     {
       id: 'doc_head',
       role: 'Doc Head',
@@ -176,8 +175,8 @@ export default function Team() {
       badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-400/40',
       rank: '10 // DOC_HEAD',
       icon: Terminal,
+      subTeam: []
     },
-    // 11. Media Head
     {
       id: 'media_head',
       role: 'Media Head',
@@ -191,8 +190,8 @@ export default function Team() {
       badgeColor: 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-400/40',
       rank: '11 // MEDIA_HEAD',
       icon: Sparkles,
+      subTeam: []
     },
-    // 12. Design Head
     {
       id: 'design_head',
       role: 'Design Head',
@@ -206,8 +205,8 @@ export default function Team() {
       badgeColor: 'bg-violet-500/20 text-violet-300 border-violet-400/40',
       rank: '12 // DESIGN_HEAD',
       icon: Compass,
+      subTeam: []
     },
-    // 13. Logistic Head
     {
       id: 'logistic_head',
       role: 'Logistic Head',
@@ -221,22 +220,13 @@ export default function Team() {
       badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-400/40',
       rank: '13 // LOGISTIC_HEAD',
       icon: Shield,
+      subTeam: []
     },
   ];
 
   const executiveMembers = teamMembers.filter((m) => m.category === 'executive');
   const boardMembers = teamMembers.filter((m) => m.category === 'board');
-  const technicalMembers = teamMembers.filter((m) => m.category === 'technical');
   const domainMembers = teamMembers.filter((m) => m.category === 'domain');
-
-  // Linked member for modal lookup
-  const linkedMember = selectedMember
-    ? teamMembers.find(
-        (m) =>
-          m.id === selectedMember.subMemberId ||
-          m.id === selectedMember.parentMemberId
-      )
-    : null;
 
   return (
     <section id="team" className="relative py-20 sm:py-28 px-4 sm:px-6 overflow-hidden">
@@ -265,7 +255,7 @@ export default function Team() {
             OUR TEAM
           </h2>
           <p className="font-space text-slate-300 text-sm sm:text-base max-w-2xl mt-3 font-light leading-relaxed">
-            The visionary engineers, designers, and strategic leads driving the AR/VR Spatial Computing Lab. Click any photo to view in high resolution.
+            The visionary engineers, designers, and strategic leads driving the AR/VR Spatial Computing Lab. Click any photo to enlarge or use "View Team" to see department members.
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 via-white to-purple-500 rounded-full mt-4" />
         </div>
@@ -342,7 +332,7 @@ export default function Team() {
           </div>
         </div>
 
-        {/* TIER 2: CORE OPERATIONS BOARD (Secretary & Treasurer) */}
+        {/* TIER 2: CORE OPERATIONS BOARD (Secretary & 2 Treasurers) */}
         <div className="mb-16 sm:mb-20">
           <div className="flex items-center justify-center gap-3 mb-8">
             <Cpu size={18} className="text-purple-400" />
@@ -352,7 +342,7 @@ export default function Team() {
             <div className="w-12 h-[1px] bg-purple-500/30" />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {boardMembers.map((member, idx) => {
               const IconComp = member.icon;
               return (
@@ -373,7 +363,7 @@ export default function Team() {
                   </div>
 
                   <div className="relative mb-4 flex justify-center">
-                    <div className={`relative w-44 h-44 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform duration-500`}>
+                    <div className={`relative w-40 h-40 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform duration-500`}>
                       <div className="w-full h-full rounded-[14px] overflow-hidden bg-slate-950 relative">
                         <img
                           src={member.image}
@@ -407,84 +397,21 @@ export default function Team() {
           </div>
         </div>
 
-        {/* TIER 3: TECHNICAL DEPARTMENT (Technical Head & Technical Co-head) */}
-        <div className="mb-16 sm:mb-20">
+        {/* TIER 3: DOMAIN LEADERSHIP (Technical Head, Content & Creativity, Doc, Media, Design, Logistic) */}
+        <div>
           <div className="flex items-center justify-center gap-3 mb-8">
-            <Code2 size={18} className="text-pink-400" />
+            <Layers size={18} className="text-pink-400" />
             <h3 className="font-orbitron font-bold text-lg sm:text-xl tracking-wider uppercase text-pink-300">
-              TECHNICAL DEPARTMENT
+              DOMAIN LEADERSHIP
             </h3>
             <div className="w-12 h-[1px] bg-pink-500/30" />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            {technicalMembers.map((member, idx) => {
-              const IconComp = member.icon;
-              return (
-                <motion.div
-                  key={member.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: idx * 0.1 }}
-                  onClick={() => setSelectedMember(member)}
-                  className={`glass-panel rounded-3xl p-6 border ${member.borderColor} transition-all duration-500 relative group flex flex-col justify-between hover:-translate-y-2 cursor-pointer shadow-[0_10px_35px_rgba(244,63,94,0.15)]`}
-                >
-                  <div className="flex items-center justify-between font-mono text-[9px] text-pink-400/80 mb-4 border-b border-pink-500/20 pb-2">
-                    <span className="tracking-widest uppercase">{member.rank}</span>
-                    <span className="flex items-center gap-1 text-pink-300">
-                      <Users size={11} /> TECH TEAM
-                    </span>
-                  </div>
-
-                  <div className="relative mb-5 flex justify-center">
-                    <div className={`relative w-44 h-44 rounded-2xl p-1 bg-gradient-to-tr ${member.color} shadow-xl group-hover:scale-105 transition-transform duration-500`}>
-                      <div className="w-full h-full rounded-xl overflow-hidden bg-slate-950 relative">
-                        <img
-                          src={member.image}
-                          alt={member.role}
-                          className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="p-3 rounded-full bg-pink-500/30 border border-pink-400/50 text-pink-300 shadow-[0_0_15px_rgba(244,63,94,0.5)]">
-                            <Maximize2 size={22} />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="absolute -bottom-2 right-4 p-2 rounded-xl bg-slate-950 border border-pink-500/40 text-pink-400 shadow-lg">
-                      <IconComp size={18} />
-                    </div>
-                  </div>
-
-                  <div className="text-center">
-                    <span className={`inline-block font-mono text-[10px] tracking-wider font-semibold uppercase px-3 py-1 rounded-full ${member.badgeColor} border mb-2`}>
-                      {member.tag}
-                    </span>
-                    <h4 className="font-orbitron font-black text-xl text-white group-hover:text-pink-300 transition-colors">
-                      {member.role}
-                    </h4>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* TIER 4: DOMAIN LEADS (Content & Creativity, Doc, Media, Design, Logistic) */}
-        <div>
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <Layers size={18} className="text-amber-400" />
-            <h3 className="font-orbitron font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300">
-              DOMAIN LEADERSHIP
-            </h3>
-            <div className="w-12 h-[1px] bg-amber-500/30" />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {domainMembers.map((member, idx) => {
               const IconComp = member.icon;
+              const subCount = member.subTeam ? member.subTeam.length : 0;
+
               return (
                 <motion.div
                   key={member.id}
@@ -492,44 +419,65 @@ export default function Team() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.08 }}
-                  onClick={() => setSelectedMember(member)}
-                  className={`glass-panel rounded-2xl p-4 border ${member.borderColor} transition-all duration-500 relative group flex flex-col justify-between hover:-translate-y-1.5 cursor-pointer`}
+                  className={`glass-panel rounded-3xl p-6 border ${member.borderColor} transition-all duration-500 relative group flex flex-col justify-between hover:-translate-y-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.4)]`}
                 >
-                  <div className="font-mono text-[9px] text-slate-500 mb-3 border-b border-cyan-500/10 pb-1.5 flex justify-between">
-                    <span>{member.rank}</span>
-                    <span className="text-amber-400 opacity-80 group-hover:opacity-100 flex items-center gap-1">
-                      <Maximize2 size={9} /> VIEW
-                    </span>
-                  </div>
+                  <div>
+                    {/* Header bar */}
+                    <div className="font-mono text-[9px] text-slate-400 mb-4 border-b border-cyan-500/15 pb-2 flex items-center justify-between">
+                      <span>{member.rank}</span>
+                      <span className="text-pink-400/90 uppercase font-semibold">DOMAIN HEAD</span>
+                    </div>
 
-                  <div className="relative mb-3 flex justify-center">
-                    <div className={`relative w-36 h-36 rounded-xl p-0.5 bg-gradient-to-tr ${member.color} shadow-md group-hover:scale-105 transition-transform duration-500`}>
-                      <div className="w-full h-full rounded-[10px] overflow-hidden bg-slate-950 relative">
-                        <img
-                          src={member.image}
-                          alt={member.role}
-                          className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="p-2 rounded-full bg-amber-500/30 border border-amber-400/50 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.5)]">
-                            <Maximize2 size={18} />
+                    {/* Image frame */}
+                    <div 
+                      onClick={() => setSelectedMember(member)}
+                      className="relative mb-5 flex justify-center cursor-pointer"
+                    >
+                      <div className={`relative w-44 h-44 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform duration-500`}>
+                        <div className="w-full h-full rounded-[14px] overflow-hidden bg-slate-950 relative">
+                          <img
+                            src={member.image}
+                            alt={member.role}
+                            className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
+                          />
+                          <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <div className="p-2.5 rounded-full bg-pink-500/30 border border-pink-400/50 text-pink-300 shadow-[0_0_15px_rgba(244,63,94,0.5)]">
+                              <Maximize2 size={20} />
+                            </div>
                           </div>
                         </div>
                       </div>
+
+                      <div className="absolute -bottom-2 right-6 p-2 rounded-xl bg-slate-950 border border-pink-500/40 text-pink-400 shadow-md">
+                        <IconComp size={16} />
+                      </div>
                     </div>
 
-                    <div className="absolute -bottom-1.5 right-4 p-1.5 rounded-lg bg-slate-950 border border-amber-500/40 text-amber-400">
-                      <IconComp size={14} />
+                    {/* Role & Tag */}
+                    <div className="text-center mb-4">
+                      <span className={`inline-block font-mono text-[9px] tracking-wider font-semibold uppercase px-3 py-1 rounded-full ${member.badgeColor} border mb-2`}>
+                        {member.tag}
+                      </span>
+                      <h4 className="font-orbitron font-bold text-xl text-white group-hover:text-pink-300 transition-colors">
+                        {member.role}
+                      </h4>
                     </div>
                   </div>
 
-                  <div className="text-center">
-                    <span className={`inline-block font-mono text-[8px] tracking-wider font-semibold uppercase px-2 py-0.5 rounded-full ${member.badgeColor} border mb-1`}>
-                      {member.tag}
-                    </span>
-                    <h4 className="font-orbitron font-bold text-base text-white group-hover:text-amber-300 transition-colors">
-                      {member.role}
-                    </h4>
+                  {/* VIEW TEAM BUTTON BELOW PHOTO */}
+                  <div className="pt-3 border-t border-cyan-500/15">
+                    <button
+                      onClick={() => setViewingTeamForDomain(member)}
+                      className="w-full py-2.5 px-4 rounded-xl font-orbitron font-bold text-xs tracking-wider uppercase bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 hover:border-cyan-400/60 flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_0_15px_rgba(0,240,255,0.1)] group/btn"
+                    >
+                      <Users size={14} className="text-cyan-400 group-hover/btn:scale-110 transition-transform" />
+                      <span>VIEW TEAM</span>
+                      {subCount > 0 && (
+                        <span className="font-mono text-[10px] px-1.5 py-0.5 rounded-md bg-cyan-400/20 text-cyan-200 border border-cyan-400/30">
+                          {subCount}
+                        </span>
+                      )}
+                    </button>
                   </div>
                 </motion.div>
               );
@@ -557,12 +505,10 @@ export default function Team() {
               onClick={(e) => e.stopPropagation()}
               className="relative max-w-3xl w-full glass-panel border border-cyan-500/40 rounded-3xl p-6 sm:p-8 overflow-hidden shadow-[0_0_80px_rgba(0,240,255,0.25)] flex flex-col items-center text-center cursor-default my-auto"
             >
-              {/* Corner HUD Markers */}
               <div className="absolute top-4 left-6 font-mono text-[10px] text-cyan-400/70 tracking-widest uppercase">
                 SYSTEM // FULL_IMAGE_VIEW
               </div>
 
-              {/* Close Button */}
               <button
                 onClick={() => setSelectedMember(null)}
                 className="absolute top-4 right-6 p-2 rounded-full glass-panel border-cyan-500/30 text-slate-300 hover:text-white hover:border-cyan-400 transition-all cursor-pointer group"
@@ -571,7 +517,6 @@ export default function Team() {
                 <X size={20} className="group-hover:rotate-90 transition-transform duration-300 text-cyan-400" />
               </button>
 
-              {/* Header Title */}
               <div className="mt-4 mb-5">
                 <span className={`inline-block font-mono text-xs tracking-wider font-semibold uppercase px-3 py-1 rounded-full ${selectedMember.badgeColor} border mb-2`}>
                   {selectedMember.tag}
@@ -581,56 +526,117 @@ export default function Team() {
                 </h3>
               </div>
 
-              {/* High-Res Full Image Container */}
-              <div className="relative max-h-[50vh] sm:max-h-[55vh] w-full flex items-center justify-center overflow-hidden rounded-2xl bg-slate-950/80 p-2 border border-cyan-500/20 shadow-2xl">
+              <div className="relative max-h-[55vh] sm:max-h-[60vh] w-full flex items-center justify-center overflow-hidden rounded-2xl bg-slate-950/80 p-2 border border-cyan-500/20 shadow-2xl">
                 <img
                   src={selectedMember.image}
                   alt={selectedMember.role}
-                  className="max-h-[45vh] sm:max-h-[50vh] w-auto max-w-full object-contain rounded-xl shadow-lg border border-cyan-500/20"
+                  className="max-h-[50vh] sm:max-h-[55vh] w-auto max-w-full object-contain rounded-xl shadow-lg border border-cyan-500/20"
                 />
               </div>
 
-              {/* LINKED TECHNICAL TEAM MEMBER SECTION */}
-              {linkedMember && (
-                <div className="mt-6 w-full glass-panel p-4 rounded-2xl border border-pink-500/30 bg-pink-500/5">
-                  <div className="flex items-center justify-between font-mono text-xs text-pink-300 mb-3 px-1">
-                    <span className="flex items-center gap-1.5 uppercase font-bold tracking-wider">
-                      <Users size={14} className="text-pink-400" />
-                      {selectedMember.subMemberId ? 'TECHNICAL TEAM CO-HEAD' : 'TECHNICAL HEAD'}
-                    </span>
-                    <span className="text-[10px] text-slate-400">CLICK BELOW TO SWITCH IMAGE</span>
-                  </div>
-
-                  <div 
-                    onClick={() => setSelectedMember(linkedMember)}
-                    className="flex items-center gap-4 p-3 rounded-xl bg-slate-950/80 border border-pink-500/20 hover:border-pink-400/60 cursor-pointer group transition-all"
-                  >
-                    <div className="w-14 h-14 rounded-lg overflow-hidden border border-pink-400/40 flex-shrink-0">
-                      <img 
-                        src={linkedMember.image} 
-                        alt={linkedMember.role} 
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform" 
-                      />
-                    </div>
-                    <div className="text-left flex-grow">
-                      <h4 className="font-orbitron font-bold text-sm text-white group-hover:text-pink-300 transition-colors">
-                        {linkedMember.role}
-                      </h4>
-                      <span className="font-mono text-[10px] text-pink-400/80 uppercase">
-                        {linkedMember.tag}
-                      </span>
-                    </div>
-                    <div className="p-2 rounded-lg bg-pink-500/20 text-pink-300 group-hover:translate-x-1 transition-transform">
-                      <ArrowRight size={16} />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Footer Indicator */}
               <div className="mt-5 flex items-center justify-between w-full font-mono text-xs text-slate-400 border-t border-cyan-500/15 pt-3">
                 <span>RANK: {selectedMember.rank}</span>
                 <span className="text-cyan-400 font-semibold uppercase">PRESS ESC OR CLICK OUTSIDE TO CLOSE</span>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* DEPARTMENT TEAM MEMBERS MODAL ("VIEW TEAM") */}
+      <AnimatePresence>
+        {viewingTeamForDomain && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setViewingTeamForDomain(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/85 backdrop-blur-2xl overflow-y-auto"
+          >
+            <motion.div
+              initial={{ scale: 0.85, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.85, opacity: 0, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-3xl w-full glass-panel border border-cyan-500/40 rounded-3xl p-6 sm:p-8 overflow-hidden shadow-[0_0_80px_rgba(0,240,255,0.25)] flex flex-col cursor-default my-auto"
+            >
+              <div className="flex items-center justify-between border-b border-cyan-500/20 pb-4 mb-6">
+                <div>
+                  <span className="font-mono text-[10px] text-cyan-400 tracking-widest uppercase block">
+                    DEPARTMENT TEAM MEMBERS // {viewingTeamForDomain.rank}
+                  </span>
+                  <h3 className="font-orbitron font-black text-2xl sm:text-3xl text-white text-glow-cyan mt-1">
+                    {viewingTeamForDomain.role} TEAM
+                  </h3>
+                </div>
+
+                <button
+                  onClick={() => setViewingTeamForDomain(null)}
+                  className="p-2 rounded-full glass-panel border-cyan-500/30 text-slate-300 hover:text-white hover:border-cyan-400 transition-all cursor-pointer group"
+                  aria-label="Close Team Modal"
+                >
+                  <X size={20} className="group-hover:rotate-90 transition-transform duration-300 text-cyan-400" />
+                </button>
+              </div>
+
+              {/* Sub-Team Members List */}
+              {viewingTeamForDomain.subTeam && viewingTeamForDomain.subTeam.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {viewingTeamForDomain.subTeam.map((member) => (
+                    <motion.div
+                      key={member.id}
+                      onClick={() => {
+                        setSelectedMember(member);
+                      }}
+                      className="glass-panel p-4 rounded-2xl border border-cyan-500/30 hover:border-cyan-400 bg-slate-950/60 hover:bg-cyan-500/10 transition-all cursor-pointer flex items-center gap-4 group"
+                    >
+                      <div className="w-16 h-16 rounded-xl overflow-hidden border border-cyan-400/40 flex-shrink-0 relative">
+                        <img 
+                          src={member.image} 
+                          alt={member.role} 
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                        />
+                        <div className="absolute inset-0 bg-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <Maximize2 size={16} className="text-white" />
+                        </div>
+                      </div>
+
+                      <div className="text-left flex-grow">
+                        <span className={`inline-block font-mono text-[9px] tracking-wider font-semibold uppercase px-2 py-0.5 rounded-full ${member.badgeColor} border mb-1`}>
+                          {member.tag}
+                        </span>
+                        <h4 className="font-orbitron font-bold text-base text-white group-hover:text-cyan-300 transition-colors">
+                          {member.role}
+                        </h4>
+                        <span className="font-mono text-[10px] text-slate-400 block mt-0.5">
+                          {member.rank}
+                        </span>
+                      </div>
+
+                      <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 group-hover:translate-x-1 transition-transform">
+                        <ArrowRight size={18} />
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <div className="glass-panel p-8 rounded-2xl border border-cyan-500/20 text-center flex flex-col items-center justify-center space-y-3 bg-slate-950/40">
+                  <div className="p-4 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+                    <UserPlus size={28} />
+                  </div>
+                  <h4 className="font-orbitron font-bold text-lg text-white">
+                    RECRUITMENT ACTIVE FOR {viewingTeamForDomain.role.toUpperCase()}
+                  </h4>
+                  <p className="font-space text-slate-400 text-xs sm:text-sm max-w-md">
+                    Team members for this department will be displayed here soon. Stay tuned as new spatial engineers and domain specialists join the club!
+                  </p>
+                </div>
+              )}
+
+              <div className="mt-6 border-t border-cyan-500/15 pt-4 flex items-center justify-between font-mono text-xs text-slate-400">
+                <span>TOTAL MEMBERS: {viewingTeamForDomain.subTeam ? viewingTeamForDomain.subTeam.length : 0}</span>
+                <span className="text-cyan-400 uppercase">CLICK ANY MEMBER TO VIEW HIGH-RES PHOTO</span>
               </div>
             </motion.div>
           </motion.div>
