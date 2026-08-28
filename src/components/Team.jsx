@@ -164,7 +164,7 @@ export default function Team() {
     },
     {
       id: 'doc_head',
-      role: 'Doc Head',
+      role: 'Documentation Head',
       category: 'domain',
       image: '/Images/Team/Doc head.jpeg',
       tag: 'DOCUMENTATION HEAD',
