@@ -21,7 +21,7 @@ export default function Hero({ onExploreClick }) {
   return (
     <section 
       id="hero" 
-      className="relative min-h-screen flex items-center justify-center pt-24 sm:pt-28 pb-16 px-4 sm:px-6 overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center pt-20 sm:pt-24 pb-16 px-4 sm:px-6 overflow-hidden"
     >
       {/* Background HUD Decor & Grid overlay */}
       <div className="absolute inset-0 spatial-grid-bg opacity-20 pointer-events-none" />
@@ -29,23 +29,6 @@ export default function Hero({ onExploreClick }) {
 
       {/* Main Container */}
       <div className="relative z-10 max-w-6xl w-full mx-auto flex flex-col items-center text-center">
-
-        {/* Top Status HUD Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 sm:gap-3 px-3.5 py-1.5 rounded-full glass-panel border-cyan-500/30 mb-6 sm:mb-8 max-w-[92vw]"
-        >
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping shrink-0" />
-          <span className="font-mono text-[10px] sm:text-xs text-cyan-300 tracking-wider uppercase font-semibold truncate">
-            SPATIAL COMPUTING & IMMERSIVE LAB
-          </span>
-          <span className="text-slate-600 hidden sm:inline">|</span>
-          <span className="font-mono text-[10px] text-slate-400 uppercase tracking-widest hidden sm:inline">
-            EST. 2026
-          </span>
-        </motion.div>
 
         {/* AR vs VR Split Interactive HUD Indicators */}
         <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 items-center mb-6 sm:mb-8">
@@ -84,8 +67,8 @@ export default function Hero({ onExploreClick }) {
             transition={{ duration: 0.8 }}
             className="flex flex-col items-center px-2"
           >
-            {/* Stable Fixed ARVR Logo */}
-            <div className="mb-4 sm:mb-6 relative">
+            {/* Stable Fixed ARVR Logo - Shifted Upwards */}
+            <div className="mb-2 sm:mb-4 relative -mt-4 sm:-mt-10">
               <Logo3D size="hero" />
             </div>
 
