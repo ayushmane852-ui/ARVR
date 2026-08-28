@@ -14,6 +14,7 @@ export default function Footer() {
     { id: 'about', label: 'About' },
     { id: 'events', label: 'Events' },
     { id: 'workshops', label: 'Workshops' },
+    { id: 'team', label: 'Team' },
     { id: 'contact', label: 'Contact' },
   ];
 

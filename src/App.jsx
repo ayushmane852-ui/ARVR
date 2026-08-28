@@ -8,6 +8,7 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Events from './components/Events';
 import Workshops from './components/Workshops';
+import Team from './components/Team';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import SocialSidebar from './components/SocialSidebar';
@@ -26,7 +27,7 @@ export default function App() {
       setScrollProgress(progress);
 
       // Section detection
-      const sections = ['hero', 'about', 'events', 'workshops', 'contact'];
+      const sections = ['hero', 'about', 'events', 'workshops', 'team', 'contact'];
       for (const sectionId of sections) {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -68,6 +69,7 @@ export default function App() {
           <About />
           <Events />
           <Workshops />
+          <Team />
           <Contact />
         </main>
 
