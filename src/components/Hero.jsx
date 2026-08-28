@@ -10,7 +10,7 @@ export default function Hero() {
   return (
     <section 
       id="hero" 
-      className="relative min-h-screen flex flex-col items-center justify-center pt-10 sm:pt-20 pb-4 sm:pb-6 px-4 sm:px-6 overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-center pt-4 sm:pt-20 pb-2 sm:pb-6 px-4 sm:px-6 overflow-hidden"
     >
       {/* Background HUD Decor & Grid overlay */}
       <div className="absolute inset-0 spatial-grid-bg opacity-20 pointer-events-none" />
@@ -20,7 +20,7 @@ export default function Hero() {
       <div className="relative z-10 max-w-6xl w-full mx-auto flex flex-col items-center text-center">
 
         {/* AR vs VR Split Interactive HUD Indicators */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 items-center mb-2 sm:mb-5">
+        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 items-center mb-1 sm:mb-5">
           
           {/* Left Side: AUGMENTED Reality Tag */}
           <motion.div
@@ -57,7 +57,7 @@ export default function Hero() {
             className="flex flex-col items-center px-2"
           >
             {/* Stable Fixed ARVR Logo - Shifted Upwards */}
-            <div className="mb-1 sm:mb-2 relative -mt-10 sm:-mt-14">
+            <div className="mb-1 sm:mb-2 relative -mt-16 sm:-mt-14">
               <Logo3D size="hero" />
             </div>
 
