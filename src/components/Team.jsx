@@ -294,7 +294,7 @@ export default function Team() {
       id: 'event_head',
       role: 'Event Head',
       category: 'domain',
-      image: '/Images/Team/Event Heads/Event Head (3).jpeg',
+      image: '/Images/Team/Event Heads/Event Head.jpeg',
       tag: 'EVENT MANAGEMENT HEAD',
       status: 'EVENTS_COMMAND',
       color: 'from-yellow-400 via-amber-500 to-orange-600',
@@ -305,9 +305,9 @@ export default function Team() {
       icon: Crown,
       subTeam: [
         {
-          id: 'event_head_1',
+          id: 'event_head_3',
           role: 'Event Head',
-          image: '/Images/Team/Event Heads/Event Head.jpeg',
+          image: '/Images/Team/Event Heads/Event Head (3).jpeg',
           tag: 'EVENT HEAD',
           rank: 'EVENT_HEAD_01',
           badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-400/40',
