@@ -126,7 +126,7 @@ export default function Team() {
       id: 'technical_head',
       role: 'Technical Head',
       category: 'domain',
-      image: '/Images/Team/Technical head.jpeg',
+      image: '/Images/Team/technical/Technical head.jpeg',
       tag: 'TECHNICAL LEAD',
       status: 'TECH_ARCHITECTURE',
       color: 'from-pink-400 to-rose-600',
@@ -137,11 +137,20 @@ export default function Team() {
       icon: Code2,
       subTeam: [
         {
-          id: 'technical_co_head',
+          id: 'technical_co_head_1',
           role: 'Technical Co-head',
-          image: '/Images/Team/Technical Co-head.jpeg',
+          image: '/Images/Team/technical/Technical Co-head.jpeg',
           tag: 'TECHNICAL CO-LEAD',
-          rank: 'TECH_MEMBER_01',
+          rank: 'TECH_CO_HEAD_01',
+          status: 'SPATIAL_DEV',
+          badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+        },
+        {
+          id: 'technical_co_head_2',
+          role: 'Technical Co-head',
+          image: '/Images/Team/technical/Technical Co-head (2).jpeg',
+          tag: 'TECHNICAL CO-LEAD',
+          rank: 'TECH_CO_HEAD_02',
           status: 'SPATIAL_DEV',
           badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
         }
@@ -151,7 +160,7 @@ export default function Team() {
       id: 'content_creativity_head',
       role: 'Content & Creativity Head',
       category: 'domain',
-      image: '/Images/Team/Content and Creativity head.jpeg',
+      image: '/Images/Team/content & Creativity/Content and Creativity head.jpeg',
       tag: 'CREATIVE LEAD',
       status: 'CREATIVE_DIRECTION',
       color: 'from-amber-400 via-orange-500 to-red-500',
@@ -166,7 +175,7 @@ export default function Team() {
       id: 'doc_head',
       role: 'Documentation Head',
       category: 'domain',
-      image: '/Images/Team/Doc head.jpeg',
+      image: '/Images/Team/Documentation/Documentation Head.jpeg',
       tag: 'DOCUMENTATION HEAD',
       status: 'RESEARCH_DOCS',
       color: 'from-sky-400 to-indigo-600',
@@ -175,13 +184,30 @@ export default function Team() {
       badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-400/40',
       rank: '10 // DOC_HEAD',
       icon: Terminal,
-      subTeam: []
+      subTeam: [
+        {
+          id: 'doc_co_head_1',
+          role: 'Documentation Co-head',
+          image: '/Images/Team/Documentation/Documentation Co-Head.jpeg',
+          tag: 'DOCUMENTATION CO-LEAD',
+          rank: 'DOC_CO_HEAD_01',
+          badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-400/40',
+        },
+        {
+          id: 'doc_co_head_2',
+          role: 'Documentation Co-head',
+          image: '/Images/Team/Documentation/Documentation Co-head (2).jpeg',
+          tag: 'DOCUMENTATION CO-LEAD',
+          rank: 'DOC_CO_HEAD_02',
+          badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-400/40',
+        }
+      ]
     },
     {
       id: 'media_head',
       role: 'Media Head',
       category: 'domain',
-      image: '/Images/Team/Media head.jpeg',
+      image: '/Images/Team/Media/Media head.jpeg',
       tag: 'MEDIA & PR HEAD',
       status: 'PUBLIC_RELATIONS',
       color: 'from-fuchsia-400 to-pink-600',
@@ -190,13 +216,22 @@ export default function Team() {
       badgeColor: 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-400/40',
       rank: '11 // MEDIA_HEAD',
       icon: Sparkles,
-      subTeam: []
+      subTeam: [
+        {
+          id: 'media_co_head',
+          role: 'Media Co-head',
+          image: '/Images/Team/Media/Media Co-head.jpeg',
+          tag: 'MEDIA CO-LEAD',
+          rank: 'MEDIA_CO_HEAD_01',
+          badgeColor: 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-400/40',
+        }
+      ]
     },
     {
       id: 'design_head',
       role: 'Design Head',
       category: 'domain',
-      image: '/Images/Team/Design head.jpeg',
+      image: '/Images/Team/Design/Design head.jpeg',
       tag: 'DESIGN & UI/UX HEAD',
       status: 'CREATIVE_DESIGN',
       color: 'from-violet-400 to-purple-600',
@@ -211,7 +246,7 @@ export default function Team() {
       id: 'logistic_head',
       role: 'Logistic Head',
       category: 'domain',
-      image: '/Images/Team/Logistic head.jpeg',
+      image: '/Images/Team/Logistic/Logistic Head.jpeg',
       tag: 'LOGISTICS HEAD',
       status: 'OPERATIONS_SUPPORT',
       color: 'from-teal-400 to-emerald-600',
@@ -220,7 +255,72 @@ export default function Team() {
       badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-400/40',
       rank: '13 // LOGISTIC_HEAD',
       icon: Shield,
-      subTeam: []
+      subTeam: [
+        {
+          id: 'logistic_co_head',
+          role: 'Logistic Co-head',
+          image: '/Images/Team/Logistic/Logistic Co-head.jpeg',
+          tag: 'LOGISTICS CO-LEAD',
+          rank: 'LOGISTIC_CO_HEAD_01',
+          badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-400/40',
+        }
+      ]
+    },
+    {
+      id: 'research_head',
+      role: 'Research Head',
+      category: 'domain',
+      image: '/Images/Team/Research Head/Research Head.jpeg',
+      tag: 'RESEARCH & R&D HEAD',
+      status: 'SPATIAL_RESEARCH',
+      color: 'from-cyan-400 to-blue-600',
+      glowColor: 'rgba(6, 182, 212, 0.35)',
+      borderColor: 'border-cyan-500/40 hover:border-cyan-300',
+      badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+      rank: '14 // RESEARCH_HEAD',
+      icon: Cpu,
+      subTeam: [
+        {
+          id: 'research_co_head',
+          role: 'Research Co-head',
+          image: '/Images/Team/Research Head/Research Head (2).jpeg',
+          tag: 'RESEARCH CO-LEAD',
+          rank: 'RESEARCH_CO_HEAD_01',
+          badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+        }
+      ]
+    },
+    {
+      id: 'event_head',
+      role: 'Event Head',
+      category: 'domain',
+      image: '/Images/Team/Event Heads/Event Head (3).jpeg',
+      tag: 'EVENT MANAGEMENT HEAD',
+      status: 'EVENTS_COMMAND',
+      color: 'from-yellow-400 via-amber-500 to-orange-600',
+      glowColor: 'rgba(234, 179, 8, 0.35)',
+      borderColor: 'border-yellow-500/40 hover:border-yellow-300',
+      badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-400/40',
+      rank: '15 // EVENT_HEAD',
+      icon: Crown,
+      subTeam: [
+        {
+          id: 'event_head_1',
+          role: 'Event Head',
+          image: '/Images/Team/Event Heads/Event Head.jpeg',
+          tag: 'EVENT HEAD',
+          rank: 'EVENT_HEAD_01',
+          badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-400/40',
+        },
+        {
+          id: 'event_head_2',
+          role: 'Event Head',
+          image: '/Images/Team/Event Heads/Event Head (2).jpeg',
+          tag: 'EVENT HEAD',
+          rank: 'EVENT_HEAD_02',
+          badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-400/40',
+        }
+      ]
     },
   ];
 
@@ -495,7 +595,7 @@ export default function Team() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedMember(null)}
-            className="fixed inset-0 z-60 flex items-center justify-center p-4 sm:p-6 bg-slate-950/90 backdrop-blur-2xl cursor-zoom-out overflow-y-auto"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 bg-slate-950/90 backdrop-blur-2xl cursor-zoom-out overflow-y-auto"
           >
             <motion.div
               initial={{ scale: 0.85, opacity: 0, y: 20 }}
