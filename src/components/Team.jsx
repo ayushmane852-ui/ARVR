@@ -542,8 +542,7 @@ export default function Team() {
                     style={{ boxShadow: `0 0 40px ${member.glowColor}` }}
                   />
 
-                  <div className="flex items-center justify-between font-mono text-[9px] text-cyan-400/70 mb-4 border-b border-cyan-500/15 pb-2">
-                    <span className="tracking-widest uppercase">{member.rank}</span>
+                  <div className="flex items-center justify-end font-mono text-[9px] text-cyan-400/70 mb-4 border-b border-cyan-500/15 pb-2">
                     <span className="flex items-center gap-1 text-cyan-400 opacity-80 group-hover:opacity-100">
                       <Maximize2 size={11} /> CLICK TO VIEW
                     </span>
@@ -601,8 +600,7 @@ export default function Team() {
                   onClick={() => setSelectedMember(member)}
                   className={`glass-panel rounded-3xl p-5 border ${member.borderColor} transition-all duration-500 relative group flex flex-col justify-between hover:-translate-y-2 cursor-pointer`}
                 >
-                  <div className="flex items-center justify-between font-mono text-[9px] text-slate-400 mb-4 border-b border-cyan-500/15 pb-2">
-                    <span className="tracking-widest uppercase">{member.rank}</span>
+                  <div className="flex items-center justify-end font-mono text-[9px] text-slate-400 mb-4 border-b border-cyan-500/15 pb-2">
                     <span className="text-purple-400 opacity-80 group-hover:opacity-100 flex items-center gap-1">
                       <Maximize2 size={10} /> VIEW PHOTO
                     </span>
@@ -662,8 +660,7 @@ export default function Team() {
                 >
                   <div>
                     {/* Header bar */}
-                    <div className="font-mono text-[9px] text-slate-400 mb-4 border-b border-cyan-500/15 pb-2 flex items-center justify-between">
-                      <span>{member.rank}</span>
+                    <div className="font-mono text-[9px] text-slate-400 mb-4 border-b border-cyan-500/15 pb-2 flex items-center justify-end">
                       <span className="text-pink-400/90 uppercase font-semibold">DOMAIN HEAD</span>
                     </div>
 
@@ -746,8 +743,7 @@ export default function Team() {
                   />
 
                   <div>
-                    <div className="font-mono text-[9px] text-slate-400 mb-4 border-b border-cyan-500/15 pb-2 flex items-center justify-between">
-                      <span className="tracking-widest uppercase">{member.rank}</span>
+                    <div className="font-mono text-[9px] text-slate-400 mb-4 border-b border-cyan-500/15 pb-2 flex items-center justify-end">
                       <span className="text-emerald-400 opacity-80 group-hover:opacity-100 flex items-center gap-1">
                         <Maximize2 size={10} /> VIEW PHOTO
                       </span>
@@ -829,8 +825,7 @@ export default function Team() {
                 />
               </div>
 
-              <div className="mt-5 flex items-center justify-between w-full font-mono text-xs text-slate-400 border-t border-cyan-500/15 pt-3">
-                <span>RANK: {selectedMember.rank}</span>
+              <div className="mt-5 flex items-center justify-center w-full font-mono text-xs text-slate-400 border-t border-cyan-500/15 pt-3">
                 <span className="text-cyan-400 font-semibold uppercase">PRESS ESC OR CLICK OUTSIDE TO CLOSE</span>
               </div>
             </motion.div>
@@ -859,7 +854,7 @@ export default function Team() {
               <div className="flex items-center justify-between border-b border-cyan-500/20 pb-4 mb-6">
                 <div>
                   <span className="font-mono text-[10px] text-cyan-400 tracking-widest uppercase block">
-                    DEPARTMENT TEAM MEMBERS // {viewingTeamForDomain.rank}
+                    DEPARTMENT TEAM MEMBERS
                   </span>
                   <h3 className="font-orbitron font-black text-2xl sm:text-3xl text-white text-glow-cyan mt-1">
                     {viewingTeamForDomain.role.replace(/\s+Head$/i, '')} TEAM
@@ -898,12 +893,9 @@ export default function Team() {
                       </div>
 
                       <div className="text-left flex-grow">
-                        <h4 className="font-orbitron font-bold text-base text-white group-hover:text-cyan-300 transition-colors">
+                        <h4 className="font-orbitron font-bold text-base sm:text-lg text-white group-hover:text-cyan-300 transition-colors">
                           {member.role}
                         </h4>
-                        <span className="font-mono text-[10px] text-slate-400 block mt-1">
-                          {member.rank}
-                        </span>
                       </div>
                     </motion.div>
                   ))}
