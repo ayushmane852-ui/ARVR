@@ -93,8 +93,8 @@ function SpiralGalaxy({ scrollProgress }) {
       galaxyRef.current.rotation.z = THREE.MathUtils.lerp(galaxyRef.current.rotation.z, mouseX * 0.25, 0.05);
 
       // Scroll effect - journey through galaxy depth
-      galaxyRef.current.position.z = THREE.MathUtils.lerp(galaxyRef.current.position.z, -scrollProgress * 5, 0.05);
-      galaxyRef.current.position.y = THREE.MathUtils.lerp(galaxyRef.current.position.y, -2.2 + scrollProgress * 1.5, 0.05);
+      galaxyRef.current.position.z = THREE.MathUtils.lerp(galaxyRef.current.position.z, -1 - scrollProgress * 3, 0.05);
+      galaxyRef.current.position.y = THREE.MathUtils.lerp(galaxyRef.current.position.y, -0.6 + scrollProgress * 1.0, 0.05);
     }
 
     if (coreRef.current) {
@@ -103,15 +103,15 @@ function SpiralGalaxy({ scrollProgress }) {
   });
 
   return (
-    <group ref={galaxyRef} position={[0, -2.2, 0]} rotation={[0.45, 0, 0]}>
-      {/* Central Galactic Core Star Cluster */}
+    <group ref={galaxyRef} position={[0, -0.6, -1]} rotation={[0.55, 0, 0]}>
+      {/* Central Galactic Core Star Cluster - Center of Solar System */}
       <points ref={coreRef}>
-        <sphereGeometry args={[1.5, 32, 32]} />
+        <sphereGeometry args={[0.85, 32, 32]} />
         <pointsMaterial
-          size={0.065}
+          size={0.055}
           color="#ffd700"
           transparent
-          opacity={0.85}
+          opacity={0.9}
           blending={THREE.AdditiveBlending}
         />
       </points>
