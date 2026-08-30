@@ -94,7 +94,7 @@ function SpiralGalaxy({ scrollProgress }) {
 
       // Scroll effect - journey through galaxy depth
       galaxyRef.current.position.z = THREE.MathUtils.lerp(galaxyRef.current.position.z, -1 - scrollProgress * 3, 0.05);
-      galaxyRef.current.position.y = THREE.MathUtils.lerp(galaxyRef.current.position.y, -0.6 + scrollProgress * 1.0, 0.05);
+      galaxyRef.current.position.y = THREE.MathUtils.lerp(galaxyRef.current.position.y, -2.4 + scrollProgress * 1.2, 0.05);
     }
 
     if (coreRef.current) {
@@ -103,7 +103,7 @@ function SpiralGalaxy({ scrollProgress }) {
   });
 
   return (
-    <group ref={galaxyRef} position={[0, -0.6, -1]} rotation={[0.55, 0, 0]}>
+    <group ref={galaxyRef} position={[0, -2.4, -1]} rotation={[0.55, 0, 0]}>
       {/* Central Galactic Core Star Cluster - Center of Solar System */}
       <points ref={coreRef}>
         <sphereGeometry args={[0.85, 32, 32]} />
@@ -272,12 +272,12 @@ function SolarSystemPlanets({ scrollProgress }) {
     // Scroll parallax & tilt
     if (groupRef.current) {
       groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, -1 - scrollProgress * 3, 0.05);
-      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, -0.6 + scrollProgress * 1.0, 0.05);
+      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, -2.4 + scrollProgress * 1.2, 0.05);
     }
   });
 
   return (
-    <group ref={groupRef} position={[0, -0.6, -1]} rotation={[0.55, 0, 0]}>
+    <group ref={groupRef} position={[0, -2.4, -1]} rotation={[0.55, 0, 0]}>
       
       {/* Orbital Path Rings (Thin glowing circular guides) */}
       {[1.6, 2.5, 3.5, 4.6, 5.8].map((radius, idx) => (
