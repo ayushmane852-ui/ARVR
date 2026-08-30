@@ -56,9 +56,16 @@ export default function Hero() {
             transition={{ duration: 0.8 }}
             className="flex flex-col items-center px-2"
           >
-            {/* Stable Fixed ARVR Logo - Shifted Higher Up */}
-            <div className="mb-1 sm:mb-2 relative -mt-28 sm:-mt-24">
+            {/* Stable Fixed ARVR Logo */}
+            <div className="mb-1 sm:mb-2 relative -mt-20 sm:-mt-16">
               <Logo3D size="hero" />
+            </div>
+
+            {/* Compact Tagline Badge Directly Below Logo */}
+            <div className="mt-1 sm:mt-2 px-4 py-1.5 rounded-full bg-slate-950/85 backdrop-blur-md border border-cyan-500/35 shadow-[0_0_20px_rgba(0,240,255,0.25)] inline-flex items-center justify-center">
+              <span className="font-orbitron font-extrabold text-xs sm:text-sm tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-purple-300 uppercase whitespace-nowrap drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+                STEP BEYOND REALITY
+              </span>
             </div>
           </motion.div>
 
@@ -89,18 +96,6 @@ export default function Hero() {
             </div>
           </motion.div>
         </div>
-
-        {/* Tagline Positioned Directly Above CTAs with High-Contrast Glass Backdrop */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="mb-4 sm:mb-6 px-6 sm:px-8 py-2.5 sm:py-3 rounded-2xl bg-slate-950/85 backdrop-blur-md border border-cyan-500/30 shadow-[0_0_30px_rgba(0,240,255,0.25)] inline-flex items-center justify-center"
-        >
-          <h1 className="font-orbitron font-black text-xl sm:text-3xl md:text-4xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-purple-400 uppercase text-glow-cyan whitespace-nowrap drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
-            STEP BEYOND REALITY
-          </h1>
-        </motion.div>
 
         {/* Action Buttons */}
         <motion.div
