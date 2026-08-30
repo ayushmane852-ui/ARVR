@@ -90,10 +90,10 @@ function SpiralGalaxy({ scrollProgress }) {
       galaxyRef.current.rotation.y += delta * 0.04;
       galaxyRef.current.rotation.z += delta * 0.005;
 
-      // Smooth 3D Cursor tilt & spatial displacement
+      // Smooth 3D Cursor tilt & spatial displacement (Front View perspective)
       const mouseX = windowMouse.x * 0.6;
       const mouseY = windowMouse.y * 0.5;
-      galaxyRef.current.rotation.x = THREE.MathUtils.lerp(galaxyRef.current.rotation.x, 0.45 - mouseY * 0.4, 0.06);
+      galaxyRef.current.rotation.x = THREE.MathUtils.lerp(galaxyRef.current.rotation.x, 0.22 - mouseY * 0.25, 0.06);
       galaxyRef.current.rotation.z = THREE.MathUtils.lerp(galaxyRef.current.rotation.z, mouseX * 0.35, 0.06);
       galaxyRef.current.position.x = THREE.MathUtils.lerp(galaxyRef.current.position.x, mouseX * 0.4, 0.06);
 
@@ -108,7 +108,7 @@ function SpiralGalaxy({ scrollProgress }) {
   });
 
   return (
-    <group ref={galaxyRef} position={[0, -0.4, -1]} rotation={[0.55, 0, 0]}>
+    <group ref={galaxyRef} position={[0, -0.4, -1]} rotation={[0.22, 0, 0]}>
       {/* Central Galactic Core Star Cluster - Center of Solar System */}
       <points ref={coreRef}>
         <sphereGeometry args={[0.85, 32, 32]} />
@@ -208,9 +208,9 @@ function CameraRig() {
 
   useFrame(() => {
     const mouseX = windowMouse.x * 1.2;
-    const mouseY = windowMouse.y * 0.9;
+    const mouseY = windowMouse.y * 0.6;
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouseX, 0.06);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, 2 + mouseY, 0.06);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, 1.0 + mouseY, 0.06);
     camera.lookAt(windowMouse.x * 0.3, windowMouse.y * 0.2, 0);
   });
 
@@ -275,7 +275,7 @@ function SolarSystemPlanets({ scrollProgress }) {
       p5Ref.current.rotation.y += delta * 0.2;
     }
 
-    // Scroll parallax, cursor tilt & multi-axis spatial tracking
+    // Scroll parallax, cursor tilt & multi-axis spatial tracking (Front View perspective)
     if (groupRef.current) {
       const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
       const responsiveScale = isMobile ? Math.min(1.0, Math.max(0.5, window.innerWidth / 700)) : 1.0;
@@ -283,7 +283,7 @@ function SolarSystemPlanets({ scrollProgress }) {
 
       const mouseX = windowMouse.x * 0.6;
       const mouseY = windowMouse.y * 0.5;
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, 0.55 - mouseY * 0.3, 0.06);
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, 0.22 - mouseY * 0.25, 0.06);
       groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, mouseX * 0.4, 0.06);
       groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, mouseX * 0.5, 0.06);
       groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, -1 - scrollProgress * 3, 0.05);
@@ -292,7 +292,7 @@ function SolarSystemPlanets({ scrollProgress }) {
   });
 
   return (
-    <group ref={groupRef} position={[0, -0.4, -1]} rotation={[0.55, 0, 0]}>
+    <group ref={groupRef} position={[0, -0.4, -1]} rotation={[0.22, 0, 0]}>
       
       {/* Orbital Path Rings (Thin glowing circular guides) */}
       {[1.6, 2.5, 3.5, 4.6, 5.8].map((radius, idx) => (
@@ -404,7 +404,7 @@ export default function Scene3D({ scrollProgress = 0 }) {
   return (
     <div className="fixed inset-0 pointer-events-none z-0">
       <Canvas
-        camera={{ position: [0, 2, 9], fov: 60 }}
+        camera={{ position: [0, 1.0, 9], fov: 60 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
         <color attach="background" args={['#02040a']} />
