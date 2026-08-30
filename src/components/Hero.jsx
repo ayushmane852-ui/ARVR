@@ -10,14 +10,14 @@ export default function Hero() {
   return (
     <section 
       id="hero" 
-      className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 pb-4 sm:pb-6 px-4 sm:px-6 overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-between pt-12 sm:pt-14 pb-8 sm:pb-12 px-4 sm:px-6 overflow-hidden"
     >
       {/* Background HUD Decor & Grid overlay */}
       <div className="absolute inset-0 spatial-grid-bg opacity-20 pointer-events-none" />
       <div className="absolute inset-0 scanlines opacity-40 pointer-events-none" />
 
       {/* Main Container - Full Viewport Flex */}
-      <div className="relative z-10 max-w-6xl w-full mx-auto flex flex-col items-center justify-between text-center min-h-[calc(100vh-7rem)]">
+      <div className="relative z-10 max-w-6xl w-full mx-auto flex flex-col items-center justify-between text-center min-h-[calc(100vh-8.5rem)]">
 
         {/* Top Brand: Logo3D Shifted Further Up */}
         <div className="w-full flex flex-col items-center justify-center pt-0">
@@ -35,10 +35,10 @@ export default function Hero() {
         </div>
 
         {/* Center Open Spatial Window for 3D Solar System */}
-        <div className="flex-1 my-auto min-h-[80px] sm:min-h-[140px]" />
+        <div className="flex-1 my-auto min-h-[60px] sm:min-h-[100px]" />
 
-        {/* Bottom Pinned Elements: Tagline + Action Buttons + Scroll Indicator */}
-        <div className="w-full flex flex-col items-center gap-2 sm:gap-2.5 pb-2">
+        {/* Bottom Pinned Elements: Tagline + Action Buttons (Pulled Upwards for Initial Viewport) */}
+        <div className="w-full flex flex-col items-center gap-2 sm:gap-2.5 pb-6 sm:pb-10 mb-2 sm:mb-4">
           {/* Tagline Badge Placed Just Above Action Buttons (No Space) */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
