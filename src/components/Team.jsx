@@ -647,7 +647,6 @@ export default function Team() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {domainMembers.map((member, idx) => {
               const IconComp = member.icon;
-              const subCount = member.subTeam ? member.subTeam.length : 0;
 
               return (
                 <motion.div
@@ -701,11 +700,6 @@ export default function Team() {
                     >
                       <Users size={14} className="text-cyan-400 group-hover/btn:scale-110 transition-transform" />
                       <span>VIEW TEAM</span>
-                      {subCount > 0 && (
-                        <span className="font-mono text-[10px] px-1.5 py-0.5 rounded-md bg-cyan-400/20 text-cyan-200 border border-cyan-400/30">
-                          {subCount}
-                        </span>
-                      )}
                     </button>
                   </div>
                 </motion.div>
