@@ -19,45 +19,16 @@ export default function Hero() {
       {/* Main Container - Full Viewport Flex */}
       <div className="relative z-10 max-w-6xl w-full mx-auto flex flex-col items-center justify-between text-center min-h-[calc(100vh-7rem)]">
 
-        {/* AR vs VR Split Interactive HUD Indicators & Top Brand */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 items-center">
-          
-          {/* Left Side: AUGMENTED Reality Tag */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="hidden md:flex flex-col items-start text-left glass-panel p-4 rounded-2xl border-cyan-500/20 relative group hover:border-cyan-400/50"
-          >
-            <div className="flex items-center gap-2 mb-1.5 text-cyan-400">
-              <Scan size={16} className="animate-pulse" />
-              <span className="font-orbitron font-bold text-xs tracking-widest uppercase">
-                AUGMENTED
-              </span>
-            </div>
-            <p className="font-space text-[11px] text-slate-400 mb-2">
-              Spatial overlay, Passthrough HUDs, Real-time tracking reticles & digital twins.
-            </p>
-            <div className="font-mono text-[9px] text-cyan-400/80 flex items-center justify-between w-full border-t border-cyan-500/15 pt-1.5">
-              <span>FOV // 110°</span>
-              <span>PASSTHROUGH: ACTIVE</span>
-            </div>
-
-            {/* Target Reticle Accent */}
-            <div className="absolute top-2 right-2 text-cyan-400/30 group-hover:text-cyan-400/70 transition-colors">
-              [+]
-            </div>
-          </motion.div>
-
-          {/* Center Brand & Main Headline */}
+        {/* Top Brand: Logo3D & Tagline */}
+        <div className="w-full flex flex-col items-center justify-center pt-2 sm:pt-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             className="flex flex-col items-center px-2"
           >
-            {/* Stable Fixed ARVR Logo - Shifted Slightly Upwards */}
-            <div className="mb-0 relative -mt-16 sm:-mt-12">
+            {/* Stable Fixed ARVR Logo */}
+            <div className="mb-0 relative -mt-12 sm:-mt-8">
               <Logo3D size="hero" />
             </div>
 
@@ -68,37 +39,10 @@ export default function Hero() {
               </span>
             </div>
           </motion.div>
-
-          {/* Right Side: VIRTUAL Reality Tag */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="hidden md:flex flex-col items-start text-left glass-panel p-4 rounded-2xl border-purple-500/20 relative group hover:border-purple-400/50"
-          >
-            <div className="flex items-center gap-2 mb-1.5 text-purple-400">
-              <Cpu size={16} className="animate-pulse" />
-              <span className="font-orbitron font-bold text-xs tracking-widest uppercase">
-                VIRTUAL
-              </span>
-            </div>
-            <p className="font-space text-[11px] text-slate-400 mb-2">
-              Full-immersion 3D environments, spatial audio & volumetric spatial rendering.
-            </p>
-            <div className="font-mono text-[9px] text-purple-400/80 flex items-center justify-between w-full border-t border-purple-500/15 pt-1.5">
-              <span>6DOF // SYNC</span>
-              <span>RENDER: 90 FPS</span>
-            </div>
-
-            {/* Target Reticle Accent */}
-            <div className="absolute top-2 right-2 text-purple-400/30 group-hover:text-purple-400/70 transition-colors">
-              [•]
-            </div>
-          </motion.div>
         </div>
 
         {/* Center Open Spatial Window for 3D Solar System */}
-        <div className="flex-1 my-auto min-h-[60px] sm:min-h-[100px]" />
+        <div className="flex-1 my-auto min-h-[80px] sm:min-h-[140px]" />
 
         {/* Bottom Pinned Elements: Action Buttons & Scroll Indicator */}
         <div className="w-full flex flex-col items-center gap-3 sm:gap-4 pb-2">
@@ -151,17 +95,63 @@ export default function Hero() {
 
       </div>
 
-      {/* Subtext Container Revealed Upon Scroll */}
+      {/* Scroll-Reveal Container: HUD Tech Cards + Subtext (Revealed Upon Scroll) */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="w-full max-w-xl mx-auto mt-8 sm:mt-12 px-5 py-3 rounded-2xl bg-slate-950/80 backdrop-blur-md border border-cyan-500/25 shadow-xl"
+        className="w-full max-w-4xl mx-auto mt-12 sm:mt-16 px-4 flex flex-col items-center gap-6"
       >
-        <p className="font-space text-slate-200 text-xs sm:text-sm font-light leading-relaxed">
-          Explore Augmented Reality, Virtual Reality, Spatial Computing and emerging technologies shaping human-computer interaction.
-        </p>
+        {/* The 2 HUD Cards (AUGMENTED & VIRTUAL) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+          {/* Left Side: AUGMENTED Reality Tag */}
+          <div className="flex flex-col items-start text-left glass-panel p-4 rounded-2xl border-cyan-500/20 relative group hover:border-cyan-400/50">
+            <div className="flex items-center gap-2 mb-1.5 text-cyan-400">
+              <Scan size={16} className="animate-pulse" />
+              <span className="font-orbitron font-bold text-xs tracking-widest uppercase">
+                AUGMENTED
+              </span>
+            </div>
+            <p className="font-space text-[11px] text-slate-400 mb-2">
+              Spatial overlay, Passthrough HUDs, Real-time tracking reticles & digital twins.
+            </p>
+            <div className="font-mono text-[9px] text-cyan-400/80 flex items-center justify-between w-full border-t border-cyan-500/15 pt-1.5">
+              <span>FOV // 110°</span>
+              <span>PASSTHROUGH: ACTIVE</span>
+            </div>
+            <div className="absolute top-2 right-2 text-cyan-400/30 group-hover:text-cyan-400/70 transition-colors">
+              [+]
+            </div>
+          </div>
+
+          {/* Right Side: VIRTUAL Reality Tag */}
+          <div className="flex flex-col items-start text-left glass-panel p-4 rounded-2xl border-purple-500/20 relative group hover:border-purple-400/50">
+            <div className="flex items-center gap-2 mb-1.5 text-purple-400">
+              <Cpu size={16} className="animate-pulse" />
+              <span className="font-orbitron font-bold text-xs tracking-widest uppercase">
+                VIRTUAL
+              </span>
+            </div>
+            <p className="font-space text-[11px] text-slate-400 mb-2">
+              Full-immersion 3D environments, spatial audio & volumetric spatial rendering.
+            </p>
+            <div className="font-mono text-[9px] text-purple-400/80 flex items-center justify-between w-full border-t border-purple-500/15 pt-1.5">
+              <span>6DOF // SYNC</span>
+              <span>RENDER: 90 FPS</span>
+            </div>
+            <div className="absolute top-2 right-2 text-purple-400/30 group-hover:text-purple-400/70 transition-colors">
+              [•]
+            </div>
+          </div>
+        </div>
+
+        {/* Subtext Container */}
+        <div className="w-full max-w-xl px-5 py-3 rounded-2xl bg-slate-950/80 backdrop-blur-md border border-cyan-500/25 shadow-xl text-center">
+          <p className="font-space text-slate-200 text-xs sm:text-sm font-light leading-relaxed">
+            Explore Augmented Reality, Virtual Reality, Spatial Computing and emerging technologies shaping human-computer interaction.
+          </p>
+        </div>
       </motion.div>
     </section>
   );
