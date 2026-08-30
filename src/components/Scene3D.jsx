@@ -90,10 +90,11 @@ function SpiralGalaxy({ scrollProgress }) {
       galaxyRef.current.rotation.y += delta * 0.04;
       galaxyRef.current.rotation.z += delta * 0.005;
 
-      // Smooth 3D Cursor tilt & spatial displacement (Front View perspective)
+      // Smooth 3D Cursor tilt & scroll-linked perspective tilt (Front -> Bottom View on Scroll)
       const mouseX = windowMouse.x * 0.6;
       const mouseY = windowMouse.y * 0.5;
-      galaxyRef.current.rotation.x = THREE.MathUtils.lerp(galaxyRef.current.rotation.x, 0.22 - mouseY * 0.25, 0.06);
+      const targetTiltX = 0.22 - scrollProgress * 0.75 - mouseY * 0.25;
+      galaxyRef.current.rotation.x = THREE.MathUtils.lerp(galaxyRef.current.rotation.x, targetTiltX, 0.06);
       galaxyRef.current.rotation.z = THREE.MathUtils.lerp(galaxyRef.current.rotation.z, mouseX * 0.35, 0.06);
       galaxyRef.current.position.x = THREE.MathUtils.lerp(galaxyRef.current.position.x, mouseX * 0.4, 0.06);
 
@@ -202,16 +203,17 @@ function DistantStarfield({ count = 3000 }) {
   );
 }
 
-// Camera Parallax Rig
-function CameraRig() {
+// Camera Parallax Rig with Scroll Elevation Transition
+function CameraRig({ scrollProgress = 0 }) {
   const { camera } = useThree();
 
   useFrame(() => {
     const mouseX = windowMouse.x * 1.2;
     const mouseY = windowMouse.y * 0.6;
+    const scrollCamY = 1.0 - scrollProgress * 1.5;
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouseX, 0.06);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, 1.0 + mouseY, 0.06);
-    camera.lookAt(windowMouse.x * 0.3, windowMouse.y * 0.2, 0);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, scrollCamY + mouseY, 0.06);
+    camera.lookAt(windowMouse.x * 0.3, windowMouse.y * 0.2 + scrollProgress * 0.4, 0);
   });
 
   return null;
@@ -275,7 +277,7 @@ function SolarSystemPlanets({ scrollProgress }) {
       p5Ref.current.rotation.y += delta * 0.2;
     }
 
-    // Scroll parallax, cursor tilt & multi-axis spatial tracking (Front View perspective)
+    // Scroll parallax, cursor tilt & multi-axis spatial tracking (Front -> Bottom View on Scroll)
     if (groupRef.current) {
       const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
       const responsiveScale = isMobile ? Math.min(1.0, Math.max(0.5, window.innerWidth / 700)) : 1.0;
@@ -283,7 +285,8 @@ function SolarSystemPlanets({ scrollProgress }) {
 
       const mouseX = windowMouse.x * 0.6;
       const mouseY = windowMouse.y * 0.5;
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, 0.22 - mouseY * 0.25, 0.06);
+      const targetTiltX = 0.22 - scrollProgress * 0.75 - mouseY * 0.25;
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetTiltX, 0.06);
       groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, mouseX * 0.4, 0.06);
       groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, mouseX * 0.5, 0.06);
       groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, -1 - scrollProgress * 3, 0.05);
@@ -415,7 +418,7 @@ export default function Scene3D({ scrollProgress = 0 }) {
         <directionalLight position={[10, 10, 5]} intensity={1.2} color="#00f0ff" />
         <pointLight position={[-10, -10, -5]} intensity={1.5} color="#8a2be2" />
 
-        <CameraRig />
+        <CameraRig scrollProgress={scrollProgress} />
 
         {/* 3D Solar System Planets */}
         <SolarSystemPlanets scrollProgress={scrollProgress} />
