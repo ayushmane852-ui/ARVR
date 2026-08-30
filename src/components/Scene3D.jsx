@@ -94,7 +94,7 @@ function SpiralGalaxy({ scrollProgress }) {
 
       // Scroll effect - journey through galaxy depth & move upward on scroll
       galaxyRef.current.position.z = THREE.MathUtils.lerp(galaxyRef.current.position.z, -1 - scrollProgress * 3, 0.05);
-      galaxyRef.current.position.y = THREE.MathUtils.lerp(galaxyRef.current.position.y, -0.4 + scrollProgress * 4.0, 0.05);
+      galaxyRef.current.position.y = THREE.MathUtils.lerp(galaxyRef.current.position.y, -1.0 + scrollProgress * 3.0, 0.05);
     }
 
     if (coreRef.current) {
@@ -272,7 +272,7 @@ function SolarSystemPlanets({ scrollProgress }) {
     // Scroll parallax & tilt - move Solar System upward on scroll
     if (groupRef.current) {
       groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, -1 - scrollProgress * 3, 0.05);
-      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, -0.4 + scrollProgress * 4.0, 0.05);
+      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, -1.0 + scrollProgress * 3.0, 0.05);
     }
   });
 

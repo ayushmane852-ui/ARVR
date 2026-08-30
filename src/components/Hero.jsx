@@ -27,8 +27,8 @@ export default function Hero() {
             transition={{ duration: 0.8 }}
             className="flex flex-col items-center px-2"
           >
-            {/* Stable Fixed ARVR Logo - Shifted High Up */}
-            <div className="mb-0 relative -mt-36 sm:-mt-28">
+            {/* Stable Fixed ARVR Logo */}
+            <div className="mb-0 relative -mt-16 sm:-mt-12">
               <Logo3D size="hero" />
             </div>
           </motion.div>
