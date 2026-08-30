@@ -61,9 +61,11 @@ export default function Hero() {
               <Logo3D size="hero" />
             </div>
 
-            <span className="font-orbitron text-[9px] sm:text-xs tracking-[0.2em] sm:tracking-[0.3em] text-cyan-400/90 font-semibold mb-1 sm:mb-1.5 uppercase text-glow-cyan">
-              AUGMENTED REALITY + VIRTUAL REALITY
-            </span>
+            <div className="mb-2 sm:mb-3 px-4 py-1.5 rounded-full bg-slate-950/85 backdrop-blur-md border border-cyan-500/40 shadow-[0_0_25px_rgba(0,240,255,0.3)] inline-flex items-center justify-center">
+              <span className="font-orbitron font-extrabold text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-purple-300 uppercase drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+                AUGMENTED REALITY + VIRTUAL REALITY
+              </span>
+            </div>
 
             {/* Compact Tagline / Headline */}
             <h1 className="font-orbitron font-black text-2xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-cyan-400 text-glow-cyan mb-2 sm:mb-3">
@@ -107,9 +109,9 @@ export default function Hero() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="w-full max-w-xl mx-auto mb-4 sm:mb-5 px-4 py-2 sm:py-0 rounded-2xl bg-slate-950/40 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-cyan-500/15 sm:border-none"
+          className="w-full max-w-xl mx-auto mb-4 sm:mb-5 px-5 py-2.5 rounded-2xl bg-slate-950/70 backdrop-blur-md border border-cyan-500/20 shadow-lg"
         >
-          <p className="font-space text-slate-300 text-xs sm:text-base font-light leading-relaxed">
+          <p className="font-space text-slate-200 text-xs sm:text-sm font-light leading-relaxed">
             Explore Augmented Reality, Virtual Reality, Spatial Computing and emerging technologies shaping human-computer interaction.
           </p>
         </motion.div>
