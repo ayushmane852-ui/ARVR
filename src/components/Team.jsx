@@ -306,7 +306,16 @@ export default function Team() {
       badgeColor: 'bg-violet-500/20 text-violet-300 border-violet-400/40',
       rank: '12 // DESIGN_HEAD',
       icon: Compass,
-      subTeam: []
+      subTeam: [
+        {
+          id: 'design_co_head',
+          role: 'Design Co-head',
+          image: '/Images/Team/Design/Design Co-head.jpeg',
+          tag: 'DESIGN CO-LEAD',
+          rank: 'DESIGN_CO_HEAD_01',
+          badgeColor: 'bg-violet-500/20 text-violet-300 border-violet-400/40',
+        }
+      ]
     },
     {
       id: 'logistic_head',
