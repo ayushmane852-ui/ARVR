@@ -61,19 +61,17 @@ export default function Hero() {
               <Logo3D size="hero" />
             </div>
 
+            {/* Single Line Tagline Directly Below Logo */}
+            <h1 className="font-orbitron font-black text-xl sm:text-2xl md:text-3xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-purple-400 uppercase text-glow-cyan mb-2 sm:mb-3 whitespace-nowrap">
+              STEP BEYOND REALITY
+            </h1>
+
+            {/* Pill Badge */}
             <div className="mb-2 sm:mb-3 px-4 py-1.5 rounded-full bg-slate-950/85 backdrop-blur-md border border-cyan-500/40 shadow-[0_0_25px_rgba(0,240,255,0.3)] inline-flex items-center justify-center">
               <span className="font-orbitron font-extrabold text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-[0.3em] text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-purple-300 uppercase drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
                 AUGMENTED REALITY + VIRTUAL REALITY
               </span>
             </div>
-
-            {/* Compact Tagline / Headline */}
-            <h1 className="font-orbitron font-black text-2xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-cyan-400 text-glow-cyan mb-2 sm:mb-3">
-              STEP BEYOND{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-white to-purple-500">
-                REALITY
-              </span>
-            </h1>
           </motion.div>
 
           {/* Right Side: VIRTUAL Reality Tag */}

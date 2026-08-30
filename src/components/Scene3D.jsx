@@ -211,7 +211,7 @@ function CameraRig() {
   return null;
 }
 
-// 3D Solar System with Circular Orbital Paths & Revolving Planets
+// 3D Solar System with Compact Circular Orbital Paths & Revolving Planets
 function SolarSystemPlanets({ scrollProgress }) {
   const groupRef = useRef();
 
@@ -235,35 +235,35 @@ function SolarSystemPlanets({ scrollProgress }) {
 
     // Circular motion calculations (x = cos, z = sin)
     if (p1Ref.current) {
-      const r = 3.2;
+      const r = 1.6;
       p1Ref.current.position.x = Math.cos(angles.current.p1) * r;
       p1Ref.current.position.z = Math.sin(angles.current.p1) * r;
       p1Ref.current.rotation.y += delta * 0.8;
     }
 
     if (p2Ref.current) {
-      const r = 4.8;
+      const r = 2.5;
       p2Ref.current.position.x = Math.cos(angles.current.p2) * r;
       p2Ref.current.position.z = Math.sin(angles.current.p2) * r;
       p2Ref.current.rotation.y += delta * 0.6;
     }
 
     if (p3Ref.current) {
-      const r = 6.6;
+      const r = 3.5;
       p3Ref.current.position.x = Math.cos(angles.current.p3) * r;
       p3Ref.current.position.z = Math.sin(angles.current.p3) * r;
       p3Ref.current.rotation.y += delta * 0.4;
     }
 
     if (p4Ref.current) {
-      const r = 8.4;
+      const r = 4.6;
       p4Ref.current.position.x = Math.cos(angles.current.p4) * r;
       p4Ref.current.position.z = Math.sin(angles.current.p4) * r;
       p4Ref.current.rotation.y += delta * 0.3;
     }
 
     if (p5Ref.current) {
-      const r = 10.5;
+      const r = 5.8;
       p5Ref.current.position.x = Math.cos(angles.current.p5) * r;
       p5Ref.current.position.z = Math.sin(angles.current.p5) * r;
       p5Ref.current.rotation.y += delta * 0.2;
@@ -271,23 +271,23 @@ function SolarSystemPlanets({ scrollProgress }) {
 
     // Scroll parallax & tilt
     if (groupRef.current) {
-      groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, -scrollProgress * 4, 0.05);
-      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, -1.8 + scrollProgress * 1.2, 0.05);
+      groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, -1 - scrollProgress * 3, 0.05);
+      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, -0.6 + scrollProgress * 1.0, 0.05);
     }
   });
 
   return (
-    <group ref={groupRef} position={[0, -1.8, 0]} rotation={[0.4, 0, 0]}>
+    <group ref={groupRef} position={[0, -0.6, -1]} rotation={[0.55, 0, 0]}>
       
       {/* Orbital Path Rings (Thin glowing circular guides) */}
-      {[3.2, 4.8, 6.6, 8.4, 10.5].map((radius, idx) => (
+      {[1.6, 2.5, 3.5, 4.6, 5.8].map((radius, idx) => (
         <mesh key={idx} rotation={[Math.PI / 2, 0, 0]}>
           <ringGeometry args={[radius - 0.015, radius + 0.015, 128]} />
           <meshBasicMaterial
             color={idx % 2 === 0 ? "#00f0ff" : "#a855f7"}
             side={THREE.DoubleSide}
             transparent
-            opacity={0.18}
+            opacity={0.28}
           />
         </mesh>
       ))}
@@ -295,7 +295,7 @@ function SolarSystemPlanets({ scrollProgress }) {
       {/* Planet 1: Small Cyan Inner Planet */}
       <group ref={p1Ref}>
         <mesh>
-          <sphereGeometry args={[0.22, 32, 32]} />
+          <sphereGeometry args={[0.12, 32, 32]} />
           <meshStandardMaterial
             color="#00f0ff"
             emissive="#006688"
@@ -304,15 +304,15 @@ function SolarSystemPlanets({ scrollProgress }) {
           />
         </mesh>
         <mesh scale={[1.2, 1.2, 1.2]}>
-          <sphereGeometry args={[0.22, 16, 16]} />
-          <meshBasicMaterial color="#00f0ff" transparent opacity={0.25} wireframe />
+          <sphereGeometry args={[0.12, 16, 16]} />
+          <meshBasicMaterial color="#00f0ff" transparent opacity={0.3} wireframe />
         </mesh>
       </group>
 
       {/* Planet 2: Small Golden Planet */}
       <group ref={p2Ref}>
         <mesh>
-          <sphereGeometry args={[0.28, 32, 32]} />
+          <sphereGeometry args={[0.15, 32, 32]} />
           <meshStandardMaterial
             color="#ffd700"
             emissive="#b45309"
@@ -322,10 +322,10 @@ function SolarSystemPlanets({ scrollProgress }) {
         </mesh>
       </group>
 
-      {/* Planet 3: Cyan Gas Giant with Saturn Rings (Smaller Size) */}
+      {/* Planet 3: Cyan Gas Giant with Saturn Rings (Compact) */}
       <group ref={p3Ref}>
         <mesh>
-          <sphereGeometry args={[0.42, 32, 32]} />
+          <sphereGeometry args={[0.22, 32, 32]} />
           <meshStandardMaterial
             color="#00f0ff"
             emissive="#003355"
@@ -335,13 +335,13 @@ function SolarSystemPlanets({ scrollProgress }) {
         </mesh>
         {/* Planet 3 Ring */}
         <mesh rotation={[Math.PI / 3, 0, 0]}>
-          <ringGeometry args={[0.55, 0.95, 64]} />
+          <ringGeometry args={[0.3, 0.5, 64]} />
           <meshStandardMaterial
             color="#00f0ff"
             emissive="#007799"
             side={THREE.DoubleSide}
             transparent
-            opacity={0.6}
+            opacity={0.65}
           />
         </mesh>
       </group>
@@ -349,7 +349,7 @@ function SolarSystemPlanets({ scrollProgress }) {
       {/* Planet 4: Purple & Magenta Planet */}
       <group ref={p4Ref}>
         <mesh>
-          <sphereGeometry args={[0.35, 32, 32]} />
+          <sphereGeometry args={[0.18, 32, 32]} />
           <meshStandardMaterial
             color="#a855f7"
             emissive="#581c87"
@@ -358,15 +358,15 @@ function SolarSystemPlanets({ scrollProgress }) {
           />
         </mesh>
         <mesh scale={[1.25, 1.25, 1.25]}>
-          <sphereGeometry args={[0.35, 16, 16]} />
-          <meshBasicMaterial color="#ff007f" transparent opacity={0.25} wireframe />
+          <sphereGeometry args={[0.18, 16, 16]} />
+          <meshBasicMaterial color="#ff007f" transparent opacity={0.3} wireframe />
         </mesh>
       </group>
 
       {/* Planet 5: Outer Cyber Mesh Planet */}
       <group ref={p5Ref}>
         <mesh>
-          <sphereGeometry args={[0.38, 24, 24]} />
+          <sphereGeometry args={[0.20, 24, 24]} />
           <meshStandardMaterial
             color="#38bdf8"
             emissive="#0369a1"
@@ -376,7 +376,7 @@ function SolarSystemPlanets({ scrollProgress }) {
           />
         </mesh>
         <mesh rotation={[0.4, 0.4, 0]}>
-          <ringGeometry args={[0.48, 0.65, 32]} />
+          <ringGeometry args={[0.26, 0.36, 32]} />
           <meshBasicMaterial color="#38bdf8" side={THREE.DoubleSide} transparent opacity={0.4} />
         </mesh>
       </group>
