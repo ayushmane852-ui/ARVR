@@ -90,14 +90,14 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Tagline Positioned Directly Above CTAs (Replacing Old Subtext Spot) */}
+        {/* Tagline Positioned Directly Above CTAs with High-Contrast Glass Backdrop */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="mb-4 sm:mb-6"
+          className="mb-4 sm:mb-6 px-6 sm:px-8 py-2.5 sm:py-3 rounded-2xl bg-slate-950/85 backdrop-blur-md border border-cyan-500/30 shadow-[0_0_30px_rgba(0,240,255,0.25)] inline-flex items-center justify-center"
         >
-          <h1 className="font-orbitron font-black text-xl sm:text-3xl md:text-4xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-purple-400 uppercase text-glow-cyan whitespace-nowrap">
+          <h1 className="font-orbitron font-black text-xl sm:text-3xl md:text-4xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-purple-400 uppercase text-glow-cyan whitespace-nowrap drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
             STEP BEYOND REALITY
           </h1>
         </motion.div>
