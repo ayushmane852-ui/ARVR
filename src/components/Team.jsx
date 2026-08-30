@@ -567,11 +567,8 @@ export default function Team() {
                     </div>
                   </div>
 
-                  <div className="text-center">
-                    <span className={`inline-block font-mono text-[10px] tracking-wider font-semibold uppercase px-3 py-1 rounded-full ${member.badgeColor} border mb-2`}>
-                      {member.tag}
-                    </span>
-                    <h4 className="font-orbitron font-extrabold text-xl text-white group-hover:text-cyan-300 transition-colors">
+                  <div className="text-center mt-1">
+                    <h4 className="font-orbitron font-extrabold text-xl sm:text-2xl text-white group-hover:text-cyan-300 transition-colors">
                       {member.role}
                     </h4>
                   </div>
@@ -628,11 +625,8 @@ export default function Team() {
                     </div>
                   </div>
 
-                  <div className="text-center">
-                    <span className={`inline-block font-mono text-[9px] tracking-wider font-semibold uppercase px-2.5 py-0.5 rounded-full ${member.badgeColor} border mb-1.5`}>
-                      {member.tag}
-                    </span>
-                    <h4 className="font-orbitron font-bold text-lg text-white group-hover:text-purple-300 transition-colors">
+                  <div className="text-center mt-1">
+                    <h4 className="font-orbitron font-extrabold text-xl text-white group-hover:text-purple-300 transition-colors">
                       {member.role}
                     </h4>
                   </div>
@@ -694,12 +688,9 @@ export default function Team() {
                       </div>
                     </div>
 
-                    {/* Role & Tag */}
-                    <div className="text-center mb-4">
-                      <span className={`inline-block font-mono text-[9px] tracking-wider font-semibold uppercase px-3 py-1 rounded-full ${member.badgeColor} border mb-2`}>
-                        {member.tag}
-                      </span>
-                      <h4 className="font-orbitron font-bold text-xl text-white group-hover:text-pink-300 transition-colors">
+                    {/* Role */}
+                    <div className="text-center mb-4 mt-1">
+                      <h4 className="font-orbitron font-extrabold text-xl text-white group-hover:text-pink-300 transition-colors">
                         {member.role}
                       </h4>
                     </div>
@@ -780,11 +771,8 @@ export default function Team() {
                       </div>
                     </div>
 
-                    <div className="text-center">
-                      <span className={`inline-block font-mono text-[9px] tracking-wider font-semibold uppercase px-3 py-1 rounded-full ${member.badgeColor} border mb-2`}>
-                        {member.tag}
-                      </span>
-                      <h4 className="font-orbitron font-bold text-xl text-white group-hover:text-emerald-300 transition-colors">
+                    <div className="text-center mt-1">
+                      <h4 className="font-orbitron font-extrabold text-xl text-white group-hover:text-emerald-300 transition-colors">
                         {member.role}
                       </h4>
                     </div>
@@ -827,10 +815,7 @@ export default function Team() {
                 <X size={20} className="group-hover:rotate-90 transition-transform duration-300 text-cyan-400" />
               </button>
 
-              <div className="mt-4 mb-5">
-                <span className={`inline-block font-mono text-xs tracking-wider font-semibold uppercase px-3 py-1 rounded-full ${selectedMember.badgeColor || 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40'} border mb-2`}>
-                  {selectedMember.tag}
-                </span>
+              <div className="mt-4 mb-4">
                 <h3 className="font-orbitron font-black text-2xl sm:text-3xl text-white text-glow-cyan">
                   {selectedMember.role}
                 </h3>
@@ -913,13 +898,10 @@ export default function Team() {
                       </div>
 
                       <div className="text-left flex-grow">
-                        <span className={`inline-block font-mono text-[9px] tracking-wider font-semibold uppercase px-2 py-0.5 rounded-full ${member.badgeColor || 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40'} border mb-1`}>
-                          {member.tag}
-                        </span>
                         <h4 className="font-orbitron font-bold text-base text-white group-hover:text-cyan-300 transition-colors">
                           {member.role}
                         </h4>
-                        <span className="font-mono text-[10px] text-slate-400 block mt-0.5">
+                        <span className="font-mono text-[10px] text-slate-400 block mt-1">
                           {member.rank}
                         </span>
                       </div>
