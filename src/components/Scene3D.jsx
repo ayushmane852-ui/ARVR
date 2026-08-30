@@ -211,140 +211,176 @@ function CameraRig() {
   return null;
 }
 
-// 3D Cosmic Planets with Rings & Atmosphere Glow
-function CosmicPlanets({ scrollProgress }) {
+// 3D Solar System with Circular Orbital Paths & Revolving Planets
+function SolarSystemPlanets({ scrollProgress }) {
   const groupRef = useRef();
-  const planet1Ref = useRef(); // Cyan Gas Giant with Ring
-  const ring1Ref = useRef();
-  const planet2Ref = useRef(); // Purple/Magenta Planet
-  const planet3Ref = useRef(); // Golden Orb/Moon
-  const planet4Ref = useRef(); // Cyber Mesh Planet
+
+  // Individual planet group refs for circular orbital movement
+  const p1Ref = useRef(); // Inner Cyan Planet
+  const p2Ref = useRef(); // Golden Planet
+  const p3Ref = useRef(); // Saturn Ring Gas Giant
+  const p4Ref = useRef(); // Purple/Magenta Planet
+  const p5Ref = useRef(); // Outer Cyber Mesh Planet
+
+  // Orbital angles tracked across animation frames
+  const angles = useRef({ p1: 0, p2: 1.5, p3: 3.1, p4: 4.5, p5: 5.8 });
 
   useFrame((_, delta) => {
-    if (groupRef.current) {
-      // Continuous slow orbital rotation
-      groupRef.current.rotation.y += delta * 0.025;
-      
-      // Parallax scroll reaction
-      groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, -scrollProgress * 4, 0.05);
-      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, scrollProgress * 1.2, 0.05);
+    // Increment angles at different orbital velocities
+    angles.current.p1 += delta * 0.45;  // Inner fast orbit
+    angles.current.p2 += delta * 0.32;
+    angles.current.p3 += delta * 0.22;  // Medium ringed orbit
+    angles.current.p4 += delta * 0.15;
+    angles.current.p5 += delta * 0.09;  // Outer slow orbit
+
+    // Circular motion calculations (x = cos, z = sin)
+    if (p1Ref.current) {
+      const r = 3.2;
+      p1Ref.current.position.x = Math.cos(angles.current.p1) * r;
+      p1Ref.current.position.z = Math.sin(angles.current.p1) * r;
+      p1Ref.current.rotation.y += delta * 0.8;
     }
 
-    if (planet1Ref.current) {
-      planet1Ref.current.rotation.y += delta * 0.15;
+    if (p2Ref.current) {
+      const r = 4.8;
+      p2Ref.current.position.x = Math.cos(angles.current.p2) * r;
+      p2Ref.current.position.z = Math.sin(angles.current.p2) * r;
+      p2Ref.current.rotation.y += delta * 0.6;
     }
-    if (ring1Ref.current) {
-      ring1Ref.current.rotation.z += delta * 0.08;
+
+    if (p3Ref.current) {
+      const r = 6.6;
+      p3Ref.current.position.x = Math.cos(angles.current.p3) * r;
+      p3Ref.current.position.z = Math.sin(angles.current.p3) * r;
+      p3Ref.current.rotation.y += delta * 0.4;
     }
-    if (planet2Ref.current) {
-      planet2Ref.current.rotation.y -= delta * 0.12;
-      planet2Ref.current.rotation.x += delta * 0.05;
+
+    if (p4Ref.current) {
+      const r = 8.4;
+      p4Ref.current.position.x = Math.cos(angles.current.p4) * r;
+      p4Ref.current.position.z = Math.sin(angles.current.p4) * r;
+      p4Ref.current.rotation.y += delta * 0.3;
     }
-    if (planet3Ref.current) {
-      planet3Ref.current.rotation.y += delta * 0.2;
+
+    if (p5Ref.current) {
+      const r = 10.5;
+      p5Ref.current.position.x = Math.cos(angles.current.p5) * r;
+      p5Ref.current.position.z = Math.sin(angles.current.p5) * r;
+      p5Ref.current.rotation.y += delta * 0.2;
     }
-    if (planet4Ref.current) {
-      planet4Ref.current.rotation.y += delta * 0.25;
-      planet4Ref.current.rotation.z -= delta * 0.1;
+
+    // Scroll parallax & tilt
+    if (groupRef.current) {
+      groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, -scrollProgress * 4, 0.05);
+      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, -1.8 + scrollProgress * 1.2, 0.05);
     }
   });
 
   return (
-    <group ref={groupRef}>
-      {/* Planet 1: Large Cyan/Teal Gas Giant with Saturn-style Rings */}
-      <group position={[-5.8, 2.8, -4.5]}>
-        <mesh ref={planet1Ref}>
-          <sphereGeometry args={[1.1, 32, 32]} />
-          <meshStandardMaterial
-            color="#00f0ff"
-            emissive="#005577"
-            roughness={0.3}
-            metalness={0.7}
-          />
-        </mesh>
-        {/* Planet 1 Outer Atmosphere Glow Shell */}
-        <mesh scale={[1.15, 1.15, 1.15]}>
-          <sphereGeometry args={[1.1, 32, 32]} />
+    <group ref={groupRef} position={[0, -1.8, 0]} rotation={[0.4, 0, 0]}>
+      
+      {/* Orbital Path Rings (Thin glowing circular guides) */}
+      {[3.2, 4.8, 6.6, 8.4, 10.5].map((radius, idx) => (
+        <mesh key={idx} rotation={[Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[radius - 0.015, radius + 0.015, 128]} />
           <meshBasicMaterial
-            color="#00f0ff"
-            transparent
-            opacity={0.15}
-            side={THREE.BackSide}
-          />
-        </mesh>
-        {/* Planet 1 Orbital Rings */}
-        <mesh ref={ring1Ref} rotation={[Math.PI / 3, 0.2, 0]}>
-          <ringGeometry args={[1.4, 2.3, 64]} />
-          <meshStandardMaterial
-            color="#00f0ff"
-            emissive="#0088aa"
+            color={idx % 2 === 0 ? "#00f0ff" : "#a855f7"}
             side={THREE.DoubleSide}
             transparent
-            opacity={0.65}
-            roughness={0.2}
+            opacity={0.18}
           />
         </mesh>
-      </group>
+      ))}
 
-      {/* Planet 2: Vibrant Purple & Magenta Terrestrial Planet */}
-      <group position={[6.2, -1.8, -3.8]}>
-        <mesh ref={planet2Ref}>
-          <sphereGeometry args={[0.85, 32, 32]} />
+      {/* Planet 1: Small Cyan Inner Planet */}
+      <group ref={p1Ref}>
+        <mesh>
+          <sphereGeometry args={[0.22, 32, 32]} />
           <meshStandardMaterial
-            color="#a855f7"
-            emissive="#4c1d95"
-            roughness={0.4}
-            metalness={0.6}
-          />
-        </mesh>
-        {/* Wireframe Orbital Mesh Shell */}
-        <mesh scale={[1.2, 1.2, 1.2]}>
-          <sphereGeometry args={[0.85, 16, 16]} />
-          <meshBasicMaterial
-            color="#ff007f"
-            wireframe
-            transparent
-            opacity={0.25}
-          />
-        </mesh>
-      </group>
-
-      {/* Planet 3: Golden Star Orb / Cosmic Moon */}
-      <group position={[-3.8, -3.5, -5.2]}>
-        <mesh ref={planet3Ref}>
-          <sphereGeometry args={[0.6, 32, 32]} />
-          <meshStandardMaterial
-            color="#ffd700"
-            emissive="#b45309"
+            color="#00f0ff"
+            emissive="#006688"
             roughness={0.2}
             metalness={0.8}
           />
         </mesh>
-        <pointLight intensity={1.5} color="#ffd700" distance={6} />
+        <mesh scale={[1.2, 1.2, 1.2]}>
+          <sphereGeometry args={[0.22, 16, 16]} />
+          <meshBasicMaterial color="#00f0ff" transparent opacity={0.25} wireframe />
+        </mesh>
       </group>
 
-      {/* Planet 4: Cybernetic Hologram Mesh Planet */}
-      <group position={[4.8, 3.8, -6]}>
-        <mesh ref={planet4Ref}>
-          <sphereGeometry args={[0.7, 24, 24]} />
+      {/* Planet 2: Small Golden Planet */}
+      <group ref={p2Ref}>
+        <mesh>
+          <sphereGeometry args={[0.28, 32, 32]} />
+          <meshStandardMaterial
+            color="#ffd700"
+            emissive="#b45309"
+            roughness={0.3}
+            metalness={0.7}
+          />
+        </mesh>
+      </group>
+
+      {/* Planet 3: Cyan Gas Giant with Saturn Rings (Smaller Size) */}
+      <group ref={p3Ref}>
+        <mesh>
+          <sphereGeometry args={[0.42, 32, 32]} />
           <meshStandardMaterial
             color="#00f0ff"
-            emissive="#003344"
+            emissive="#003355"
+            roughness={0.3}
+            metalness={0.7}
+          />
+        </mesh>
+        {/* Planet 3 Ring */}
+        <mesh rotation={[Math.PI / 3, 0, 0]}>
+          <ringGeometry args={[0.55, 0.95, 64]} />
+          <meshStandardMaterial
+            color="#00f0ff"
+            emissive="#007799"
+            side={THREE.DoubleSide}
+            transparent
+            opacity={0.6}
+          />
+        </mesh>
+      </group>
+
+      {/* Planet 4: Purple & Magenta Planet */}
+      <group ref={p4Ref}>
+        <mesh>
+          <sphereGeometry args={[0.35, 32, 32]} />
+          <meshStandardMaterial
+            color="#a855f7"
+            emissive="#581c87"
+            roughness={0.4}
+            metalness={0.6}
+          />
+        </mesh>
+        <mesh scale={[1.25, 1.25, 1.25]}>
+          <sphereGeometry args={[0.35, 16, 16]} />
+          <meshBasicMaterial color="#ff007f" transparent opacity={0.25} wireframe />
+        </mesh>
+      </group>
+
+      {/* Planet 5: Outer Cyber Mesh Planet */}
+      <group ref={p5Ref}>
+        <mesh>
+          <sphereGeometry args={[0.38, 24, 24]} />
+          <meshStandardMaterial
+            color="#38bdf8"
+            emissive="#0369a1"
             wireframe
             transparent
             opacity={0.7}
           />
         </mesh>
-        <mesh scale={[1.25, 1.25, 1.25]} rotation={[0.5, 0.5, 0]}>
-          <ringGeometry args={[0.9, 1.1, 32]} />
-          <meshBasicMaterial
-            color="#00f0ff"
-            side={THREE.DoubleSide}
-            transparent
-            opacity={0.4}
-          />
+        <mesh rotation={[0.4, 0.4, 0]}>
+          <ringGeometry args={[0.48, 0.65, 32]} />
+          <meshBasicMaterial color="#38bdf8" side={THREE.DoubleSide} transparent opacity={0.4} />
         </mesh>
       </group>
+
     </group>
   );
 }
@@ -366,8 +402,8 @@ export default function Scene3D({ scrollProgress = 0 }) {
 
         <CameraRig />
 
-        {/* 3D Cosmic Planets */}
-        <CosmicPlanets scrollProgress={scrollProgress} />
+        {/* 3D Solar System Planets */}
+        <SolarSystemPlanets scrollProgress={scrollProgress} />
 
         {/* 3D Spiral Galaxy Scene (Circles Removed) */}
         <SpiralGalaxy scrollProgress={scrollProgress} />
