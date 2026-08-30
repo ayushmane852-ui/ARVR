@@ -258,6 +258,14 @@ export default function Team() {
           tag: 'DOCUMENTATION CO-LEAD',
           rank: 'DOC_CO_HEAD_02',
           badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-400/40',
+        },
+        {
+          id: 'doc_co_head_3',
+          role: 'Documentation Co-head',
+          image: '/Images/Team/Documentation/Documentation Co-head (3).jpeg',
+          tag: 'DOCUMENTATION CO-LEAD',
+          rank: 'DOC_CO_HEAD_03',
+          badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-400/40',
         }
       ]
     },
