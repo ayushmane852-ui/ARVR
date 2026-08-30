@@ -10,17 +10,17 @@ export default function Hero() {
   return (
     <section 
       id="hero" 
-      className="relative min-h-screen flex flex-col items-center justify-center pt-4 sm:pt-20 pb-2 sm:pb-6 px-4 sm:px-6 overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 pb-4 sm:pb-6 px-4 sm:px-6 overflow-hidden"
     >
       {/* Background HUD Decor & Grid overlay */}
       <div className="absolute inset-0 spatial-grid-bg opacity-20 pointer-events-none" />
       <div className="absolute inset-0 scanlines opacity-40 pointer-events-none" />
 
-      {/* Main Container */}
-      <div className="relative z-10 max-w-6xl w-full mx-auto flex flex-col items-center text-center">
+      {/* Main Container - Full Viewport Flex */}
+      <div className="relative z-10 max-w-6xl w-full mx-auto flex flex-col items-center justify-between text-center min-h-[calc(100vh-7rem)]">
 
-        {/* AR vs VR Split Interactive HUD Indicators */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 items-center mb-1 sm:mb-5">
+        {/* AR vs VR Split Interactive HUD Indicators & Top Brand */}
+        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 items-center">
           
           {/* Left Side: AUGMENTED Reality Tag */}
           <motion.div
@@ -57,7 +57,7 @@ export default function Hero() {
             className="flex flex-col items-center px-2"
           >
             {/* Stable Fixed ARVR Logo */}
-            <div className="mb-1 sm:mb-2 relative -mt-20 sm:-mt-16">
+            <div className="mb-1 sm:mb-2 relative -mt-6 sm:-mt-4">
               <Logo3D size="hero" />
             </div>
 
@@ -97,66 +97,72 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Action Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="flex flex-col sm:flex-row gap-3 sm:gap-5 items-center justify-center w-full max-w-md px-2 mb-4 sm:mb-6"
-        >
-          {/* Primary CTA */}
-          <button
+        {/* Center Open Spatial Window for 3D Solar System */}
+        <div className="flex-1 my-auto min-h-[60px] sm:min-h-[100px]" />
+
+        {/* Bottom Pinned Elements: Action Buttons & Scroll Indicator */}
+        <div className="w-full flex flex-col items-center gap-3 sm:gap-4 pb-2">
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="flex flex-col sm:flex-row gap-3 sm:gap-5 items-center justify-center w-full max-w-md px-2"
+          >
+            {/* Primary CTA */}
+            <button
+              onClick={() => navigate('/about')}
+              className="w-full sm:w-auto px-6 py-3 rounded-xl font-orbitron font-bold text-[11px] sm:text-xs tracking-widest uppercase glass-button-primary flex items-center justify-center gap-2.5 group cursor-pointer"
+            >
+              <span>ENTER THE EXPERIENCE</span>
+              <ChevronRight size={15} className="group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            {/* Secondary CTA */}
+            <button
+              onClick={() => navigate('/events')}
+              className="w-full sm:w-auto px-6 py-3 rounded-xl font-orbitron font-bold text-[11px] sm:text-xs tracking-widest uppercase glass-button-secondary flex items-center justify-center gap-2.5 cursor-pointer"
+            >
+              <Sparkles size={15} className="text-cyan-400" />
+              <span>EXPLORE ARVR</span>
+            </button>
+          </motion.div>
+
+          {/* Scroll Indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.7 }}
+            className="flex flex-col items-center gap-1.5 cursor-pointer group"
             onClick={() => navigate('/about')}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl font-orbitron font-bold text-[11px] sm:text-xs tracking-widest uppercase glass-button-primary flex items-center justify-center gap-2.5 group cursor-pointer"
           >
-            <span>ENTER THE EXPERIENCE</span>
-            <ChevronRight size={15} className="group-hover:translate-x-1 transition-transform" />
-          </button>
-
-          {/* Secondary CTA */}
-          <button
-            onClick={() => navigate('/events')}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl font-orbitron font-bold text-[11px] sm:text-xs tracking-widest uppercase glass-button-secondary flex items-center justify-center gap-2.5 cursor-pointer"
-          >
-            <Sparkles size={15} className="text-cyan-400" />
-            <span>EXPLORE ARVR</span>
-          </button>
-        </motion.div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.7 }}
-          className="flex flex-col items-center gap-1.5 cursor-pointer group mb-6 sm:mb-8"
-          onClick={() => navigate('/about')}
-        >
-          <span className="font-mono text-[9px] text-cyan-400/60 uppercase tracking-[0.2em] group-hover:text-cyan-300">
-            SCROLL TO EXPLORE SPATIAL REALM
-          </span>
-          <div className="w-5 h-8 rounded-full border border-cyan-500/30 flex items-start justify-center p-1 glass-panel">
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-              className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f0ff]"
-            />
-          </div>
-        </motion.div>
-
-        {/* Subtext Container Revealed Upon Scroll */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="w-full max-w-xl mx-auto mt-2 sm:mt-4 px-5 py-3 rounded-2xl bg-slate-950/80 backdrop-blur-md border border-cyan-500/25 shadow-xl"
-        >
-          <p className="font-space text-slate-200 text-xs sm:text-sm font-light leading-relaxed">
-            Explore Augmented Reality, Virtual Reality, Spatial Computing and emerging technologies shaping human-computer interaction.
-          </p>
-        </motion.div>
+            <span className="font-mono text-[9px] text-cyan-400/60 uppercase tracking-[0.2em] group-hover:text-cyan-300">
+              SCROLL TO EXPLORE SPATIAL REALM
+            </span>
+            <div className="w-5 h-7 rounded-full border border-cyan-500/30 flex items-start justify-center p-1 glass-panel">
+              <motion.div
+                animate={{ y: [0, 8, 0] }}
+                transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+                className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f0ff]"
+              />
+            </div>
+          </motion.div>
+        </div>
 
       </div>
+
+      {/* Subtext Container Revealed Upon Scroll */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="w-full max-w-xl mx-auto mt-8 sm:mt-12 px-5 py-3 rounded-2xl bg-slate-950/80 backdrop-blur-md border border-cyan-500/25 shadow-xl"
+      >
+        <p className="font-space text-slate-200 text-xs sm:text-sm font-light leading-relaxed">
+          Explore Augmented Reality, Virtual Reality, Spatial Computing and emerging technologies shaping human-computer interaction.
+        </p>
+      </motion.div>
     </section>
   );
 }
