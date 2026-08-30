@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, AtSign, Globe, MapPin, Send, Radio, MessageSquare, CheckCircle } from 'lucide-react';
+import { Mail, AtSign, Globe, Send, Radio, MessageSquare, CheckCircle } from 'lucide-react';
 
 export default function Contact() {
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -19,8 +19,9 @@ export default function Contact() {
     {
       icon: Mail,
       label: 'Email',
-      value: 'contact@arvrclub.edu',
-      subText: 'Official spatial channel placeholder'
+      value: 'hr.arvrkitcoek@gmail.com',
+      subText: 'Official club inquiry mail',
+      url: 'mailto:hr.arvrkitcoek@gmail.com'
     },
     {
       icon: AtSign,
@@ -34,12 +35,6 @@ export default function Contact() {
       label: 'LinkedIn',
       value: 'ARVR Club Innovation Lab',
       subText: 'Professional tech network'
-    },
-    {
-      icon: MapPin,
-      label: 'College Location',
-      value: 'Spatial Computing Lab, Block 4',
-      subText: 'College Innovation Hub'
     }
   ];
 
