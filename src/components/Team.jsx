@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Shield, Cpu, Layers, Crown, Terminal, Compass, Zap, Scan, Code2, X, Maximize2, Users, ArrowRight, UserPlus } from 'lucide-react';
+import { Sparkles, Shield, Cpu, Layers, Crown, Terminal, Compass, Zap, Code2, X, Maximize2, Users, UserPlus } from 'lucide-react';
 
 export default function Team() {
   const [selectedMember, setSelectedMember] = useState(null);
@@ -77,7 +77,7 @@ export default function Team() {
       icon: Layers,
     },
 
-    // 2. Core Operations Board (2 Treasurers + Secretary)
+    // 2. Core Operations Board (Secretary & Single Treasurer)
     {
       id: 'secretary',
       role: 'Secretary',
@@ -93,35 +93,93 @@ export default function Team() {
       icon: Terminal,
     },
     {
-      id: 'treasurer1',
+      id: 'treasurer',
       role: 'Treasurer',
       category: 'board',
-      image: '/Images/Team/Treasure.png',
+      image: '/Images/Team/Treasure.jpeg',
       tag: 'FINANCE & ASSETS',
       status: 'TREASURY_LEAD',
       color: 'from-amber-400 to-yellow-600',
       glowColor: 'rgba(251, 191, 36, 0.35)',
       borderColor: 'border-amber-500/40 hover:border-amber-300',
       badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-400/40',
-      rank: '06 // TREASURER I',
-      icon: Zap,
-    },
-    {
-      id: 'treasurer2',
-      role: 'Treasurer',
-      category: 'board',
-      image: '/Images/Team/Treasure.jpeg',
-      tag: 'FINANCE & ASSETS',
-      status: 'TREASURY_LEAD',
-      color: 'from-amber-400 to-yellow-500',
-      glowColor: 'rgba(251, 191, 36, 0.35)',
-      borderColor: 'border-amber-500/40 hover:border-amber-300',
-      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-400/40',
-      rank: '07 // TREASURER II',
+      rank: '06 // TREASURER',
       icon: Zap,
     },
 
-    // 3. Domain Leadership
+    // 3. Domain Leadership (Unity placed FIRST)
+    {
+      id: 'unity_head',
+      role: 'Unity Head',
+      category: 'domain',
+      image: '/Images/Team/Unity/Unity Head.jpeg',
+      tag: 'UNITY LEAD',
+      status: 'UNITY_ENGINE',
+      color: 'from-cyan-400 via-teal-400 to-emerald-500',
+      glowColor: 'rgba(6, 182, 212, 0.35)',
+      borderColor: 'border-cyan-500/40 hover:border-cyan-300',
+      badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+      rank: '07 // UNITY_HEAD',
+      icon: Cpu,
+      subTeam: [
+        {
+          id: 'unity_team_1',
+          role: 'Team Unity',
+          image: '/Images/Team/Unity/Team Unity.jpeg',
+          tag: 'UNITY TEAM',
+          rank: 'UNITY_DEV_01',
+          badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+        },
+        {
+          id: 'unity_team_2',
+          role: 'Team Unity',
+          image: '/Images/Team/Unity/Team Unity (2).jpeg',
+          tag: 'UNITY TEAM',
+          rank: 'UNITY_DEV_02',
+          badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+        },
+        {
+          id: 'unity_team_3',
+          role: 'Team Unity',
+          image: '/Images/Team/Unity/Team Unity (3).jpeg',
+          tag: 'UNITY TEAM',
+          rank: 'UNITY_DEV_03',
+          badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+        },
+        {
+          id: 'unity_team_4',
+          role: 'Team Unity',
+          image: '/Images/Team/Unity/Team Unity (4).jpeg',
+          tag: 'UNITY TEAM',
+          rank: 'UNITY_DEV_04',
+          badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+        },
+        {
+          id: 'unity_team_5',
+          role: 'Team Unity',
+          image: '/Images/Team/Unity/Team Unity (5).jpeg',
+          tag: 'UNITY TEAM',
+          rank: 'UNITY_DEV_05',
+          badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+        },
+        {
+          id: 'unity_team_6',
+          role: 'Team Unity',
+          image: '/Images/Team/Unity/Team Unity (6).jpeg',
+          tag: 'UNITY TEAM',
+          rank: 'UNITY_DEV_06',
+          badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+        },
+        {
+          id: 'unity_team_7',
+          role: 'Team Unity',
+          image: '/Images/Team/Unity/Team Unity (7).jpeg',
+          tag: 'UNITY TEAM',
+          rank: 'UNITY_DEV_07',
+          badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+        },
+      ]
+    },
     {
       id: 'technical_head',
       role: 'Technical Head',
@@ -143,7 +201,7 @@ export default function Team() {
           tag: 'TECHNICAL CO-LEAD',
           rank: 'TECH_CO_HEAD_01',
           status: 'SPATIAL_DEV',
-          badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+          badgeColor: 'bg-pink-500/20 text-pink-300 border-pink-400/40',
         },
         {
           id: 'technical_co_head_2',
@@ -152,7 +210,7 @@ export default function Team() {
           tag: 'TECHNICAL CO-LEAD',
           rank: 'TECH_CO_HEAD_02',
           status: 'SPATIAL_DEV',
-          badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+          badgeColor: 'bg-pink-500/20 text-pink-300 border-pink-400/40',
         }
       ]
     },
@@ -305,28 +363,115 @@ export default function Team() {
       icon: Crown,
       subTeam: [
         {
-          id: 'event_head_3',
-          role: 'Event Head',
-          image: '/Images/Team/Event Heads/Event Head (3).jpeg',
-          tag: 'EVENT HEAD',
-          rank: 'EVENT_HEAD_01',
+          id: 'event_co_head_1',
+          role: 'Event Co-head',
+          image: '/Images/Team/Event Heads/Event Head (2).jpeg',
+          tag: 'EVENT CO-LEAD',
+          rank: 'EVENT_CO_HEAD_01',
           badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-400/40',
         },
         {
-          id: 'event_head_2',
-          role: 'Event Head',
-          image: '/Images/Team/Event Heads/Event Head (2).jpeg',
-          tag: 'EVENT HEAD',
-          rank: 'EVENT_HEAD_02',
+          id: 'event_co_head_2',
+          role: 'Event Co-head',
+          image: '/Images/Team/Event Heads/Event Head (3).jpeg',
+          tag: 'EVENT CO-LEAD',
+          rank: 'EVENT_CO_HEAD_02',
           badgeColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-400/40',
         }
       ]
+    },
+
+    // 4. Department Coordinators
+    {
+      id: 'coord_biotech',
+      role: 'BioTechnology',
+      category: 'coordinator',
+      image: '/Images/Team/Department Co-ordinators/BioTechnology.jpeg',
+      tag: 'DEPT COORDINATOR',
+      status: 'BIOTECH_LEAD',
+      color: 'from-emerald-400 via-teal-500 to-green-600',
+      glowColor: 'rgba(52, 211, 153, 0.35)',
+      borderColor: 'border-emerald-500/40 hover:border-emerald-300',
+      badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40',
+      rank: 'DEPT // BIOTECH',
+      icon: Compass,
+    },
+    {
+      id: 'coord_civil',
+      role: 'Civil Engineering',
+      category: 'coordinator',
+      image: '/Images/Team/Department Co-ordinators/Civil Engineering.jpeg',
+      tag: 'DEPT COORDINATOR',
+      status: 'CIVIL_LEAD',
+      color: 'from-amber-400 via-orange-500 to-yellow-600',
+      glowColor: 'rgba(245, 158, 11, 0.35)',
+      borderColor: 'border-amber-500/40 hover:border-amber-300',
+      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-400/40',
+      rank: 'DEPT // CIVIL',
+      icon: Shield,
+    },
+    {
+      id: 'coord_csbs',
+      role: 'Computer Science & Business System',
+      category: 'coordinator',
+      image: '/Images/Team/Department Co-ordinators/Computer Science & Business System.jpeg',
+      tag: 'DEPT COORDINATOR',
+      status: 'CSBS_LEAD',
+      color: 'from-purple-400 via-indigo-500 to-violet-600',
+      glowColor: 'rgba(168, 85, 247, 0.35)',
+      borderColor: 'border-purple-500/40 hover:border-purple-300',
+      badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-400/40',
+      rank: 'DEPT // CSBS',
+      icon: Cpu,
+    },
+    {
+      id: 'coord_cse',
+      role: 'Computer Science & Engineering',
+      category: 'coordinator',
+      image: '/Images/Team/Department Co-ordinators/Computer Science & Engineering.jpeg',
+      tag: 'DEPT COORDINATOR',
+      status: 'CSE_LEAD',
+      color: 'from-cyan-400 via-blue-500 to-indigo-600',
+      glowColor: 'rgba(6, 182, 212, 0.35)',
+      borderColor: 'border-cyan-500/40 hover:border-cyan-300',
+      badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/40',
+      rank: 'DEPT // CSE',
+      icon: Code2,
+    },
+    {
+      id: 'coord_aiml',
+      role: 'CSE (AIML)',
+      category: 'coordinator',
+      image: '/Images/Team/Department Co-ordinators/CSE (AIML).jpeg',
+      tag: 'DEPT COORDINATOR',
+      status: 'AIML_LEAD',
+      color: 'from-pink-400 via-rose-500 to-red-600',
+      glowColor: 'rgba(244, 63, 94, 0.35)',
+      borderColor: 'border-pink-500/40 hover:border-pink-300',
+      badgeColor: 'bg-pink-500/20 text-pink-300 border-pink-400/40',
+      rank: 'DEPT // AIML',
+      icon: Zap,
+    },
+    {
+      id: 'coord_entc',
+      role: 'Electronics & Telecommunication',
+      category: 'coordinator',
+      image: '/Images/Team/Department Co-ordinators/Electronics & Telecommunication Engineering.jpeg',
+      tag: 'DEPT COORDINATOR',
+      status: 'ENTC_LEAD',
+      color: 'from-sky-400 via-blue-500 to-cyan-600',
+      glowColor: 'rgba(56, 189, 248, 0.35)',
+      borderColor: 'border-sky-500/40 hover:border-sky-300',
+      badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-400/40',
+      rank: 'DEPT // ENTC',
+      icon: Terminal,
     },
   ];
 
   const executiveMembers = teamMembers.filter((m) => m.category === 'executive');
   const boardMembers = teamMembers.filter((m) => m.category === 'board');
   const domainMembers = teamMembers.filter((m) => m.category === 'domain');
+  const coordinatorMembers = teamMembers.filter((m) => m.category === 'coordinator');
 
   return (
     <section id="team" className="relative py-20 sm:py-28 px-4 sm:px-6 overflow-hidden">
@@ -355,7 +500,7 @@ export default function Team() {
             OUR TEAM
           </h2>
           <p className="font-space text-slate-300 text-sm sm:text-base max-w-2xl mt-3 font-light leading-relaxed">
-            The visionary engineers, designers, and strategic leads driving the AR/VR Spatial Computing Lab. Click any photo to enlarge or use "View Team" to see department members.
+            The visionary engineers, designers, and strategic leads driving the AR/VR Spatial Computing Lab. Click any photo to enlarge or use "View Team" to see domain team members.
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 via-white to-purple-500 rounded-full mt-4" />
         </div>
@@ -432,7 +577,7 @@ export default function Team() {
           </div>
         </div>
 
-        {/* TIER 2: CORE OPERATIONS BOARD (Secretary & 2 Treasurers) */}
+        {/* TIER 2: CORE OPERATIONS BOARD (Secretary & 1 Treasurer) */}
         <div className="mb-16 sm:mb-20">
           <div className="flex items-center justify-center gap-3 mb-8">
             <Cpu size={18} className="text-purple-400" />
@@ -442,7 +587,7 @@ export default function Team() {
             <div className="w-12 h-[1px] bg-purple-500/30" />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 max-w-2xl mx-auto gap-6 sm:gap-8">
             {boardMembers.map((member, idx) => {
               const IconComp = member.icon;
               return (
@@ -497,8 +642,8 @@ export default function Team() {
           </div>
         </div>
 
-        {/* TIER 3: DOMAIN LEADERSHIP (Technical Head, Content & Creativity, Doc, Media, Design, Logistic) */}
-        <div>
+        {/* TIER 3: DOMAIN LEADERSHIP (Unity First, then Technical, Content, Doc, Media, Design, Logistic, Research, Event) */}
+        <div className="mb-16 sm:mb-20">
           <div className="flex items-center justify-center gap-3 mb-8">
             <Layers size={18} className="text-pink-400" />
             <h3 className="font-orbitron font-bold text-lg sm:text-xl tracking-wider uppercase text-pink-300">
@@ -578,6 +723,79 @@ export default function Team() {
                         </span>
                       )}
                     </button>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* TIER 4: DEPARTMENT COORDINATORS */}
+        <div>
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <Compass size={18} className="text-emerald-400" />
+            <h3 className="font-orbitron font-bold text-lg sm:text-xl tracking-wider uppercase text-emerald-300">
+              DEPARTMENT COORDINATORS
+            </h3>
+            <div className="w-12 h-[1px] bg-emerald-500/30" />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {coordinatorMembers.map((member, idx) => {
+              const IconComp = member.icon;
+              return (
+                <motion.div
+                  key={member.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.08 }}
+                  onClick={() => setSelectedMember(member)}
+                  className={`glass-panel rounded-3xl p-6 border ${member.borderColor} transition-all duration-500 relative group flex flex-col justify-between hover:-translate-y-1.5 cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.4)]`}
+                >
+                  <div 
+                    className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{ boxShadow: `0 0 35px ${member.glowColor}` }}
+                  />
+
+                  <div>
+                    <div className="font-mono text-[9px] text-slate-400 mb-4 border-b border-cyan-500/15 pb-2 flex items-center justify-between">
+                      <span className="tracking-widest uppercase">{member.rank}</span>
+                      <span className="text-emerald-400 opacity-80 group-hover:opacity-100 flex items-center gap-1">
+                        <Maximize2 size={10} /> VIEW PHOTO
+                      </span>
+                    </div>
+
+                    <div className="relative mb-5 flex justify-center">
+                      <div className={`relative w-44 h-44 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform duration-500`}>
+                        <div className="w-full h-full rounded-[14px] overflow-hidden bg-slate-950 relative">
+                          <img
+                            src={member.image}
+                            alt={member.role}
+                            className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
+                            onError={(e) => { e.target.style.display = 'none'; }}
+                          />
+                          <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <div className="p-2.5 rounded-full bg-emerald-500/30 border border-emerald-400/50 text-emerald-300 shadow-[0_0_15px_rgba(52,211,153,0.5)]">
+                              <Maximize2 size={20} />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="absolute -bottom-2 right-6 p-2 rounded-xl bg-slate-950 border border-emerald-500/40 text-emerald-400 shadow-md">
+                        <IconComp size={16} />
+                      </div>
+                    </div>
+
+                    <div className="text-center">
+                      <span className={`inline-block font-mono text-[9px] tracking-wider font-semibold uppercase px-3 py-1 rounded-full ${member.badgeColor} border mb-2`}>
+                        {member.tag}
+                      </span>
+                      <h4 className="font-orbitron font-bold text-xl text-white group-hover:text-emerald-300 transition-colors">
+                        {member.role}
+                      </h4>
+                    </div>
                   </div>
                 </motion.div>
               );
