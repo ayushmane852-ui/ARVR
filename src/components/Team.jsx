@@ -565,10 +565,6 @@ export default function Team() {
                         </div>
                       </div>
                     </div>
-
-                    <div className="absolute -bottom-2 right-4 p-2 rounded-xl bg-slate-950 border border-cyan-500/40 text-cyan-400 shadow-lg group-hover:rotate-12 transition-transform">
-                      <IconComp size={18} />
-                    </div>
                   </div>
 
                   <div className="text-center">
@@ -629,10 +625,6 @@ export default function Team() {
                           </div>
                         </div>
                       </div>
-                    </div>
-
-                    <div className="absolute -bottom-2 right-6 p-2 rounded-xl bg-slate-950 border border-purple-500/40 text-purple-400 shadow-md">
-                      <IconComp size={16} />
                     </div>
                   </div>
 
@@ -699,10 +691,6 @@ export default function Team() {
                             </div>
                           </div>
                         </div>
-                      </div>
-
-                      <div className="absolute -bottom-2 right-6 p-2 rounded-xl bg-slate-950 border border-pink-500/40 text-pink-400 shadow-md">
-                        <IconComp size={16} />
                       </div>
                     </div>
 
@@ -789,10 +777,6 @@ export default function Team() {
                             </div>
                           </div>
                         </div>
-                      </div>
-
-                      <div className="absolute -bottom-2 right-6 p-2 rounded-xl bg-slate-950 border border-emerald-500/40 text-emerald-400 shadow-md">
-                        <IconComp size={16} />
                       </div>
                     </div>
 
