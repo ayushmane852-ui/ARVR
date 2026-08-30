@@ -56,13 +56,13 @@ export default function Hero() {
             transition={{ duration: 0.8 }}
             className="flex flex-col items-center px-2"
           >
-            {/* Stable Fixed ARVR Logo */}
-            <div className="mb-1 sm:mb-2 relative -mt-6 sm:-mt-4">
+            {/* Stable Fixed ARVR Logo - Shifted Slightly Upwards */}
+            <div className="mb-0 relative -mt-16 sm:-mt-12">
               <Logo3D size="hero" />
             </div>
 
-            {/* Compact Tagline Badge Directly Below Logo */}
-            <div className="mt-1 sm:mt-2 px-4 py-1.5 rounded-full bg-slate-950/85 backdrop-blur-md border border-cyan-500/35 shadow-[0_0_20px_rgba(0,240,255,0.25)] inline-flex items-center justify-center">
+            {/* Compact Tagline Badge Touching Directly Below Logo */}
+            <div className="-mt-3 sm:-mt-4 px-4 py-1.5 rounded-full bg-slate-950/85 backdrop-blur-md border border-cyan-500/35 shadow-[0_0_20px_rgba(0,240,255,0.25)] inline-flex items-center justify-center relative z-20">
               <span className="font-orbitron font-extrabold text-xs sm:text-sm tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-purple-300 uppercase whitespace-nowrap drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
                 STEP BEYOND REALITY
               </span>
