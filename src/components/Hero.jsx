@@ -76,26 +76,6 @@ export default function Hero() {
               <span>EXPLORE ARVR</span>
             </button>
           </motion.div>
-
-          {/* Scroll Indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.7 }}
-            className="flex flex-col items-center gap-1.5 cursor-pointer group"
-            onClick={() => navigate('/about')}
-          >
-            <span className="font-mono text-[9px] text-cyan-400/60 uppercase tracking-[0.2em] group-hover:text-cyan-300">
-              SCROLL TO EXPLORE SPATIAL REALM
-            </span>
-            <div className="w-5 h-7 rounded-full border border-cyan-500/30 flex items-start justify-center p-1 glass-panel">
-              <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-                className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f0ff]"
-              />
-            </div>
-          </motion.div>
         </div>
 
       </div>
