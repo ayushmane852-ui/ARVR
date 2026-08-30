@@ -550,7 +550,7 @@ export default function Team() {
                   </div>
 
                   <div className="relative mb-5 flex justify-center">
-                    <div className={`relative w-44 h-44 sm:w-48 sm:h-48 rounded-2xl p-1 bg-gradient-to-tr ${member.color} shadow-xl group-hover:scale-105 transition-transform duration-500`}>
+                    <div className={`relative w-52 h-52 sm:w-60 sm:h-60 rounded-2xl p-1 bg-gradient-to-tr ${member.color} shadow-xl group-hover:scale-105 transition-transform duration-500`}>
                       <div className="w-full h-full rounded-xl overflow-hidden bg-slate-950/90 relative">
                         <img
                           src={member.image}
@@ -616,7 +616,7 @@ export default function Team() {
                   </div>
 
                   <div className="relative mb-4 flex justify-center">
-                    <div className={`relative w-40 h-40 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform duration-500`}>
+                    <div className={`relative w-48 h-48 sm:w-52 sm:h-52 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform duration-500`}>
                       <div className="w-full h-full rounded-[14px] overflow-hidden bg-slate-950 relative">
                         <img
                           src={member.image}
@@ -686,7 +686,7 @@ export default function Team() {
                       onClick={() => setSelectedMember(member)}
                       className="relative mb-5 flex justify-center cursor-pointer"
                     >
-                      <div className={`relative w-44 h-44 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform duration-500`}>
+                      <div className={`relative w-52 h-52 sm:w-56 sm:h-56 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform duration-500`}>
                         <div className="w-full h-full rounded-[14px] overflow-hidden bg-slate-950 relative">
                           <img
                             src={member.image}
@@ -775,7 +775,7 @@ export default function Team() {
                     </div>
 
                     <div className="relative mb-5 flex justify-center">
-                      <div className={`relative w-44 h-44 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform duration-500`}>
+                      <div className={`relative w-52 h-52 sm:w-56 sm:h-56 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform duration-500`}>
                         <div className="w-full h-full rounded-[14px] overflow-hidden bg-slate-950 relative">
                           <img
                             src={member.image}
@@ -829,7 +829,7 @@ export default function Team() {
               exit={{ scale: 0.85, opacity: 0, y: 20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-w-3xl w-full glass-panel border border-cyan-500/40 rounded-3xl p-6 sm:p-8 overflow-hidden shadow-[0_0_80px_rgba(0,240,255,0.25)] flex flex-col items-center text-center cursor-default my-auto"
+              className="relative max-w-4xl w-full glass-panel border border-cyan-500/40 rounded-3xl p-6 sm:p-8 overflow-hidden shadow-[0_0_80px_rgba(0,240,255,0.25)] flex flex-col items-center text-center cursor-default my-auto"
             >
               <div className="absolute top-4 left-6 font-mono text-[10px] text-cyan-400/70 tracking-widest uppercase">
                 SYSTEM // FULL_IMAGE_VIEW
@@ -852,11 +852,11 @@ export default function Team() {
                 </h3>
               </div>
 
-              <div className="relative max-h-[55vh] sm:max-h-[60vh] w-full flex items-center justify-center overflow-hidden rounded-2xl bg-slate-950/80 p-2 border border-cyan-500/20 shadow-2xl">
+              <div className="relative max-h-[65vh] sm:max-h-[70vh] w-full flex items-center justify-center overflow-hidden rounded-2xl bg-slate-950/80 p-2 border border-cyan-500/20 shadow-2xl">
                 <img
                   src={selectedMember.image}
                   alt={selectedMember.role}
-                  className="max-h-[50vh] sm:max-h-[55vh] w-auto max-w-full object-contain rounded-xl shadow-lg border border-cyan-500/20"
+                  className="max-h-[60vh] sm:max-h-[65vh] w-auto max-w-full object-contain rounded-xl shadow-lg border border-cyan-500/20"
                 />
               </div>
 
@@ -917,7 +917,7 @@ export default function Team() {
                       }}
                       className="glass-panel p-4 rounded-2xl border border-cyan-500/30 hover:border-cyan-400 bg-slate-950/60 hover:bg-cyan-500/10 transition-all cursor-pointer flex items-center gap-4 group"
                     >
-                      <div className="w-16 h-16 rounded-xl overflow-hidden border border-cyan-400/40 flex-shrink-0 relative">
+                      <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border border-cyan-400/40 flex-shrink-0 relative">
                         <img 
                           src={member.image} 
                           alt={member.role} 
