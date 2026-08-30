@@ -56,13 +56,13 @@ export default function Hero() {
             transition={{ duration: 0.8 }}
             className="flex flex-col items-center px-2"
           >
-            {/* Stable Fixed ARVR Logo - Shifted Upwards */}
-            <div className="mb-1 sm:mb-2 relative -mt-24 sm:-mt-20">
+            {/* Stable Fixed ARVR Logo - Shifted Further Upwards */}
+            <div className="mb-2 sm:mb-4 relative -mt-32 sm:-mt-28">
               <Logo3D size="hero" />
             </div>
 
-            {/* Single Line Tagline Directly Below Logo */}
-            <h1 className="font-orbitron font-black text-xl sm:text-2xl md:text-3xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-purple-400 uppercase text-glow-cyan mb-3 sm:mb-4 whitespace-nowrap">
+            {/* Single Line Tagline Shifted Lower Down */}
+            <h1 className="font-orbitron font-black text-xl sm:text-3xl md:text-4xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-purple-400 uppercase text-glow-cyan mt-6 sm:mt-10 mb-4 sm:mb-6 whitespace-nowrap">
               STEP BEYOND REALITY
             </h1>
           </motion.div>
