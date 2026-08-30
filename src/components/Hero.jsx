@@ -19,16 +19,16 @@ export default function Hero() {
       {/* Main Container - Full Viewport Flex */}
       <div className="relative z-10 max-w-6xl w-full mx-auto flex flex-col items-center justify-between text-center min-h-[calc(100vh-7rem)]">
 
-        {/* Top Brand: ARVR Logo Shifted Upwards */}
-        <div className="w-full flex flex-col items-center justify-center pt-0 sm:pt-1">
+        {/* Top Brand: ARVR Logo Shifted Further Upwards */}
+        <div className="w-full flex flex-col items-center justify-center pt-0">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             className="flex flex-col items-center px-2"
           >
-            {/* ARVR Logo Shifted Upwards */}
-            <div className="mb-0 relative -mt-20 sm:-mt-16">
+            {/* ARVR Logo Shifted Further Upwards */}
+            <div className="mb-0 relative -mt-32 sm:-mt-24">
               <Logo3D size="hero" />
             </div>
           </motion.div>
