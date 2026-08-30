@@ -10,16 +10,16 @@ export default function Hero() {
   return (
     <section 
       id="hero" 
-      className="relative min-h-screen flex flex-col items-center justify-between pt-12 sm:pt-14 pb-8 sm:pb-12 px-4 sm:px-6 overflow-hidden"
+      className="relative min-h-screen h-screen flex flex-col items-center justify-between pt-14 sm:pt-16 pb-3 sm:pb-4 px-4 sm:px-6 overflow-hidden"
     >
       {/* Background HUD Decor & Grid overlay */}
       <div className="absolute inset-0 spatial-grid-bg opacity-20 pointer-events-none" />
       <div className="absolute inset-0 scanlines opacity-40 pointer-events-none" />
 
-      {/* Main Container - Full Viewport Flex */}
-      <div className="relative z-10 max-w-6xl w-full mx-auto flex flex-col items-center justify-between text-center min-h-[calc(100vh-8.5rem)]">
+      {/* Main Container - Exact Viewport Height Flex */}
+      <div className="relative z-10 max-w-6xl w-full mx-auto flex flex-col items-center justify-between text-center h-full pb-1 sm:pb-2">
 
-        {/* Top Brand: Logo3D Shifted Further Up */}
+        {/* Top Brand: Logo3D Shifted High Up */}
         <div className="w-full flex flex-col items-center justify-center pt-0">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -27,18 +27,18 @@ export default function Hero() {
             transition={{ duration: 0.8 }}
             className="flex flex-col items-center px-2"
           >
-            {/* Stable Fixed ARVR Logo - Shifted Further Up */}
-            <div className="mb-0 relative -mt-44 sm:-mt-36">
+            {/* Stable Fixed ARVR Logo - Shifted High Up */}
+            <div className="mb-0 relative -mt-36 sm:-mt-28">
               <Logo3D size="hero" />
             </div>
           </motion.div>
         </div>
 
         {/* Center Open Spatial Window for 3D Solar System */}
-        <div className="flex-1 my-auto min-h-[60px] sm:min-h-[100px]" />
+        <div className="flex-1 my-auto min-h-[40px]" />
 
-        {/* Bottom Pinned Elements: Tagline + Action Buttons (Pulled Upwards for Initial Viewport) */}
-        <div className="w-full flex flex-col items-center gap-2 sm:gap-2.5 pb-6 sm:pb-10 mb-2 sm:mb-4">
+        {/* Bottom Pinned Elements: Tagline + Action Buttons (Pinned at Bottom of Initial Fold) */}
+        <div className="w-full flex flex-col items-center gap-2 sm:gap-2.5 pb-2 sm:pb-3">
           {/* Tagline Badge Placed Just Above Action Buttons (No Space) */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
