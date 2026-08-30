@@ -86,11 +86,12 @@ function SpiralGalaxy({ scrollProgress }) {
       galaxyRef.current.rotation.y += delta * 0.04;
       galaxyRef.current.rotation.z += delta * 0.005;
 
-      // Smooth 3D Cursor tilt
-      const mouseX = windowMouse.x * 0.35;
-      const mouseY = windowMouse.y * 0.35;
-      galaxyRef.current.rotation.x = THREE.MathUtils.lerp(galaxyRef.current.rotation.x, 0.45 - mouseY * 0.35, 0.05);
-      galaxyRef.current.rotation.z = THREE.MathUtils.lerp(galaxyRef.current.rotation.z, mouseX * 0.25, 0.05);
+      // Smooth 3D Cursor tilt & spatial displacement
+      const mouseX = windowMouse.x * 0.6;
+      const mouseY = windowMouse.y * 0.5;
+      galaxyRef.current.rotation.x = THREE.MathUtils.lerp(galaxyRef.current.rotation.x, 0.45 - mouseY * 0.4, 0.06);
+      galaxyRef.current.rotation.z = THREE.MathUtils.lerp(galaxyRef.current.rotation.z, mouseX * 0.35, 0.06);
+      galaxyRef.current.position.x = THREE.MathUtils.lerp(galaxyRef.current.position.x, mouseX * 0.4, 0.06);
 
       // Scroll effect - journey through galaxy depth & move upward on scroll
       galaxyRef.current.position.z = THREE.MathUtils.lerp(galaxyRef.current.position.z, -1 - scrollProgress * 3, 0.05);
@@ -175,7 +176,8 @@ function DistantStarfield({ count = 3000 }) {
   useFrame((_, delta) => {
     if (starsRef.current) {
       starsRef.current.rotation.y += delta * 0.01;
-      starsRef.current.rotation.x += delta * 0.005;
+      starsRef.current.rotation.x = THREE.MathUtils.lerp(starsRef.current.rotation.x, windowMouse.y * 0.15, 0.04);
+      starsRef.current.position.x = THREE.MathUtils.lerp(starsRef.current.position.x, -windowMouse.x * 0.3, 0.04);
     }
   });
 
@@ -201,11 +203,11 @@ function CameraRig() {
   const { camera } = useThree();
 
   useFrame(() => {
-    const mouseX = windowMouse.x * 0.4;
-    const mouseY = windowMouse.y * 0.4;
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouseX, 0.04);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, 2 + mouseY, 0.04);
-    camera.lookAt(0, 0, 0);
+    const mouseX = windowMouse.x * 1.2;
+    const mouseY = windowMouse.y * 0.9;
+    camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouseX, 0.06);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, 2 + mouseY, 0.06);
+    camera.lookAt(windowMouse.x * 0.3, windowMouse.y * 0.2, 0);
   });
 
   return null;
@@ -269,8 +271,13 @@ function SolarSystemPlanets({ scrollProgress }) {
       p5Ref.current.rotation.y += delta * 0.2;
     }
 
-    // Scroll parallax & tilt - move Solar System upward on scroll
+    // Scroll parallax, cursor tilt & multi-axis spatial tracking
     if (groupRef.current) {
+      const mouseX = windowMouse.x * 0.6;
+      const mouseY = windowMouse.y * 0.5;
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, 0.55 - mouseY * 0.3, 0.06);
+      groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, mouseX * 0.4, 0.06);
+      groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, mouseX * 0.5, 0.06);
       groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, -1 - scrollProgress * 3, 0.05);
       groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, -1.0 + scrollProgress * 3.0, 0.05);
     }
