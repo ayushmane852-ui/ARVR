@@ -56,15 +56,10 @@ export default function Hero() {
             transition={{ duration: 0.8 }}
             className="flex flex-col items-center px-2"
           >
-            {/* Stable Fixed ARVR Logo - Shifted Further Upwards */}
-            <div className="mb-2 sm:mb-4 relative -mt-32 sm:-mt-28">
+            {/* Stable Fixed ARVR Logo */}
+            <div className="mb-1 sm:mb-2 relative -mt-20 sm:-mt-14">
               <Logo3D size="hero" />
             </div>
-
-            {/* Single Line Tagline Shifted Lower Down */}
-            <h1 className="font-orbitron font-black text-xl sm:text-3xl md:text-4xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-purple-400 uppercase text-glow-cyan mt-6 sm:mt-10 mb-4 sm:mb-6 whitespace-nowrap">
-              STEP BEYOND REALITY
-            </h1>
           </motion.div>
 
           {/* Right Side: VIRTUAL Reality Tag */}
@@ -95,24 +90,24 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Subtext */}
+        {/* Tagline Positioned Directly Above CTAs (Replacing Old Subtext Spot) */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="w-full max-w-xl mx-auto mb-4 sm:mb-5 px-5 py-2.5 rounded-2xl bg-slate-950/70 backdrop-blur-md border border-cyan-500/20 shadow-lg"
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="mb-4 sm:mb-6"
         >
-          <p className="font-space text-slate-200 text-xs sm:text-sm font-light leading-relaxed">
-            Explore Augmented Reality, Virtual Reality, Spatial Computing and emerging technologies shaping human-computer interaction.
-          </p>
+          <h1 className="font-orbitron font-black text-xl sm:text-3xl md:text-4xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-purple-400 uppercase text-glow-cyan whitespace-nowrap">
+            STEP BEYOND REALITY
+          </h1>
         </motion.div>
 
         {/* Action Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-col sm:flex-row gap-3 sm:gap-5 items-center justify-center w-full max-w-md px-2 mb-3 sm:mb-5"
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="flex flex-col sm:flex-row gap-3 sm:gap-5 items-center justify-center w-full max-w-md px-2 mb-4 sm:mb-6"
         >
           {/* Primary CTA */}
           <button
@@ -137,8 +132,8 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
-          className="flex flex-col items-center gap-1.5 cursor-pointer group"
+          transition={{ duration: 1, delay: 0.7 }}
+          className="flex flex-col items-center gap-1.5 cursor-pointer group mb-6 sm:mb-8"
           onClick={() => navigate('/about')}
         >
           <span className="font-mono text-[9px] text-cyan-400/60 uppercase tracking-[0.2em] group-hover:text-cyan-300">
@@ -151,6 +146,19 @@ export default function Hero() {
               className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f0ff]"
             />
           </div>
+        </motion.div>
+
+        {/* Subtext Container Revealed Upon Scroll */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="w-full max-w-xl mx-auto mt-2 sm:mt-4 px-5 py-3 rounded-2xl bg-slate-950/80 backdrop-blur-md border border-cyan-500/25 shadow-xl"
+        >
+          <p className="font-space text-slate-200 text-xs sm:text-sm font-light leading-relaxed">
+            Explore Augmented Reality, Virtual Reality, Spatial Computing and emerging technologies shaping human-computer interaction.
+          </p>
         </motion.div>
 
       </div>
