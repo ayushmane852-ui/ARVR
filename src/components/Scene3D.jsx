@@ -82,6 +82,10 @@ function SpiralGalaxy({ scrollProgress }) {
 
   useFrame((_, delta) => {
     if (galaxyRef.current) {
+      const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+      const responsiveScale = isMobile ? Math.min(1.0, Math.max(0.5, window.innerWidth / 700)) : 1.0;
+      galaxyRef.current.scale.set(responsiveScale, responsiveScale, responsiveScale);
+
       // Continuous slow galactic rotation
       galaxyRef.current.rotation.y += delta * 0.04;
       galaxyRef.current.rotation.z += delta * 0.005;
@@ -95,7 +99,7 @@ function SpiralGalaxy({ scrollProgress }) {
 
       // Scroll effect - journey through galaxy depth & move upward on scroll
       galaxyRef.current.position.z = THREE.MathUtils.lerp(galaxyRef.current.position.z, -1 - scrollProgress * 3, 0.05);
-      galaxyRef.current.position.y = THREE.MathUtils.lerp(galaxyRef.current.position.y, -1.0 + scrollProgress * 3.0, 0.05);
+      galaxyRef.current.position.y = THREE.MathUtils.lerp(galaxyRef.current.position.y, (isMobile ? -0.8 : -1.0) + scrollProgress * 3.0, 0.05);
     }
 
     if (coreRef.current) {
@@ -273,13 +277,17 @@ function SolarSystemPlanets({ scrollProgress }) {
 
     // Scroll parallax, cursor tilt & multi-axis spatial tracking
     if (groupRef.current) {
+      const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+      const responsiveScale = isMobile ? Math.min(1.0, Math.max(0.5, window.innerWidth / 700)) : 1.0;
+      groupRef.current.scale.set(responsiveScale, responsiveScale, responsiveScale);
+
       const mouseX = windowMouse.x * 0.6;
       const mouseY = windowMouse.y * 0.5;
       groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, 0.55 - mouseY * 0.3, 0.06);
       groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, mouseX * 0.4, 0.06);
       groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, mouseX * 0.5, 0.06);
       groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, -1 - scrollProgress * 3, 0.05);
-      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, -1.0 + scrollProgress * 3.0, 0.05);
+      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, (isMobile ? -0.8 : -1.0) + scrollProgress * 3.0, 0.05);
     }
   });
 
