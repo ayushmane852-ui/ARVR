@@ -17,9 +17,25 @@ import SocialSidebar from './components/SocialSidebar';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const [windowScrollProgress, setWindowScrollProgress] = useState(0);
   const location = useLocation();
 
-  // Calculate 3D scene transformation progress based on active page route
+  React.useEffect(() => {
+    const handleScroll = () => {
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalScroll > 0) {
+        setWindowScrollProgress(Math.min(1.0, Math.max(0, window.scrollY / totalScroll)));
+      } else {
+        setWindowScrollProgress(0);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [location.pathname]);
+
+  // Calculate 3D scene transformation progress combining route base + active page scroll
   const getRouteScrollProgress = (path) => {
     switch (path) {
       case '/':
@@ -39,7 +55,8 @@ export default function App() {
     }
   };
 
-  const scrollProgress = getRouteScrollProgress(location.pathname);
+  const routeProgress = getRouteScrollProgress(location.pathname);
+  const scrollProgress = Math.min(1.0, routeProgress + windowScrollProgress * 0.85);
 
   return (
     <div className="relative min-h-screen bg-[#030712] text-slate-100 selection:bg-cyan-500/30 selection:text-cyan-200">
