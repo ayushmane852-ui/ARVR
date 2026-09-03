@@ -3,7 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html, Float } from '@react-three/drei';
 import * as THREE from 'three';
 
-// 3D Sub-Floor Solar System & Cosmic Galaxy Component
+// 3D Sub-Floor Solar System & Cosmic Galaxy Component (Logo Color Theme)
 function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
   const solarGroupRef = useRef();
   const sunCoreRef = useRef();
@@ -17,7 +17,7 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
   const angles = useRef({ p1: 0, p2: 1.2, p3: 2.8, p4: 4.2, p5: 5.5 });
 
   const [starPositions, starColors] = useMemo(() => {
-    const count = 2500;
+    const count = 3000;
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
 
@@ -26,7 +26,7 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
     const cGold = new THREE.Color("#fbbf24");
 
     for (let i = 0; i < count; i++) {
-      const radius = 3 + Math.random() * 18;
+      const radius = 3 + Math.random() * 20;
       const theta = Math.random() * Math.PI * 2;
       const phi = (Math.random() - 0.5) * 0.4;
 
@@ -120,7 +120,7 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
           <bufferAttribute attach="attributes-color" args={[starColors, 3]} />
         </bufferGeometry>
         <pointsMaterial
-          size={0.07}
+          size={0.08}
           vertexColors
           transparent
           opacity={0.8}
@@ -135,7 +135,7 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
             color={idx % 2 === 0 ? "#00f0ff" : "#a855f7"} 
             side={THREE.DoubleSide} 
             transparent 
-            opacity={0.3} 
+            opacity={0.35} 
           />
         </mesh>
       ))}
@@ -151,10 +151,6 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
         <mesh>
           <sphereGeometry args={[0.6, 24, 24]} />
           <meshStandardMaterial color="#fbbf24" emissive="#d97706" roughness={0.3} />
-        </mesh>
-        <mesh>
-          <icosahedronGeometry args={[0.8, 1]} />
-          <meshBasicMaterial color="#f59e0b" wireframe transparent opacity={0.5} />
         </mesh>
       </group>
 
@@ -222,7 +218,7 @@ function OfficeChair3D({ position, color = "#1e293b", rotation = [0, 0, 0] }) {
   );
 }
 
-// Reusable 3D Seated Person Avatar Component (Added for EVERY chair in room)
+// Reusable 3D Seated Person Avatar Component
 function SeatedPersonAvatar3D({ 
   position = [0, 0, 0], 
   rotation = [0, Math.PI, 0], 
@@ -233,22 +229,18 @@ function SeatedPersonAvatar3D({
 }) {
   return (
     <group position={position} rotation={rotation}>
-      {/* Torso */}
       <mesh position={[0, 0.62, 0]}>
         <boxGeometry args={[0.38, 0.46, 0.22]} />
         <meshStandardMaterial color={shirtColor} roughness={0.4} />
       </mesh>
-      {/* Head */}
       <mesh position={[0, 1.0, 0]}>
         <sphereGeometry args={[0.14, 16, 16]} />
         <meshStandardMaterial color={skinColor} roughness={0.5} />
       </mesh>
-      {/* Hair */}
       <mesh position={[0, 1.06, 0.02]}>
         <sphereGeometry args={[0.15, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2.2]} />
         <meshStandardMaterial color={hairColor} roughness={0.8} />
       </mesh>
-      {/* Seated Thighs */}
       <mesh position={[-0.1, 0.38, -0.12]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.07, 0.06, 0.32, 12]} />
         <meshStandardMaterial color={pantsColor} />
@@ -257,7 +249,6 @@ function SeatedPersonAvatar3D({
         <cylinderGeometry args={[0.07, 0.06, 0.32, 12]} />
         <meshStandardMaterial color={pantsColor} />
       </mesh>
-      {/* Lower Legs */}
       <mesh position={[-0.1, 0.18, -0.28]}>
         <cylinderGeometry args={[0.06, 0.05, 0.32, 12]} />
         <meshStandardMaterial color={pantsColor} />
@@ -266,7 +257,6 @@ function SeatedPersonAvatar3D({
         <cylinderGeometry args={[0.06, 0.05, 0.32, 12]} />
         <meshStandardMaterial color={pantsColor} />
       </mesh>
-      {/* Arms resting on desk */}
       <mesh position={[-0.22, 0.54, -0.15]} rotation={[0.4, 0.2, 0]}>
         <cylinderGeometry args={[0.05, 0.04, 0.32, 12]} />
         <meshStandardMaterial color={shirtColor} />
@@ -383,75 +373,71 @@ function SeatedWomanAvatar3D({ position = [0, 0, 0] }) {
   );
 }
 
-// 3D Cyber Entrance Vault Doors Component (Opens on scroll / enter)
-function CyberEntranceDoors3D({ isOpen }) {
+// 3D Grand Cyber Vault Entrance Doors Component
+function GrandEntranceDoors3D({ scrollProgress, doorsOpen }) {
   const leftDoorRef = useRef();
   const rightDoorRef = useRef();
 
   useFrame((_, delta) => {
-    // Smooth sliding door animation
-    const targetLeft = isOpen ? -4.2 : -1.05;
-    const targetRight = isOpen ? 4.2 : 1.05;
+    // Open doors dynamically as user scrolls down
+    const openRatio = doorsOpen ? 1 : Math.max(0, Math.min(1, (scrollProgress - 0.1) * 2.5));
+    const targetLeft = -1.25 - openRatio * 5.5;
+    const targetRight = 1.25 + openRatio * 5.5;
 
     if (leftDoorRef.current) {
-      leftDoorRef.current.position.x = THREE.MathUtils.lerp(leftDoorRef.current.position.x, targetLeft, delta * 4);
+      leftDoorRef.current.position.x = THREE.MathUtils.lerp(leftDoorRef.current.position.x, targetLeft, delta * 5);
     }
     if (rightDoorRef.current) {
-      rightDoorRef.current.position.x = THREE.MathUtils.lerp(rightDoorRef.current.position.x, targetRight, delta * 4);
+      rightDoorRef.current.position.x = THREE.MathUtils.lerp(rightDoorRef.current.position.x, targetRight, delta * 5);
     }
   });
 
   return (
-    <group position={[0, 0, 14.5]}>
-      {/* Outer Doorway Frame Arch */}
-      <mesh position={[-2.2, 1.8, 0]}>
-        <boxGeometry args={[0.4, 3.6, 0.4]} />
-        <meshStandardMaterial color="#00f0ff" emissive="#0284c7" metalness={0.9} />
+    <group position={[0, 0, 16]}>
+      {/* Outer Grand Doorway Arch */}
+      <mesh position={[-2.8, 2.5, 0]}>
+        <boxGeometry args={[0.6, 5.0, 0.6]} />
+        <meshStandardMaterial color="#00f0ff" emissive="#0284c7" metalness={0.9} roughness={0.1} />
       </mesh>
-      <mesh position={[2.2, 1.8, 0]}>
-        <boxGeometry args={[0.4, 3.6, 0.4]} />
-        <meshStandardMaterial color="#00f0ff" emissive="#0284c7" metalness={0.9} />
+      <mesh position={[2.8, 2.5, 0]}>
+        <boxGeometry args={[0.6, 5.0, 0.6]} />
+        <meshStandardMaterial color="#00f0ff" emissive="#0284c7" metalness={0.9} roughness={0.1} />
       </mesh>
-      <mesh position={[0, 3.7, 0]}>
-        <boxGeometry args={[4.8, 0.4, 0.4]} />
-        <meshStandardMaterial color="#00f0ff" emissive="#0284c7" metalness={0.9} />
+      <mesh position={[0, 4.8, 0]}>
+        <boxGeometry args={[6.2, 0.6, 0.6]} />
+        <meshStandardMaterial color="#00f0ff" emissive="#0284c7" metalness={0.9} roughness={0.1} />
       </mesh>
 
-      {/* Top Holographic Sign Header */}
-      <Html position={[0, 4.4, 0]} center distanceFactor={15}>
-        <div className="px-4 py-1.5 rounded-xl bg-slate-950/90 border border-cyan-400 text-cyan-300 font-orbitron font-black text-[10px] tracking-widest uppercase shadow-[0_0_20px_rgba(0,240,255,0.6)]">
-          {isOpen ? '🚪 ARVR OFFICE LAB // ACCESS GRANTED' : '🔒 SCROLL DOWN TO OPEN DOORS'}
-        </div>
-      </Html>
-
-      {/* Sliding Left Vault Door */}
-      <group ref={leftDoorRef} position={[-1.05, 1.8, 0]}>
+      {/* Heavy Sliding Left Vault Door */}
+      <group ref={leftDoorRef} position={[-1.25, 2.2, 0]}>
         <mesh>
-          <boxGeometry args={[2.0, 3.4, 0.15]} />
-          <meshStandardMaterial color="#0f172a" metalness={0.8} roughness={0.2} />
+          <boxGeometry args={[2.5, 4.6, 0.25]} />
+          <meshStandardMaterial color="#0b1329" metalness={0.9} roughness={0.2} />
         </mesh>
-        <mesh position={[0, 0, 0.09]}>
-          <boxGeometry args={[1.6, 2.8, 0.02]} />
-          <meshBasicMaterial color="#00f0ff" wireframe transparent opacity={0.4} />
+        {/* Neon Energy Circuit Pattern */}
+        <mesh position={[0, 0, 0.14]}>
+          <boxGeometry args={[2.1, 4.0, 0.02]} />
+          <meshBasicMaterial color="#00f0ff" wireframe transparent opacity={0.6} />
         </mesh>
-        <mesh position={[0.8, 0, 0.1]}>
-          <cylinderGeometry args={[0.04, 0.04, 0.8]} />
+        <mesh position={[1.0, 0, 0.15]}>
+          <cylinderGeometry args={[0.06, 0.06, 1.2]} />
           <meshStandardMaterial color="#fbbf24" metalness={0.9} />
         </mesh>
       </group>
 
-      {/* Sliding Right Vault Door */}
-      <group ref={rightDoorRef} position={[1.05, 1.8, 0]}>
+      {/* Heavy Sliding Right Vault Door */}
+      <group ref={rightDoorRef} position={[1.25, 2.2, 0]}>
         <mesh>
-          <boxGeometry args={[2.0, 3.4, 0.15]} />
-          <meshStandardMaterial color="#0f172a" metalness={0.8} roughness={0.2} />
+          <boxGeometry args={[2.5, 4.6, 0.25]} />
+          <meshStandardMaterial color="#0b1329" metalness={0.9} roughness={0.2} />
         </mesh>
-        <mesh position={[0, 0, 0.09]}>
-          <boxGeometry args={[1.6, 2.8, 0.02]} />
-          <meshBasicMaterial color="#00f0ff" wireframe transparent opacity={0.4} />
+        {/* Neon Energy Circuit Pattern */}
+        <mesh position={[0, 0, 0.14]}>
+          <boxGeometry args={[2.1, 4.0, 0.02]} />
+          <meshBasicMaterial color="#a855f7" wireframe transparent opacity={0.6} />
         </mesh>
-        <mesh position={[-0.8, 0, 0.1]}>
-          <cylinderGeometry args={[0.04, 0.04, 0.8]} />
+        <mesh position={[-1.0, 0, 0.15]}>
+          <cylinderGeometry args={[0.06, 0.06, 1.2]} />
           <meshStandardMaterial color="#fbbf24" metalness={0.9} />
         </mesh>
       </group>
@@ -459,14 +445,19 @@ function CyberEntranceDoors3D({ isOpen }) {
   );
 }
 
-// Camera Rig for Scroll-Driven Zoom-In
-function CameraScrollRig({ doorsOpen }) {
+// Front View Eye-Level Camera Rig with Scroll Zoom Transition
+function FrontViewCameraRig({ scrollProgress, doorsOpen }) {
   useFrame(({ camera }) => {
-    const targetZ = doorsOpen ? 14 : 21;
-    const targetY = doorsOpen ? 12 : 16;
+    // Initial Front View: Camera starts straight ahead at [0, 2.5, 24] looking at eye level
+    const openRatio = doorsOpen ? 1 : Math.max(0, Math.min(1, (scrollProgress - 0.1) * 2.5));
+
+    // Smoothly fly inside room from front perspective
+    const targetZ = 24 - openRatio * 11.5; // z: 24 -> 12.5
+    const targetY = 2.5 + openRatio * 3.5;  // y: 2.5 -> 6.0
 
     camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.05);
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.05);
+    camera.lookAt(0, 1.5, 0);
   });
 
   return null;
@@ -550,13 +541,13 @@ function FacultyPavilion3D({ onSelect, hoveredZone, setHoveredZone }) {
         </mesh>
       </Float>
 
-      {/* Floating 3D Golden Crest Label (Faculty name removed as requested) */}
+      {/* Floating 3D Golden Crest Label */}
       <Html position={[0, 3.2, 0]} center distanceFactor={15}>
         <div 
           onClick={(e) => { e.stopPropagation(); onSelect('faculty'); }}
           className={`px-4 py-2 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
             isHovered 
-              ? 'border-amber-300 bg-amber-500/30 shadow-[0_0_30px_rgba(251,191,36,0.8)] scale-110' 
+              ? 'border-amber-300 bg-amber-500/30 shadow-[0_0_30px_rgba(251,191,36,0.9)] scale-110' 
               : 'border-amber-400/60 bg-slate-950/80 shadow-[0_0_15px_rgba(251,191,36,0.3)]'
           }`}
         >
@@ -572,13 +563,13 @@ function FacultyPavilion3D({ onSelect, hoveredZone, setHoveredZone }) {
   );
 }
 
-// 2. 3D Main Panel / Executive Command Room (With seated avatars on chairs)
+// 2. 3D Main Panel / Executive Command Room
 function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
   const isHovered = hoveredZone === 'executive';
   
   return (
     <group 
-      position={[-8, 0, -4]}
+      position={[-8, 0, -3]}
       onClick={(e) => { e.stopPropagation(); onSelect('executive'); }}
       onPointerOver={(e) => { e.stopPropagation(); setHoveredZone('executive'); }}
       onPointerOut={() => setHoveredZone(null)}
@@ -593,7 +584,7 @@ function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
         <meshStandardMaterial color="#0f172a" metalness={0.8} />
       </mesh>
 
-      {/* Chairs + Seated Person Avatars behind Executive Console */}
+      {/* Chairs + Seated Person Avatars */}
       {[-1.2, 0, 1.2].map((x, idx) => (
         <group key={idx}>
           <OfficeChair3D position={[x, 0, 0.3]} color="#0284c7" rotation={[0, Math.PI, 0]} />
@@ -612,7 +603,7 @@ function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
         <div 
           onClick={(e) => { e.stopPropagation(); onSelect('executive'); }}
           className={`px-3 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
-            isHovered ? 'border-cyan-300 bg-cyan-500/30 scale-110 shadow-[0_0_25px_rgba(0,240,255,0.8)]' : 'border-cyan-400/50 bg-slate-950/80 shadow-[0_0_15px_rgba(0,240,255,0.3)]'
+            isHovered ? 'border-cyan-300 bg-cyan-500/30 scale-110 shadow-[0_0_25px_rgba(0,240,255,0.9)]' : 'border-cyan-400/50 bg-slate-950/80 shadow-[0_0_15px_rgba(0,240,255,0.3)]'
           }`}
         >
           <span className="font-mono text-[8px] text-cyan-300 tracking-wider uppercase font-bold">MAIN PANEL ROOM</span>
@@ -626,13 +617,13 @@ function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
   );
 }
 
-// 3. 3D Core Operations Board Console (With seated avatars on chairs)
+// 3. 3D Core Operations Board Console
 function BoardRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
   const isHovered = hoveredZone === 'board';
 
   return (
     <group 
-      position={[8, 0, -4]}
+      position={[8, 0, -3]}
       onClick={(e) => { e.stopPropagation(); onSelect('board'); }}
       onPointerOver={(e) => { e.stopPropagation(); setHoveredZone('board'); }}
       onPointerOut={() => setHoveredZone(null)}
@@ -647,7 +638,7 @@ function BoardRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
         <meshStandardMaterial color="#0f172a" metalness={0.8} />
       </mesh>
 
-      {/* Chairs + Seated Person Avatars behind Operations Console */}
+      {/* Chairs + Seated Person Avatars */}
       {[-1, 1].map((x, idx) => (
         <group key={idx}>
           <OfficeChair3D position={[x, 0, 0.3]} color="#7e22ce" rotation={[0, Math.PI, 0]} />
@@ -666,7 +657,7 @@ function BoardRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
         <div 
           onClick={(e) => { e.stopPropagation(); onSelect('board'); }}
           className={`px-3 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
-            isHovered ? 'border-purple-300 bg-purple-500/30 scale-110 shadow-[0_0_25px_rgba(168,85,247,0.8)]' : 'border-purple-400/50 bg-slate-950/80 shadow-[0_0_15px_rgba(168,85,247,0.3)]'
+            isHovered ? 'border-purple-300 bg-purple-500/30 scale-110 shadow-[0_0_25px_rgba(168,85,247,0.9)]' : 'border-purple-400/50 bg-slate-950/80 shadow-[0_0_15px_rgba(168,85,247,0.3)]'
           }`}
         >
           <span className="font-mono text-[8px] text-purple-300 tracking-wider uppercase font-bold">OPERATIONS BOARD</span>
@@ -680,7 +671,7 @@ function BoardRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
   );
 }
 
-// 4. 3D Domain Workstations Grid (With seated avatars on chairs)
+// 4. 3D Domain Workstations Grid
 function DomainWorkstation3D({ id, title, color, position, onSelect, hoveredZone, setHoveredZone }) {
   const isHovered = hoveredZone === id;
 
@@ -696,7 +687,6 @@ function DomainWorkstation3D({ id, title, color, position, onSelect, hoveredZone
         <meshStandardMaterial color="#1e293b" metalness={0.6} />
       </mesh>
 
-      {/* Office Chair + Seated Person Avatar behind Desk */}
       <OfficeChair3D position={[0, 0, 0.8]} color={color} rotation={[0, Math.PI, 0]} />
       <SeatedPersonAvatar3D position={[0, 0, 0.8]} shirtColor={color} />
 
@@ -717,13 +707,11 @@ function DomainWorkstation3D({ id, title, color, position, onSelect, hoveredZone
             onSelect(id, 'view_team');
           }}
           className={`px-2.5 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
-            isHovered ? 'scale-110 bg-cyan-500/30 border-cyan-300 shadow-[0_0_20px_rgba(0,240,255,0.7)]' : 'bg-slate-950/85 border-cyan-500/30'
+            isHovered ? 'scale-110 bg-cyan-500/30 border-cyan-300 shadow-[0_0_20px_rgba(0,240,255,0.8)]' : 'bg-slate-950/85 border-cyan-500/30'
           }`}
         >
           <span className="font-orbitron font-bold text-[10px] text-white">{title}</span>
-          <button 
-            className="mt-1 px-2 py-0.5 rounded bg-cyan-500 text-slate-950 font-orbitron font-bold text-[8px] uppercase hover:bg-cyan-300 transition-colors cursor-pointer"
-          >
+          <button className="mt-1 px-2 py-0.5 rounded bg-cyan-500 text-slate-950 font-orbitron font-bold text-[8px] uppercase hover:bg-cyan-300 transition-colors cursor-pointer">
             VIEW TEAM
           </button>
         </div>
@@ -732,43 +720,42 @@ function DomainWorkstation3D({ id, title, color, position, onSelect, hoveredZone
   );
 }
 
-// 5. 3D Department Coordinators Terminal (With Liaison Terminal text removed & seated avatars on chairs)
-function DepartmentCoordinators3D({ onSelect, hoveredZone, setHoveredZone }) {
+// 5. 3D Department Coordinators Terminal (Placed BEHIND Faculty Directorate at position [0, 0, -8.5])
+function DepartmentCoordinators3D({ position = [0, 0, -8.5], onSelect, hoveredZone, setHoveredZone }) {
   const isHovered = hoveredZone === 'coordinator';
 
   return (
     <group 
-      position={[0, 0, 10]}
+      position={position}
       onClick={(e) => { e.stopPropagation(); onSelect('coordinator'); }}
       onPointerOver={(e) => { e.stopPropagation(); setHoveredZone('coordinator'); }}
       onPointerOut={() => setHoveredZone(null)}
     >
       <mesh position={[0, 0.15, 0]}>
-        <cylinderGeometry args={[3.2, 3.6, 0.3, 32]} />
+        <cylinderGeometry args={[3.4, 3.8, 0.3, 32]} />
         <meshStandardMaterial color={isHovered ? "#34d399" : "#059669"} emissive="#047857" roughness={0.3} />
       </mesh>
 
-      {/* 6 Chairs + 6 Seated Person Avatars behind Coordinator Displays */}
-      {[-2, -1.2, -0.4, 0.4, 1.2, 2].map((x, idx) => (
+      {/* 6 Chairs + 6 Seated Person Avatars */}
+      {[-2.2, -1.3, -0.4, 0.4, 1.3, 2.2].map((x, idx) => (
         <group key={idx}>
           <OfficeChair3D position={[x, 0, 0.5]} color="#059669" rotation={[0, Math.PI, 0]} />
           <SeatedPersonAvatar3D position={[x, 0, 0.5]} shirtColor="#059669" />
         </group>
       ))}
 
-      {[-2, -1.2, -0.4, 0.4, 1.2, 2].map((x, idx) => (
+      {[-2.2, -1.3, -0.4, 0.4, 1.3, 2.2].map((x, idx) => (
         <mesh key={idx} position={[x, 0.7, 0]}>
           <boxGeometry args={[0.6, 0.8, 0.4]} />
           <meshBasicMaterial color={isHovered ? "#34d399" : "#10b981"} />
         </mesh>
       ))}
 
-      {/* Departmental Coordinators Label (Liaison Terminal text removed) */}
-      <Html position={[0, 2.2, 0]} center distanceFactor={15}>
+      <Html position={[0, 2.4, 0]} center distanceFactor={15}>
         <div 
           onClick={(e) => { e.stopPropagation(); onSelect('coordinator'); }}
-          className={`px-3 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
-            isHovered ? 'border-emerald-300 bg-emerald-500/30 scale-110 shadow-[0_0_25px_rgba(52,211,153,0.8)]' : 'border-emerald-400/50 bg-slate-950/80 shadow-[0_0_15px_rgba(52,211,153,0.3)]'
+          className={`px-3.5 py-2 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
+            isHovered ? 'border-emerald-300 bg-emerald-500/30 scale-110 shadow-[0_0_25px_rgba(52,211,153,0.9)]' : 'border-emerald-400/50 bg-slate-950/80 shadow-[0_0_15px_rgba(52,211,153,0.3)]'
           }`}
         >
           <span className="font-orbitron font-bold text-xs text-white">DEPARTMENT COORDINATORS</span>
@@ -787,22 +774,21 @@ export default function Office3DScene({ onSelectZone }) {
   const [doorsOpen, setDoorsOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Scroll event listener for automatic door opening on scroll
+  // Scroll event listener for smooth door opening & camera entrance
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      // Calculate relative scroll position
-      const entranceTriggerPoint = windowHeight * 0.8;
-      const progress = Math.max(0, Math.min(1, (windowHeight - rect.top) / entranceTriggerPoint));
+      // Progress: 0 when top of section touches bottom of window, 1 when section is centered
+      const rawProgress = (windowHeight - rect.top) / (windowHeight * 0.9);
+      const progress = Math.max(0, Math.min(1, rawProgress));
       setScrollProgress(progress);
 
-      // Dynamically open doors as user scrolls into view
-      if (progress > 0.35) {
+      if (progress > 0.25) {
         setDoorsOpen(true);
-      } else if (progress < 0.15) {
+      } else if (progress < 0.1) {
         setDoorsOpen(false);
       }
     };
@@ -824,100 +810,126 @@ export default function Office3DScene({ onSelectZone }) {
     { id: 'event_head', title: 'EVENT MANAGEMENT TEAM', color: '#eab308', position: [9, 0, 7] },
   ];
 
+  // Calculate text overlay opacity (100% when doors closed, fades to 0 as doors open)
+  const textOpacity = doorsOpen ? 0 : Math.max(0, 1 - scrollProgress * 3);
+
   return (
     <div 
       ref={containerRef}
-      className="w-full h-[580px] sm:h-[680px] relative rounded-3xl overflow-hidden glass-panel border border-cyan-500/40 shadow-[0_0_50px_rgba(0,240,255,0.2)] bg-[#020617]"
+      className="w-full h-[620px] sm:h-[720px] relative rounded-3xl overflow-hidden glass-panel border border-cyan-500/40 shadow-[0_0_50px_rgba(0,240,255,0.25)] bg-[#020617]"
     >
-      
-      {/* 3D Controls & Door Entrance Toggle Overlay */}
-      <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-3">
+      {/* OVERLAPPED OVERLAY TEXT: "WELCOME TO ARVR LAB" ON CLOSED DOORS */}
+      <div 
+        className={`absolute inset-0 z-20 pointer-events-none flex flex-col items-center justify-center transition-opacity duration-700 ${
+          doorsOpen ? 'opacity-0 scale-105' : 'opacity-100 scale-100'
+        }`}
+        style={{ opacity: textOpacity }}
+      >
+        <div className="text-center px-4">
+          <span className="font-mono text-xs sm:text-sm text-cyan-400 font-bold tracking-[0.3em] uppercase block mb-2 drop-shadow-[0_0_10px_rgba(0,240,255,0.8)]">
+            VIRTUAL OFFICE HEADQUARTERS
+          </span>
+          <h1 className="font-orbitron font-black text-4xl sm:text-6xl md:text-7xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-amber-300 drop-shadow-[0_0_35px_rgba(0,240,255,0.8)] tracking-tight">
+            WELCOME TO ARVR LAB
+          </h1>
+          <p className="font-mono text-xs text-slate-300 mt-4 tracking-widest uppercase animate-pulse">
+            Scroll down to open vault doors & enter room ↓
+          </p>
+        </div>
+      </div>
+
+      {/* 3D Controls & Door Manual Toggle Overlay */}
+      <div className="absolute top-4 left-4 z-30 flex flex-wrap items-center gap-3">
         <button
           onClick={() => setDoorsOpen(!doorsOpen)}
           className={`px-4 py-2 rounded-xl font-orbitron font-bold text-xs tracking-wider uppercase transition-all cursor-pointer shadow-lg ${
             doorsOpen
-              ? 'bg-emerald-500 text-slate-950 shadow-[0_0_20px_rgba(52,211,153,0.6)]'
-              : 'bg-cyan-500 text-slate-950 shadow-[0_0_20px_rgba(0,240,255,0.6)] animate-pulse'
+              ? 'bg-emerald-500 text-slate-950 shadow-[0_0_20px_rgba(52,211,153,0.6)] hover:bg-emerald-400'
+              : 'bg-gradient-to-r from-cyan-500 to-purple-600 text-white shadow-[0_0_20px_rgba(0,240,255,0.6)] animate-pulse'
           }`}
         >
-          {doorsOpen ? '🚪 DOORS OPEN // INSIDE ROOM' : '🔒 SCROLL DOWN TO ENTER ROOM'}
+          {doorsOpen ? '🚪 DOORS OPEN // INSIDE ROOM' : '🔒 CLICK OR SCROLL TO OPEN DOORS'}
         </button>
 
         <div className="font-mono text-[10px] text-cyan-300/80 bg-slate-950/80 px-3 py-2 rounded-xl border border-cyan-500/30 pointer-events-none hidden sm:block">
-          <span>SCROLL TO ENTER ROOM • LEFT CLICK ROTATE • CLICK DESKS TO VIEW ROSTERS</span>
+          <span>FRONT VIEW PERSPECTIVE • SCROLL TO ENTER • CLICK DESKS TO VIEW ROSTERS</span>
         </div>
       </div>
 
-      <Canvas camera={{ position: [0, 16, 21], fov: 50 }}>
+      <Canvas camera={{ position: [0, 2.5, 24], fov: 50 }}>
         <color attach="background" args={['#020617']} />
-        <fog attach="fog" args={['#020617', 15, 45]} />
+        <fog attach="fog" args={['#020617', 15, 50]} />
 
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[10, 20, 10]} intensity={1.5} color="#00f0ff" />
-        <pointLight position={[-10, 10, -10]} intensity={1.2} color="#a855f7" />
-        <pointLight position={[0, 8, 0]} intensity={2.0} color="#fbbf24" />
+        <ambientLight intensity={0.7} />
+        <directionalLight position={[10, 20, 10]} intensity={1.8} color="#00f0ff" />
+        <pointLight position={[-10, 10, -10]} intensity={1.4} color="#a855f7" />
+        <pointLight position={[0, 8, 0]} intensity={2.2} color="#fbbf24" />
 
         <OrbitControls 
           enableDamping 
           dampingFactor={0.05} 
           minDistance={5} 
-          maxDistance={28}
+          maxDistance={30}
           maxPolarAngle={Math.PI / 2 - 0.05}
         />
 
-        {/* Camera Scroll Rig (Smoothly zooms camera inside room on scroll) */}
-        <CameraScrollRig doorsOpen={doorsOpen} />
+        {/* Front-View Eye-Level Camera Rig */}
+        <FrontViewCameraRig scrollProgress={scrollProgress} doorsOpen={doorsOpen} />
 
-        {/* Semi-transparent Reflective Cyber Floor Grid */}
+        {/* Floor Grid */}
         <gridHelper args={[40, 40, '#00f0ff', '#1e293b']} position={[0, 0, 0]} />
 
-        {/* 3D Cyber Entrance Vault Doors (Opens on scroll/click) */}
-        <CyberEntranceDoors3D isOpen={doorsOpen} />
+        {/* Grand Cyber Vault Doors */}
+        <GrandEntranceDoors3D scrollProgress={scrollProgress} doorsOpen={doorsOpen} />
 
-        {/* Sub-Floor Solar System Cosmic Structure (Revolving under office floor) */}
+        {/* Sub-Floor Solar System Cosmic Structure */}
         <SubFloorSolarSystem3D position={[0, -4.5, 0]} />
 
-        {/* 1. Center Faculty Directorate Pavilion */}
-        <FacultyPavilion3D 
-          onSelect={onSelectZone} 
-          hoveredZone={hoveredZone} 
-          setHoveredZone={setHoveredZone} 
-        />
-
-        {/* 2. Executive Command Room */}
-        <ExecutiveRoom3D 
-          onSelect={onSelectZone} 
-          hoveredZone={hoveredZone} 
-          setHoveredZone={setHoveredZone} 
-        />
-
-        {/* 3. Core Operations Board Room */}
-        <BoardRoom3D 
-          onSelect={onSelectZone} 
-          hoveredZone={hoveredZone} 
-          setHoveredZone={setHoveredZone} 
-        />
-
-        {/* 4. Domain Workstation Desks with Chairs */}
-        {domainDesks.map((desk) => (
-          <DomainWorkstation3D
-            key={desk.id}
-            id={desk.id}
-            title={desk.title}
-            color={desk.color}
-            position={desk.position}
-            onSelect={onSelectZone}
-            hoveredZone={hoveredZone}
-            setHoveredZone={setHoveredZone}
+        {/* Inside Room Sections (Revealed when doors open) */}
+        <group visible={doorsOpen || scrollProgress > 0.1}>
+          {/* 1. Center Faculty Directorate Pavilion */}
+          <FacultyPavilion3D 
+            onSelect={onSelectZone} 
+            hoveredZone={hoveredZone} 
+            setHoveredZone={setHoveredZone} 
           />
-        ))}
 
-        {/* 5. Department Coordinators Terminal */}
-        <DepartmentCoordinators3D 
-          onSelect={onSelectZone} 
-          hoveredZone={hoveredZone} 
-          setHoveredZone={setHoveredZone} 
-        />
+          {/* 2. Executive Command Room */}
+          <ExecutiveRoom3D 
+            onSelect={onSelectZone} 
+            hoveredZone={hoveredZone} 
+            setHoveredZone={setHoveredZone} 
+          />
+
+          {/* 3. Core Operations Board Room */}
+          <BoardRoom3D 
+            onSelect={onSelectZone} 
+            hoveredZone={hoveredZone} 
+            setHoveredZone={setHoveredZone} 
+          />
+
+          {/* 4. Domain Workstation Desks with Chairs */}
+          {domainDesks.map((desk) => (
+            <DomainWorkstation3D
+              key={desk.id}
+              id={desk.id}
+              title={desk.title}
+              color={desk.color}
+              position={desk.position}
+              onSelect={onSelectZone}
+              hoveredZone={hoveredZone}
+              setHoveredZone={setHoveredZone}
+            />
+          ))}
+
+          {/* 5. Department Coordinators Terminal (Placed BEHIND Faculty Directorate at position [0, 0, -8.5]) */}
+          <DepartmentCoordinators3D 
+            position={[0, 0, -8.5]}
+            onSelect={onSelectZone} 
+            hoveredZone={hoveredZone} 
+            setHoveredZone={setHoveredZone} 
+          />
+        </group>
       </Canvas>
     </div>
   );
