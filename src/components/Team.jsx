@@ -567,7 +567,7 @@ export default function Team() {
     <section 
       id="team" 
       ref={sectionRef}
-      className="relative py-20 sm:py-28 px-4 sm:px-6 overflow-hidden min-h-screen select-none"
+      className={`relative ${viewMode === '3D' ? 'py-0 px-0' : 'py-20 sm:py-28 px-4 sm:px-6'} overflow-hidden min-h-screen select-none`}
     >
       
       {/* Interactive Cursor Spotlight Glow */}
@@ -582,53 +582,55 @@ export default function Team() {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-cyan-500/10 rounded-full blur-[180px] pointer-events-none" />
       <div className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[160px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className={viewMode === '3D' ? 'w-full relative z-10' : 'max-w-7xl mx-auto relative z-10'}>
         
-        {/* Header Banner */}
-        <div className="flex flex-col items-center text-center mb-10 sm:mb-14">
-          <motion.div 
-            initial={{ opacity: 0, y: -15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border-cyan-500/30 mb-4 shadow-[0_0_20px_rgba(0,240,255,0.2)]"
-          >
-            <Sparkles size={14} className="text-cyan-400 animate-pulse" />
-            <span className="font-mono text-xs text-cyan-300 tracking-widest uppercase font-semibold">
-              3D ARVR VIRTUAL OFFICE LAB // HEADQUARTERS
-            </span>
-          </motion.div>
-
-          <h2 className="font-orbitron font-black text-4xl sm:text-6xl tracking-tight text-white text-glow-cyan">
-            3D ARVR OFFICE LAB
-          </h2>
-
-          {/* VIEW MODE TOGGLE BUTTONS */}
-          <div className="mt-6 flex items-center justify-center gap-3 p-1.5 rounded-2xl glass-panel border border-cyan-500/30 bg-slate-950/80">
-            <button
-              onClick={() => setViewMode('3D')}
-              className={`flex items-center gap-2 px-5 py-2 rounded-xl font-orbitron font-bold text-xs tracking-wider uppercase transition-all cursor-pointer ${
-                viewMode === '3D'
-                  ? 'bg-cyan-500 text-slate-950 shadow-[0_0_20px_rgba(0,240,255,0.6)] scale-105'
-                  : 'text-slate-300 hover:text-white hover:bg-cyan-500/10'
-              }`}
+        {/* Header Banner - Displayed in GRID view */}
+        {viewMode === 'GRID' && (
+          <div className="flex flex-col items-center text-center mb-10 sm:mb-14">
+            <motion.div 
+              initial={{ opacity: 0, y: -15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border-cyan-500/30 mb-4 shadow-[0_0_20px_rgba(0,240,255,0.2)]"
             >
-              <Box size={16} />
-              <span>3D SPATIAL LAB VIEW</span>
-            </button>
+              <Sparkles size={14} className="text-cyan-400 animate-pulse" />
+              <span className="font-mono text-xs text-cyan-300 tracking-widest uppercase font-semibold">
+                3D ARVR VIRTUAL OFFICE LAB // HEADQUARTERS
+              </span>
+            </motion.div>
 
-            <button
-              onClick={() => setViewMode('GRID')}
-              className={`flex items-center gap-2 px-5 py-2 rounded-xl font-orbitron font-bold text-xs tracking-wider uppercase transition-all cursor-pointer ${
-                viewMode === 'GRID'
-                  ? 'bg-cyan-500 text-slate-950 shadow-[0_0_20px_rgba(0,240,255,0.6)] scale-105'
-                  : 'text-slate-300 hover:text-white hover:bg-cyan-500/10'
-              }`}
-            >
-              <LayoutGrid size={16} />
-              <span>DESK ROSTER GRID VIEW</span>
-            </button>
+            <h2 className="font-orbitron font-black text-4xl sm:text-6xl tracking-tight text-white text-glow-cyan">
+              3D ARVR OFFICE LAB
+            </h2>
+
+            {/* VIEW MODE TOGGLE BUTTONS */}
+            <div className="mt-6 flex items-center justify-center gap-3 p-1.5 rounded-2xl glass-panel border border-cyan-500/30 bg-slate-950/80">
+              <button
+                onClick={() => setViewMode('3D')}
+                className={`flex items-center gap-2 px-5 py-2 rounded-xl font-orbitron font-bold text-xs tracking-wider uppercase transition-all cursor-pointer ${
+                  viewMode === '3D'
+                    ? 'bg-cyan-500 text-slate-950 shadow-[0_0_20px_rgba(0,240,255,0.6)] scale-105'
+                    : 'text-slate-300 hover:text-white hover:bg-cyan-500/10'
+                }`}
+              >
+                <Box size={16} />
+                <span>3D SPATIAL LAB VIEW</span>
+              </button>
+
+              <button
+                onClick={() => setViewMode('GRID')}
+                className={`flex items-center gap-2 px-5 py-2 rounded-xl font-orbitron font-bold text-xs tracking-wider uppercase transition-all cursor-pointer ${
+                  viewMode === 'GRID'
+                    ? 'bg-cyan-500 text-slate-950 shadow-[0_0_20px_rgba(0,240,255,0.6)] scale-105'
+                    : 'text-slate-300 hover:text-white hover:bg-cyan-500/10'
+                }`}
+              >
+                <LayoutGrid size={16} />
+                <span>DESK ROSTER GRID VIEW</span>
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* 3D INTERACTIVE ARVR OFFICE SCENE VIEW */}
         {viewMode === '3D' && (
@@ -637,9 +639,13 @@ export default function Team() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="w-full mb-12"
+            className="w-full"
           >
-            <Office3DScene onSelectZone={handleSelect3DZone} />
+            <Office3DScene 
+              onSelectZone={handleSelect3DZone} 
+              viewMode={viewMode} 
+              setViewMode={setViewMode} 
+            />
           </motion.div>
         )}
 
