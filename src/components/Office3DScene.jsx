@@ -591,17 +591,19 @@ function RealARVRVerticalVaultDoors3D({ openRatio, hasOpened }) {
         </mesh>
       </group>
 
-      {/* Central Rotating ARVR Emblem Core */}
-      <group position={[0, 0, 0.6]} ref={emblemRef}>
-        <mesh>
-          <torusGeometry args={[2.2, 0.12, 16, 64]} />
-          <meshBasicMaterial color="#00f0ff" />
-        </mesh>
-        <mesh rotation={[0, 0, Math.PI / 4]}>
-          <torusGeometry args={[2.8, 0.08, 16, 64]} />
-          <meshBasicMaterial color="#a855f7" />
-        </mesh>
-      </group>
+      {/* Central Rotating ARVR Emblem Core (Disappears instantly when door starts opening!) */}
+      {openRatio < 0.05 && (
+        <group position={[0, 0, 0.6]} ref={emblemRef}>
+          <mesh>
+            <torusGeometry args={[2.2, 0.12, 16, 64]} />
+            <meshBasicMaterial color="#00f0ff" />
+          </mesh>
+          <mesh rotation={[0, 0, Math.PI / 4]}>
+            <torusGeometry args={[2.8, 0.08, 16, 64]} />
+            <meshBasicMaterial color="#a855f7" />
+          </mesh>
+        </group>
+      )}
     </group>
   );
 }
