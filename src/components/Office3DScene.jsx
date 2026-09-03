@@ -200,7 +200,7 @@ function LaboratoryRoomEnclosure3D({ showScreenText }) {
           <meshBasicMaterial color="#030712" />
         </mesh>
 
-        {/* Neon Text & Logo Display on Screen ("ARVR Team") - ONLY VISIBLE INSIDE ROOM AFTER DOORS OPEN */}
+        {/* Neon Text & Logo Display on Screen ("ARVR Team") */}
         {showScreenText && (
           <Html position={[0, 0, 0.15]} transform center distanceFactor={14}>
             <div className="flex flex-col items-center justify-center p-6 text-center select-none w-[800px]">
@@ -228,10 +228,10 @@ function LaboratoryRoomEnclosure3D({ showScreenText }) {
   );
 }
 
-// Luxury High-Back Faculty Director Leather Chair
-function LuxuryFacultyDirectorChair3D({ position, color = "#581c87", rotation = [0, 0, 0] }) {
+// Luxury High-Back Faculty Director Leather Chair (Enlarged Scale)
+function LuxuryFacultyDirectorChair3D({ position, color = "#581c87", rotation = [0, 0, 0], scale = 1.25 }) {
   return (
-    <group position={position} rotation={rotation}>
+    <group position={position} rotation={rotation} scale={[scale, scale, scale]}>
       {[0, 72, 144, 216, 288].map((deg, i) => {
         const rad = (deg * Math.PI) / 180;
         return (
@@ -280,10 +280,10 @@ function LuxuryFacultyDirectorChair3D({ position, color = "#581c87", rotation = 
   );
 }
 
-// Standard Ergonomic Office Chair
-function RealisticOfficeChair3D({ position, color = "#0284c7", rotation = [0, 0, 0] }) {
+// Standard Ergonomic Office Chair (Enlarged Scale)
+function RealisticOfficeChair3D({ position, color = "#0284c7", rotation = [0, 0, 0], scale = 1.25 }) {
   return (
-    <group position={position} rotation={rotation}>
+    <group position={position} rotation={rotation} scale={[scale, scale, scale]}>
       {[0, 72, 144, 216, 288].map((deg, i) => {
         const rad = (deg * Math.PI) / 180;
         return (
@@ -323,10 +323,10 @@ function RealisticOfficeChair3D({ position, color = "#0284c7", rotation = [0, 0,
   );
 }
 
-// REALISTIC MALE FACULTY DIRECTOR AVATAR (Looking at partner across table)
-function RealisticMaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] }) {
+// REALISTIC MALE FACULTY DIRECTOR AVATAR (Enlarged Scale)
+function RealisticMaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0], scale = 1.25 }) {
   return (
-    <group position={position} rotation={rotation}>
+    <group position={position} rotation={rotation} scale={[scale, scale, scale]}>
       <mesh position={[0, 0.68, 0]}>
         <boxGeometry args={[0.46, 0.52, 0.26]} />
         <meshStandardMaterial color="#1e3a8a" roughness={0.3} />
@@ -350,12 +350,10 @@ function RealisticMaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] }) {
           <sphereGeometry args={[0.16, 24, 24]} />
           <meshStandardMaterial color="#ffdbac" roughness={0.5} />
         </mesh>
-        {/* Hair */}
         <mesh position={[0, 0.06, 0.01]}>
           <sphereGeometry args={[0.168, 20, 20, 0, Math.PI * 2, 0, Math.PI / 2.1]} />
           <meshStandardMaterial color="#0f172a" roughness={0.9} />
         </mesh>
-        {/* Eyes facing partner */}
         <mesh position={[-0.05, 0.02, -0.15]}>
           <sphereGeometry args={[0.025, 12, 12]} />
           <meshBasicMaterial color="#0f172a" />
@@ -375,7 +373,6 @@ function RealisticMaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] }) {
         <meshStandardMaterial color="#0f172a" />
       </mesh>
       
-      {/* Arm gestured forward towards table */}
       <mesh position={[-0.22, 0.6, -0.2]} rotation={[0.7, 0.2, -0.2]}>
         <cylinderGeometry args={[0.055, 0.045, 0.4, 12]} />
         <meshStandardMaterial color="#1e3a8a" />
@@ -388,10 +385,10 @@ function RealisticMaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] }) {
   );
 }
 
-// REALISTIC FEMALE FACULTY DIRECTOR AVATAR (Looking at partner across table)
-function RealisticFemaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] }) {
+// REALISTIC FEMALE FACULTY DIRECTOR AVATAR (Enlarged Scale)
+function RealisticFemaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0], scale = 1.25 }) {
   return (
-    <group position={position} rotation={rotation}>
+    <group position={position} rotation={rotation} scale={[scale, scale, scale]}>
       <mesh position={[0, 0.66, 0]}>
         <boxGeometry args={[0.4, 0.48, 0.24]} />
         <meshStandardMaterial color="#9f1239" roughness={0.4} />
@@ -411,7 +408,6 @@ function RealisticFemaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] })
           <sphereGeometry args={[0.15, 24, 24]} />
           <meshStandardMaterial color="#f1c27d" roughness={0.5} />
         </mesh>
-        {/* Hair */}
         <mesh position={[0, 0.02, 0.02]}>
           <sphereGeometry args={[0.165, 20, 20, 0, Math.PI * 2, 0, Math.PI / 1.8]} />
           <meshStandardMaterial color="#291d09" roughness={0.7} />
@@ -424,7 +420,6 @@ function RealisticFemaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] })
           <boxGeometry args={[0.06, 0.3, 0.14]} />
           <meshStandardMaterial color="#291d09" roughness={0.7} />
         </mesh>
-        {/* Eyes facing partner */}
         <mesh position={[-0.045, 0.01, -0.14]}>
           <sphereGeometry args={[0.022, 12, 12]} />
           <meshBasicMaterial color="#0f172a" />
@@ -444,7 +439,6 @@ function RealisticFemaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] })
         <meshStandardMaterial color="#0f172a" />
       </mesh>
       
-      {/* Arm resting on desk facing table */}
       <mesh position={[-0.2, 0.58, -0.18]} rotation={[0.65, 0.2, -0.15]}>
         <cylinderGeometry args={[0.05, 0.04, 0.38, 12]} />
         <meshStandardMaterial color="#9f1239" />
@@ -457,10 +451,10 @@ function RealisticFemaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] })
   );
 }
 
-// Standard Seated Avatar
-function RealisticSeatedAvatar3D({ position = [0, 0, 0], rotation = [0, Math.PI, 0], shirtColor = "#0284c7", pantsColor = "#0f172a", skinColor = "#ffdbac", hairColor = "#1e293b" }) {
+// Standard Seated Avatar (Enlarged Scale)
+function RealisticSeatedAvatar3D({ position = [0, 0, 0], rotation = [0, Math.PI, 0], shirtColor = "#0284c7", pantsColor = "#0f172a", skinColor = "#ffdbac", hairColor = "#1e293b", scale = 1.25 }) {
   return (
-    <group position={position} rotation={rotation}>
+    <group position={position} rotation={rotation} scale={[scale, scale, scale]}>
       <mesh position={[0, 0.65, 0]}>
         <boxGeometry args={[0.4, 0.48, 0.24]} />
         <meshStandardMaterial color={shirtColor} roughness={0.4} />
@@ -634,7 +628,7 @@ function FrontViewCameraRig({ openRatio, isUserInteracting, isMobile }) {
   return null;
 }
 
-// Glass Cabin Office Room for Faculty Directorate (Male and Female Seated Facing Each Other)
+// Glass Cabin Office Room for Faculty Directorate (Enlarged Desk, Chairs, Avatars)
 function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, showLabels, isMobile }) {
   const isHovered = hoveredZone === 'faculty';
 
@@ -647,78 +641,78 @@ function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, show
     >
       {/* Floor Base */}
       <mesh position={[0, 0.1, 0]}>
-        <boxGeometry args={[5.2, 0.2, 4.2]} />
+        <boxGeometry args={[6.2, 0.2, 5.0]} />
         <meshStandardMaterial color={isHovered ? "#a855f7" : "#7e22ce"} emissive={isHovered ? "#9333ea" : "#581c87"} roughness={0.2} />
       </mesh>
 
       {/* Cabin Support Columns */}
-      {[[-2.55, -2.05], [2.55, -2.05], [-2.55, 2.05], [2.55, 2.05]].map(([x, z], idx) => (
-        <mesh key={idx} position={[x, 1.7, z]}>
-          <boxGeometry args={[0.1, 3.2, 0.1]} />
+      {[[-3.05, -2.45], [3.05, -2.45], [-3.05, 2.45], [3.05, 2.45]].map(([x, z], idx) => (
+        <mesh key={idx} position={[x, 2.0, z]}>
+          <boxGeometry args={[0.12, 3.8, 0.12]} />
           <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.1} />
         </mesh>
       ))}
 
       {/* Glass Walls */}
-      <mesh position={[0, 1.7, -2.05]}>
-        <boxGeometry args={[5.0, 3.2, 0.04]} />
+      <mesh position={[0, 2.0, -2.45]}>
+        <boxGeometry args={[6.0, 3.8, 0.04]} />
         <meshPhysicalMaterial color="#c084fc" transparent opacity={0.35} roughness={0.1} transmission={0.8} thickness={0.2} />
       </mesh>
-      <mesh position={[-2.55, 1.7, 0]}>
-        <boxGeometry args={[0.04, 3.2, 4.0]} />
+      <mesh position={[-3.05, 2.0, 0]}>
+        <boxGeometry args={[0.04, 3.8, 4.8]} />
         <meshPhysicalMaterial color="#c084fc" transparent opacity={0.35} roughness={0.1} transmission={0.8} thickness={0.2} />
       </mesh>
-      <mesh position={[2.55, 1.7, 0]}>
-        <boxGeometry args={[0.04, 3.2, 4.0]} />
+      <mesh position={[3.05, 2.0, 0]}>
+        <boxGeometry args={[0.04, 3.8, 4.8]} />
         <meshPhysicalMaterial color="#c084fc" transparent opacity={0.35} roughness={0.1} transmission={0.8} thickness={0.2} />
       </mesh>
-      <mesh position={[0, 3.3, 0]}>
-        <boxGeometry args={[5.2, 0.05, 4.2]} />
+      <mesh position={[0, 3.9, 0]}>
+        <boxGeometry args={[6.2, 0.05, 5.0]} />
         <meshPhysicalMaterial color="#a855f7" transparent opacity={0.4} roughness={0.1} />
       </mesh>
 
-      {/* Discussion Desk Between Them */}
-      <mesh position={[0, 0.55, 0]}>
-        <boxGeometry args={[1.5, 0.65, 1.0]} />
+      {/* Enlarged Discussion Desk */}
+      <mesh position={[0, 0.65, 0]}>
+        <boxGeometry args={[2.0, 0.75, 1.3]} />
         <meshStandardMaterial color="#f8fafc" roughness={0.2} metalness={0.3} />
       </mesh>
 
       {/* Items on Discussion Desk */}
-      <group position={[0, 0.9, 0]}>
+      <group position={[0, 1.05, 0]}>
         {/* Holographic Tablet */}
-        <mesh position={[-0.2, 0, 0]} rotation={[0, 0.3, 0]}>
-          <boxGeometry args={[0.42, 0.02, 0.28]} />
+        <mesh position={[-0.3, 0, 0]} rotation={[0, 0.3, 0]}>
+          <boxGeometry args={[0.52, 0.02, 0.35]} />
           <meshStandardMaterial color="#64748b" metalness={0.9} />
         </mesh>
-        <mesh position={[-0.2, 0.12, -0.1]} rotation={[-0.4, 0.3, 0]}>
-          <boxGeometry args={[0.42, 0.24, 0.015]} />
+        <mesh position={[-0.3, 0.15, -0.12]} rotation={[-0.4, 0.3, 0]}>
+          <boxGeometry args={[0.52, 0.3, 0.018]} />
           <meshBasicMaterial color="#38bdf8" />
         </mesh>
         {/* Coffee Cups */}
-        <mesh position={[0.3, 0.02, -0.2]}>
-          <cylinderGeometry args={[0.04, 0.03, 0.1, 12]} />
+        <mesh position={[0.4, 0.02, -0.25]}>
+          <cylinderGeometry args={[0.05, 0.04, 0.12, 12]} />
           <meshStandardMaterial color="#00f0ff" />
         </mesh>
-        <mesh position={[-0.3, 0.02, 0.2]}>
-          <cylinderGeometry args={[0.04, 0.03, 0.1, 12]} />
+        <mesh position={[-0.4, 0.02, 0.25]}>
+          <cylinderGeometry args={[0.05, 0.04, 0.12, 12]} />
           <meshStandardMaterial color="#fbbf24" />
         </mesh>
       </group>
 
-      {/* Male Faculty Director seated on LEFT facing RIGHT (towards female) */}
-      <group position={[-1.0, 0, 0]} rotation={[0, Math.PI / 2 + 0.12, 0]}>
-        <LuxuryFacultyDirectorChair3D position={[0, 0, 0]} color="#4c1d95" />
-        <RealisticMaleAvatar3D position={[0, 0, 0]} />
+      {/* Male Faculty Director seated on LEFT facing RIGHT (Enlarged) */}
+      <group position={[-1.3, 0, 0]} rotation={[0, Math.PI / 2 + 0.12, 0]}>
+        <LuxuryFacultyDirectorChair3D position={[0, 0, 0]} color="#4c1d95" scale={1.3} />
+        <RealisticMaleAvatar3D position={[0, 0, 0]} scale={1.3} />
       </group>
 
-      {/* Female Faculty Director seated on RIGHT facing LEFT (towards male) */}
-      <group position={[1.0, 0, 0]} rotation={[0, -Math.PI / 2 - 0.12, 0]}>
-        <LuxuryFacultyDirectorChair3D position={[0, 0, 0]} color="#831843" />
-        <RealisticFemaleAvatar3D position={[0, 0, 0]} />
+      {/* Female Faculty Director seated on RIGHT facing LEFT (Enlarged) */}
+      <group position={[1.3, 0, 0]} rotation={[0, -Math.PI / 2 - 0.12, 0]}>
+        <LuxuryFacultyDirectorChair3D position={[0, 0, 0]} color="#831843" scale={1.3} />
+        <RealisticFemaleAvatar3D position={[0, 0, 0]} scale={1.3} />
       </group>
 
       {showLabels && (
-        <Html position={[0, 3.9, 0]} center distanceFactor={isMobile ? 24 : 16}>
+        <Html position={[0, 4.4, 0]} center distanceFactor={isMobile ? 24 : 16}>
           <div 
             onClick={(e) => { e.stopPropagation(); onSelect('faculty'); }}
             className={`px-4 py-2 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
@@ -738,7 +732,7 @@ function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, show
   );
 }
 
-// Executive Command Desk
+// Executive Command Desk (Enlarged)
 function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone, showLabels, isMobile }) {
   const isHovered = hoveredZone === 'executive';
 
@@ -750,31 +744,31 @@ function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone, showLabels, is
       onPointerOut={() => setHoveredZone(null)}
     >
       <mesh position={[0, 0.1, 0]}>
-        <boxGeometry args={[4.5, 0.2, 3.5]} />
+        <boxGeometry args={[5.2, 0.2, 4.0]} />
         <meshStandardMaterial color={isHovered ? "#00f0ff" : "#0284c7"} emissive="#0369a1" roughness={0.3} />
       </mesh>
 
-      <mesh position={[0, 0.6, -0.5]}>
-        <boxGeometry args={[3.8, 0.8, 0.8]} />
+      <mesh position={[0, 0.7, -0.6]}>
+        <boxGeometry args={[4.6, 0.9, 1.0]} />
         <meshStandardMaterial color="#0f172a" metalness={0.8} />
       </mesh>
 
-      {[-1.2, 0, 1.2].map((x, idx) => (
+      {[-1.5, 0, 1.5].map((x, idx) => (
         <group key={idx}>
-          <RealisticOfficeChair3D position={[x, 0, 0.3]} color="#0284c7" rotation={[0, Math.PI, 0]} />
-          <RealisticSeatedAvatar3D position={[x, 0, 0.3]} shirtColor="#0284c7" hairColor="#0f172a" />
+          <RealisticOfficeChair3D position={[x, 0, 0.45]} color="#0284c7" rotation={[0, Math.PI, 0]} scale={1.25} />
+          <RealisticSeatedAvatar3D position={[x, 0, 0.45]} shirtColor="#0284c7" hairColor="#0f172a" scale={1.25} />
         </group>
       ))}
 
-      {[-1.2, 0, 1.2].map((x, i) => (
-        <mesh key={i} position={[x, 1.4, -0.6]} rotation={[-0.2, 0, 0]}>
-          <planeGeometry args={[1.0, 0.6]} />
+      {[-1.5, 0, 1.5].map((x, i) => (
+        <mesh key={i} position={[x, 1.6, -0.7]} rotation={[-0.2, 0, 0]}>
+          <planeGeometry args={[1.2, 0.75]} />
           <meshBasicMaterial color={isHovered ? "#00f0ff" : "#38bdf8"} side={THREE.DoubleSide} />
         </mesh>
       ))}
 
       {showLabels && (
-        <Html position={[0, 2.6, 0]} center distanceFactor={isMobile ? 24 : 16}>
+        <Html position={[0, 3.0, 0]} center distanceFactor={isMobile ? 24 : 16}>
           <div 
             onClick={(e) => { e.stopPropagation(); onSelect('executive'); }}
             className={`px-3.5 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
@@ -793,7 +787,7 @@ function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone, showLabels, is
   );
 }
 
-// Core Operations Board Room
+// Core Operations Board Room (Enlarged)
 function BoardRoom3D({ onSelect, hoveredZone, setHoveredZone, showLabels, isMobile }) {
   const isHovered = hoveredZone === 'board';
 
@@ -805,31 +799,31 @@ function BoardRoom3D({ onSelect, hoveredZone, setHoveredZone, showLabels, isMobi
       onPointerOut={() => setHoveredZone(null)}
     >
       <mesh position={[0, 0.1, 0]}>
-        <boxGeometry args={[4.5, 0.2, 3.5]} />
+        <boxGeometry args={[5.2, 0.2, 4.0]} />
         <meshStandardMaterial color={isHovered ? "#c084fc" : "#7e22ce"} emissive="#581c87" roughness={0.3} />
       </mesh>
 
-      <mesh position={[0, 0.6, -0.5]}>
-        <boxGeometry args={[3.5, 0.8, 0.8]} />
+      <mesh position={[0, 0.7, -0.6]}>
+        <boxGeometry args={[4.2, 0.9, 1.0]} />
         <meshStandardMaterial color="#0f172a" metalness={0.8} />
       </mesh>
 
-      {[-1, 1].map((x, idx) => (
+      {[-1.3, 1.3].map((x, idx) => (
         <group key={idx}>
-          <RealisticOfficeChair3D position={[x, 0, 0.3]} color="#7e22ce" rotation={[0, Math.PI, 0]} />
-          <RealisticSeatedAvatar3D position={[x, 0, 0.3]} shirtColor="#7e22ce" hairColor="#3b0764" />
+          <RealisticOfficeChair3D position={[x, 0, 0.45]} color="#7e22ce" rotation={[0, Math.PI, 0]} scale={1.25} />
+          <RealisticSeatedAvatar3D position={[x, 0, 0.45]} shirtColor="#7e22ce" hairColor="#3b0764" scale={1.25} />
         </group>
       ))}
 
-      {[-1, 1].map((x, i) => (
-        <mesh key={i} position={[x, 1.4, -0.6]} rotation={[-0.2, 0, 0]}>
-          <planeGeometry args={[1.2, 0.7]} />
+      {[-1.3, 1.3].map((x, i) => (
+        <mesh key={i} position={[x, 1.6, -0.7]} rotation={[-0.2, 0, 0]}>
+          <planeGeometry args={[1.3, 0.8]} />
           <meshBasicMaterial color={isHovered ? "#a855f7" : "#c084fc"} side={THREE.DoubleSide} />
         </mesh>
       ))}
 
       {showLabels && (
-        <Html position={[0, 2.6, 0]} center distanceFactor={isMobile ? 24 : 16}>
+        <Html position={[0, 3.0, 0]} center distanceFactor={isMobile ? 24 : 16}>
           <div 
             onClick={(e) => { e.stopPropagation(); onSelect('board'); }}
             className={`px-3.5 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
@@ -848,7 +842,7 @@ function BoardRoom3D({ onSelect, hoveredZone, setHoveredZone, showLabels, isMobi
   );
 }
 
-// Domain Workstation Desk Component
+// Domain Workstation Desk Component (Enlarged)
 function DomainWorkstation3D({ id, title, color, position, onSelect, hoveredZone, setHoveredZone, showLabels, isMobile }) {
   const isHovered = hoveredZone === id;
 
@@ -859,21 +853,24 @@ function DomainWorkstation3D({ id, title, color, position, onSelect, hoveredZone
       onPointerOver={(e) => { e.stopPropagation(); setHoveredZone(id); }}
       onPointerOut={() => setHoveredZone(null)}
     >
-      <mesh position={[0, 0.35, 0]}>
-        <boxGeometry args={[2.0, 0.7, 1.2]} />
+      {/* Enlarged Desk */}
+      <mesh position={[0, 0.4, 0]}>
+        <boxGeometry args={[2.5, 0.8, 1.4]} />
         <meshStandardMaterial color="#1e293b" metalness={0.6} />
       </mesh>
 
-      <RealisticOfficeChair3D position={[0, 0, 0.8]} color={color} rotation={[0, Math.PI, 0]} />
-      <RealisticSeatedAvatar3D position={[0, 0, 0.8]} shirtColor={color} />
+      {/* Enlarged Chair & Avatar */}
+      <RealisticOfficeChair3D position={[0, 0, 0.95]} color={color} rotation={[0, Math.PI, 0]} scale={1.25} />
+      <RealisticSeatedAvatar3D position={[0, 0, 0.95]} shirtColor={color} scale={1.25} />
 
-      <mesh position={[0, 1.05, -0.3]}>
-        <boxGeometry args={[1.1, 0.65, 0.08]} />
+      {/* Enlarged Monitor */}
+      <mesh position={[0, 1.2, -0.35]}>
+        <boxGeometry args={[1.3, 0.75, 0.08]} />
         <meshBasicMaterial color={isHovered ? "#ffffff" : color} />
       </mesh>
 
       {showLabels && (
-        <Html position={[0, 1.8, 0]} center distanceFactor={isMobile ? 24 : 16}>
+        <Html position={[0, 2.1, 0]} center distanceFactor={isMobile ? 24 : 16}>
           <div 
             onClick={(e) => {
               e.stopPropagation();
@@ -894,7 +891,7 @@ function DomainWorkstation3D({ id, title, color, position, onSelect, hoveredZone
   );
 }
 
-// Department Coordinators Terminal
+// Department Coordinators Terminal (Enlarged)
 function DepartmentCoordinators3D({ position = [0, 0.4, -7.5], onSelect, hoveredZone, setHoveredZone, showLabels, isMobile }) {
   const isHovered = hoveredZone === 'coordinator';
 
@@ -905,20 +902,20 @@ function DepartmentCoordinators3D({ position = [0, 0.4, -7.5], onSelect, hovered
       onPointerOver={(e) => { e.stopPropagation(); setHoveredZone('coordinator'); }}
       onPointerOut={() => setHoveredZone(null)}
     >
-      <mesh position={[0, 0.15, 0]}>
-        <cylinderGeometry args={[3.8, 4.2, 0.4, 32]} />
+      <mesh position={[0, 0.18, 0]}>
+        <cylinderGeometry args={[4.4, 4.8, 0.45, 32]} />
         <meshStandardMaterial color={isHovered ? "#34d399" : "#059669"} emissive="#047857" roughness={0.3} />
       </mesh>
 
-      {[-2.5, -1.5, -0.5, 0.5, 1.5, 2.5].map((x, idx) => (
+      {[-2.8, -1.7, -0.6, 0.6, 1.7, 2.8].map((x, idx) => (
         <group key={idx}>
-          <RealisticOfficeChair3D position={[x, 0, 0.5]} color="#059669" rotation={[0, Math.PI, 0]} />
-          <RealisticSeatedAvatar3D position={[x, 0, 0.5]} shirtColor="#059669" />
+          <RealisticOfficeChair3D position={[x, 0, 0.6]} color="#059669" rotation={[0, Math.PI, 0]} scale={1.25} />
+          <RealisticSeatedAvatar3D position={[x, 0, 0.6]} shirtColor="#059669" scale={1.25} />
         </group>
       ))}
 
       {showLabels && (
-        <Html position={[0, 4.2, 0]} center distanceFactor={isMobile ? 24 : 16}>
+        <Html position={[0, 4.6, 0]} center distanceFactor={isMobile ? 24 : 16}>
           <div 
             onClick={(e) => { e.stopPropagation(); onSelect('coordinator'); }}
             className={`px-4 py-2 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
