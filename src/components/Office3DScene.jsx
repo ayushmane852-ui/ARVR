@@ -202,9 +202,9 @@ function LaboratoryRoomEnclosure3D({ showScreenText }) {
 
         {/* Neon Text & Logo Display on Screen ("ARVR Team") */}
         {showScreenText && (
-          <Html position={[0, 0, 0.15]} transform center distanceFactor={14}>
-            <div className="flex flex-col items-center justify-center p-6 text-center select-none w-[800px]">
-              {/* Enlarged ARVR Logo on screen above text */}
+          <Html position={[0, 0, 0.15]} transform center distanceFactor={18}>
+            <div className="flex flex-col items-center justify-center p-4 text-center select-none w-[600px]">
+              {/* Perfectly Proportioned ARVR Logo on screen above text */}
               <img
                 src="/Images/arvr logo.png"
                 onError={(e) => {
@@ -213,11 +213,11 @@ function LaboratoryRoomEnclosure3D({ showScreenText }) {
                   }
                 }}
                 alt="ARVR Logo"
-                className="w-36 h-36 sm:w-44 sm:h-44 mb-3 object-contain filter drop-shadow-[0_0_35px_rgba(0,240,255,0.9)] animate-pulse"
+                className="w-24 h-24 sm:w-30 sm:h-30 mb-2 object-contain filter drop-shadow-[0_0_30px_rgba(0,240,255,0.85)] animate-pulse"
               />
 
-              {/* ARVR Team Title */}
-              <h1 className="font-orbitron font-black text-7xl sm:text-8xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-amber-300 drop-shadow-[0_0_45px_rgba(0,240,255,0.9)] uppercase">
+              {/* Perfectly Contained ARVR Team Title */}
+              <h1 className="font-orbitron font-black text-4xl sm:text-5xl tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-amber-300 drop-shadow-[0_0_35px_rgba(0,240,255,0.9)] uppercase whitespace-nowrap">
                 ARVR Team
               </h1>
             </div>
