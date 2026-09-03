@@ -580,7 +580,6 @@ function RealARVRVerticalVaultDoors3D({ openRatio, hasOpened }) {
 function FrontViewCameraRig({ openRatio, isUserInteracting, isMobile }) {
   useFrame(({ camera }) => {
     if (openRatio < 0.95 && !isUserInteracting) {
-      // Start z = 42.0 (Full door view without zoom-in clipping), target z = 26.0 (inside room view)
       const startZ = isMobile ? 48.0 : 42.0;
       const openZ = isMobile ? 32.0 : 26.0;
 
@@ -970,9 +969,9 @@ export default function Office3DScene({ onSelectZone }) {
               WELCOME TO ARVR LAB
             </h1>
 
-            <div className="mt-2 px-5 py-2.5 rounded-2xl glass-panel border border-cyan-400/50 bg-slate-950/90 shadow-[0_0_30px_rgba(0,240,255,0.3)] animate-bounce flex items-center gap-2">
-              <span className="font-mono text-[11px] sm:text-sm text-cyan-300 font-bold uppercase tracking-wider">
-                Scroll down or tap to open vault doors & enter room ↓
+            <div className="mt-2 px-6 py-2.5 rounded-2xl glass-panel border border-cyan-400/50 bg-slate-950/90 shadow-[0_0_30px_rgba(0,240,255,0.3)] animate-bounce flex items-center gap-2 cursor-pointer hover:border-cyan-300 hover:scale-105 transition-all">
+              <span className="font-mono text-[12px] sm:text-sm text-cyan-300 font-bold uppercase tracking-wider">
+                Tap to enter room ↓
               </span>
             </div>
           </div>
