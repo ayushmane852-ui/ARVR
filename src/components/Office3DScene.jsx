@@ -612,8 +612,8 @@ function RealARVRVerticalVaultDoors3D({ openRatio, hasOpened }) {
 function FrontViewCameraRig({ openRatio, hasOpened, isUserInteracting, isMobile }) {
   useFrame(({ camera }) => {
     if (!hasOpened && openRatio < 0.98 && !isUserInteracting) {
-      const startZ = isMobile ? 26.0 : 22.0;
-      const openZ = isMobile ? 38.0 : 32.0;
+      const startZ = isMobile ? 48.0 : 42.0;
+      const openZ = isMobile ? 34.0 : 28.0;
 
       const startY = 4.5;
       const openY = 5.0;
@@ -621,8 +621,8 @@ function FrontViewCameraRig({ openRatio, hasOpened, isUserInteracting, isMobile 
       const targetZ = THREE.MathUtils.lerp(startZ, openZ, openRatio);
       const targetY = THREE.MathUtils.lerp(startY, openY, openRatio);
 
-      camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.12);
-      camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.12);
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.16);
+      camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.16);
       camera.lookAt(0, THREE.MathUtils.lerp(4.5, 5.0, openRatio), 0);
     }
   });
@@ -1026,7 +1026,7 @@ export default function Office3DScene({ onSelectZone }) {
         </div>
       )}
 
-      <Canvas camera={{ position: [0, 4.5, isMobile ? 26 : 22], fov: isMobile ? 65 : 48 }}>
+      <Canvas camera={{ position: [0, 4.5, isMobile ? 48 : 42], fov: isMobile ? 65 : 48 }}>
         <color attach="background" args={['#020617']} />
         <fog attach="fog" args={['#020617', 15, 65]} />
 
