@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html, Float } from '@react-three/drei';
 import * as THREE from 'three';
@@ -390,8 +390,8 @@ function CyberEntranceDoors3D({ isOpen }) {
 
   useFrame((_, delta) => {
     // Smooth sliding door animation
-    const targetLeft = isOpen ? -3.8 : -1.05;
-    const targetRight = isOpen ? 3.8 : 1.05;
+    const targetLeft = isOpen ? -4.2 : -1.05;
+    const targetRight = isOpen ? 4.2 : 1.05;
 
     if (leftDoorRef.current) {
       leftDoorRef.current.position.x = THREE.MathUtils.lerp(leftDoorRef.current.position.x, targetLeft, delta * 4);
@@ -419,8 +419,8 @@ function CyberEntranceDoors3D({ isOpen }) {
 
       {/* Top Holographic Sign Header */}
       <Html position={[0, 4.4, 0]} center distanceFactor={15}>
-        <div className="px-4 py-1 rounded-xl bg-slate-950/90 border border-cyan-400 text-cyan-300 font-orbitron font-black text-[10px] tracking-widest uppercase shadow-[0_0_20px_rgba(0,240,255,0.6)]">
-          {isOpen ? '🚪 ARVR OFFICE LAB // ACCESS GRANTED' : '🔒 ARVR OFFICE LAB // ENTERING ROOM'}
+        <div className="px-4 py-1.5 rounded-xl bg-slate-950/90 border border-cyan-400 text-cyan-300 font-orbitron font-black text-[10px] tracking-widest uppercase shadow-[0_0_20px_rgba(0,240,255,0.6)]">
+          {isOpen ? '🚪 ARVR OFFICE LAB // ACCESS GRANTED' : '🔒 SCROLL DOWN TO OPEN DOORS'}
         </div>
       </Html>
 
@@ -457,6 +457,19 @@ function CyberEntranceDoors3D({ isOpen }) {
       </group>
     </group>
   );
+}
+
+// Camera Rig for Scroll-Driven Zoom-In
+function CameraScrollRig({ doorsOpen }) {
+  useFrame(({ camera }) => {
+    const targetZ = doorsOpen ? 14 : 21;
+    const targetY = doorsOpen ? 12 : 16;
+
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.05);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.05);
+  });
+
+  return null;
 }
 
 // 1. 3D HOD & Faculty Pavilion (Center of Office Floor)
@@ -769,8 +782,35 @@ function DepartmentCoordinators3D({ onSelect, hoveredZone, setHoveredZone }) {
 }
 
 export default function Office3DScene({ onSelectZone }) {
+  const containerRef = useRef(null);
   const [hoveredZone, setHoveredZone] = useState(null);
   const [doorsOpen, setDoorsOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  // Scroll event listener for automatic door opening on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      // Calculate relative scroll position
+      const entranceTriggerPoint = windowHeight * 0.8;
+      const progress = Math.max(0, Math.min(1, (windowHeight - rect.top) / entranceTriggerPoint));
+      setScrollProgress(progress);
+
+      // Dynamically open doors as user scrolls into view
+      if (progress > 0.35) {
+        setDoorsOpen(true);
+      } else if (progress < 0.15) {
+        setDoorsOpen(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const domainDesks = [
     { id: 'unity_head', title: 'TEAM UNITY', color: '#00f0ff', position: [-9, 0, 2] },
@@ -785,7 +825,10 @@ export default function Office3DScene({ onSelectZone }) {
   ];
 
   return (
-    <div className="w-full h-[580px] sm:h-[680px] relative rounded-3xl overflow-hidden glass-panel border border-cyan-500/40 shadow-[0_0_50px_rgba(0,240,255,0.2)] bg-[#020617]">
+    <div 
+      ref={containerRef}
+      className="w-full h-[580px] sm:h-[680px] relative rounded-3xl overflow-hidden glass-panel border border-cyan-500/40 shadow-[0_0_50px_rgba(0,240,255,0.2)] bg-[#020617]"
+    >
       
       {/* 3D Controls & Door Entrance Toggle Overlay */}
       <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-3">
@@ -797,15 +840,15 @@ export default function Office3DScene({ onSelectZone }) {
               : 'bg-cyan-500 text-slate-950 shadow-[0_0_20px_rgba(0,240,255,0.6)] animate-pulse'
           }`}
         >
-          {doorsOpen ? '🚪 DOORS OPEN // INSIDE ROOM' : '🔒 CLICK TO OPEN DOORS & ENTER ROOM'}
+          {doorsOpen ? '🚪 DOORS OPEN // INSIDE ROOM' : '🔒 SCROLL DOWN TO ENTER ROOM'}
         </button>
 
         <div className="font-mono text-[10px] text-cyan-300/80 bg-slate-950/80 px-3 py-2 rounded-xl border border-cyan-500/30 pointer-events-none hidden sm:block">
-          <span>LEFT CLICK ROTATE • SCROLL ZOOM • CLICK DESKS TO VIEW ROSTERS</span>
+          <span>SCROLL TO ENTER ROOM • LEFT CLICK ROTATE • CLICK DESKS TO VIEW ROSTERS</span>
         </div>
       </div>
 
-      <Canvas camera={{ position: [0, 14, 19], fov: 50 }}>
+      <Canvas camera={{ position: [0, 16, 21], fov: 50 }}>
         <color attach="background" args={['#020617']} />
         <fog attach="fog" args={['#020617', 15, 45]} />
 
@@ -821,6 +864,9 @@ export default function Office3DScene({ onSelectZone }) {
           maxDistance={28}
           maxPolarAngle={Math.PI / 2 - 0.05}
         />
+
+        {/* Camera Scroll Rig (Smoothly zooms camera inside room on scroll) */}
+        <CameraScrollRig doorsOpen={doorsOpen} />
 
         {/* Semi-transparent Reflective Cyber Floor Grid */}
         <gridHelper args={[40, 40, '#00f0ff', '#1e293b']} position={[0, 0, 0]} />
