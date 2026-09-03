@@ -737,6 +737,74 @@ export default function Team() {
               </div>
             </div>
 
+            {/* Core Operations Board Grid */}
+            <div className="mb-16">
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <Terminal size={20} className="text-purple-400" />
+                <h3 className="font-orbitron font-black text-xl tracking-wider uppercase text-purple-300">
+                  CORE OPERATIONS BOARD (SECRETARY & TREASURER)
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                {boardMembers.map((member) => (
+                  <div
+                    key={member.id}
+                    onClick={() => setSelectedMember(member)}
+                    className="glass-panel p-5 rounded-2xl border border-purple-500/40 hover:border-purple-300 bg-slate-950/70 hover:bg-purple-500/10 transition-all cursor-pointer flex flex-col items-center group"
+                  >
+                    <div className={`w-40 h-40 sm:w-48 sm:h-48 rounded-xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform`}>
+                      <div className="w-full h-full rounded-[10px] overflow-hidden bg-slate-950 relative">
+                        <img src={member.image} alt={member.role} className="w-full h-full object-cover" />
+                      </div>
+                    </div>
+                    <div className="text-center mt-3">
+                      <h4 className="font-orbitron font-bold text-lg text-white group-hover:text-purple-300">
+                        {member.role}
+                      </h4>
+                      <p className="font-mono text-xs text-purple-400/90 font-semibold mt-1">
+                        {member.tag}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Departmental Coordinators Grid */}
+            <div className="mb-16">
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <GraduationCap size={20} className="text-emerald-400" />
+                <h3 className="font-orbitron font-black text-xl tracking-wider uppercase text-emerald-300">
+                  DEPARTMENTAL COORDINATORS
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-6">
+                {coordinatorMembers.map((member) => (
+                  <div
+                    key={member.id}
+                    onClick={() => setSelectedMember(member)}
+                    className="glass-panel p-4 rounded-2xl border border-emerald-500/40 hover:border-emerald-300 bg-slate-950/70 hover:bg-emerald-500/10 transition-all cursor-pointer flex flex-col items-center group"
+                  >
+                    <div className={`w-36 h-36 sm:w-44 sm:h-44 rounded-xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform`}>
+                      <div className="w-full h-full rounded-[10px] overflow-hidden bg-slate-950 relative">
+                        <img src={member.image} alt={member.role} className="w-full h-full object-cover" />
+                      </div>
+                    </div>
+                    <div className="text-center mt-3">
+                      <h4 className="font-orbitron font-bold text-sm sm:text-base text-white group-hover:text-emerald-300">
+                        {member.role}
+                      </h4>
+                      <p className="font-mono text-[10px] text-emerald-400/90 font-semibold mt-1">
+                        {member.status}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Domain Leadership Grid with Previous Domain Names */}
             <div className="mb-16">
               <div className="flex items-center justify-center gap-3 mb-6">
