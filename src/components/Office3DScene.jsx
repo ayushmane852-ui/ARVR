@@ -144,7 +144,7 @@ function SubFloorSolarSystem3D({ position = [0, -5.5, 0] }) {
   );
 }
 
-// LABORATORY ROOM ENCLOSURE WALLS & GIANT BACK SCREEN ("ARVR Team")
+// LABORATORY ROOM ENCLOSURE WALLS & GIANT BACK SCREEN ("ARVR Team" + Logo)
 function LaboratoryRoomEnclosure3D({ showScreenText }) {
   return (
     <group>
@@ -200,24 +200,26 @@ function LaboratoryRoomEnclosure3D({ showScreenText }) {
           <meshBasicMaterial color="#030712" />
         </mesh>
 
-        {/* Neon Text Display on Screen ("ARVR Team") - ONLY VISIBLE INSIDE ROOM AFTER DOORS OPEN */}
+        {/* Neon Text & Logo Display on Screen ("ARVR Team") - ONLY VISIBLE INSIDE ROOM AFTER DOORS OPEN */}
         {showScreenText && (
           <Html position={[0, 0, 0.15]} transform center distanceFactor={14}>
-            <div className="flex flex-col items-center justify-center p-6 text-center select-none w-[900px]">
-              <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-cyan-400/50 bg-cyan-950/80 mb-3 shadow-[0_0_20px_rgba(0,240,255,0.6)]">
-                <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
-                <span className="font-mono text-sm text-cyan-300 tracking-[0.3em] uppercase font-bold">
-                  HEADQUARTERS MAIN DISPLAY
-                </span>
-              </div>
+            <div className="flex flex-col items-center justify-center p-6 text-center select-none w-[800px]">
+              {/* Small ARVR Logo on screen above text */}
+              <img
+                src="/Images/arvr logo.png"
+                onError={(e) => {
+                  if (e.currentTarget.src.includes('.png')) {
+                    e.currentTarget.src = '/Images/arvr logo.jpg';
+                  }
+                }}
+                alt="ARVR Logo"
+                className="w-20 h-20 sm:w-24 sm:h-24 mb-2 object-contain filter drop-shadow-[0_0_25px_rgba(0,240,255,0.85)] animate-pulse"
+              />
 
+              {/* ARVR Team Title */}
               <h1 className="font-orbitron font-black text-7xl sm:text-8xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-amber-300 drop-shadow-[0_0_45px_rgba(0,240,255,0.9)] uppercase">
                 ARVR Team
               </h1>
-
-              <p className="mt-2 font-mono text-xs sm:text-sm text-slate-300 tracking-[0.25em] uppercase font-semibold">
-                ADVANCED IMMERSIVE TECHNOLOGIES LABORATORY // CORE ROSTER
-              </p>
             </div>
           </Html>
         )}
@@ -321,7 +323,7 @@ function RealisticOfficeChair3D({ position, color = "#0284c7", rotation = [0, 0,
   );
 }
 
-// REALISTIC MALE FACULTY DIRECTOR AVATAR
+// REALISTIC MALE FACULTY DIRECTOR AVATAR (Looking at partner across table)
 function RealisticMaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] }) {
   return (
     <group position={position} rotation={rotation}>
@@ -341,14 +343,29 @@ function RealisticMaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] }) {
         <cylinderGeometry args={[0.07, 0.08, 0.12, 16]} />
         <meshStandardMaterial color="#ffdbac" />
       </mesh>
-      <mesh position={[0, 1.08, 0]}>
-        <sphereGeometry args={[0.16, 24, 24]} />
-        <meshStandardMaterial color="#ffdbac" roughness={0.5} />
-      </mesh>
-      <mesh position={[0, 1.14, 0.01]}>
-        <sphereGeometry args={[0.168, 20, 20, 0, Math.PI * 2, 0, Math.PI / 2.1]} />
-        <meshStandardMaterial color="#0f172a" roughness={0.9} />
-      </mesh>
+      
+      {/* Head looking forward towards partner (-Z) */}
+      <group position={[0, 1.08, 0]}>
+        <mesh>
+          <sphereGeometry args={[0.16, 24, 24]} />
+          <meshStandardMaterial color="#ffdbac" roughness={0.5} />
+        </mesh>
+        {/* Hair */}
+        <mesh position={[0, 0.06, 0.01]}>
+          <sphereGeometry args={[0.168, 20, 20, 0, Math.PI * 2, 0, Math.PI / 2.1]} />
+          <meshStandardMaterial color="#0f172a" roughness={0.9} />
+        </mesh>
+        {/* Eyes facing partner */}
+        <mesh position={[-0.05, 0.02, -0.15]}>
+          <sphereGeometry args={[0.025, 12, 12]} />
+          <meshBasicMaterial color="#0f172a" />
+        </mesh>
+        <mesh position={[0.05, 0.02, -0.15]}>
+          <sphereGeometry args={[0.025, 12, 12]} />
+          <meshBasicMaterial color="#0f172a" />
+        </mesh>
+      </group>
+
       <mesh position={[-0.12, 0.42, -0.16]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.08, 0.07, 0.38, 14]} />
         <meshStandardMaterial color="#0f172a" />
@@ -357,19 +374,21 @@ function RealisticMaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] }) {
         <cylinderGeometry args={[0.08, 0.07, 0.38, 14]} />
         <meshStandardMaterial color="#0f172a" />
       </mesh>
-      <mesh position={[-0.24, 0.6, -0.18]} rotation={[0.6, 0.3, 0]}>
-        <cylinderGeometry args={[0.055, 0.045, 0.38, 12]} />
+      
+      {/* Arm gestured forward towards table */}
+      <mesh position={[-0.22, 0.6, -0.2]} rotation={[0.7, 0.2, -0.2]}>
+        <cylinderGeometry args={[0.055, 0.045, 0.4, 12]} />
         <meshStandardMaterial color="#1e3a8a" />
       </mesh>
-      <mesh position={[0.24, 0.6, -0.18]} rotation={[0.6, -0.3, 0]}>
-        <cylinderGeometry args={[0.055, 0.045, 0.38, 12]} />
+      <mesh position={[0.22, 0.6, -0.2]} rotation={[0.7, -0.2, 0.2]}>
+        <cylinderGeometry args={[0.055, 0.045, 0.4, 12]} />
         <meshStandardMaterial color="#1e3a8a" />
       </mesh>
     </group>
   );
 }
 
-// REALISTIC FEMALE FACULTY DIRECTOR AVATAR
+// REALISTIC FEMALE FACULTY DIRECTOR AVATAR (Looking at partner across table)
 function RealisticFemaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] }) {
   return (
     <group position={position} rotation={rotation}>
@@ -385,22 +404,37 @@ function RealisticFemaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] })
         <cylinderGeometry args={[0.06, 0.07, 0.12, 16]} />
         <meshStandardMaterial color="#f1c27d" />
       </mesh>
-      <mesh position={[0, 1.06, 0]}>
-        <sphereGeometry args={[0.15, 24, 24]} />
-        <meshStandardMaterial color="#f1c27d" roughness={0.5} />
-      </mesh>
-      <mesh position={[0, 1.08, 0.02]}>
-        <sphereGeometry args={[0.165, 20, 20, 0, Math.PI * 2, 0, Math.PI / 1.8]} />
-        <meshStandardMaterial color="#291d09" roughness={0.7} />
-      </mesh>
-      <mesh position={[-0.14, 0.95, -0.02]}>
-        <boxGeometry args={[0.06, 0.3, 0.14]} />
-        <meshStandardMaterial color="#291d09" roughness={0.7} />
-      </mesh>
-      <mesh position={[0.14, 0.95, -0.02]}>
-        <boxGeometry args={[0.06, 0.3, 0.14]} />
-        <meshStandardMaterial color="#291d09" roughness={0.7} />
-      </mesh>
+      
+      {/* Head looking forward towards partner (-Z) */}
+      <group position={[0, 1.06, 0]}>
+        <mesh>
+          <sphereGeometry args={[0.15, 24, 24]} />
+          <meshStandardMaterial color="#f1c27d" roughness={0.5} />
+        </mesh>
+        {/* Hair */}
+        <mesh position={[0, 0.02, 0.02]}>
+          <sphereGeometry args={[0.165, 20, 20, 0, Math.PI * 2, 0, Math.PI / 1.8]} />
+          <meshStandardMaterial color="#291d09" roughness={0.7} />
+        </mesh>
+        <mesh position={[-0.14, -0.1, -0.02]}>
+          <boxGeometry args={[0.06, 0.3, 0.14]} />
+          <meshStandardMaterial color="#291d09" roughness={0.7} />
+        </mesh>
+        <mesh position={[0.14, -0.1, -0.02]}>
+          <boxGeometry args={[0.06, 0.3, 0.14]} />
+          <meshStandardMaterial color="#291d09" roughness={0.7} />
+        </mesh>
+        {/* Eyes facing partner */}
+        <mesh position={[-0.045, 0.01, -0.14]}>
+          <sphereGeometry args={[0.022, 12, 12]} />
+          <meshBasicMaterial color="#0f172a" />
+        </mesh>
+        <mesh position={[0.045, 0.01, -0.14]}>
+          <sphereGeometry args={[0.022, 12, 12]} />
+          <meshBasicMaterial color="#0f172a" />
+        </mesh>
+      </group>
+
       <mesh position={[-0.11, 0.4, -0.15]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.07, 0.06, 0.35, 14]} />
         <meshStandardMaterial color="#0f172a" />
@@ -409,12 +443,14 @@ function RealisticFemaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] })
         <cylinderGeometry args={[0.07, 0.06, 0.35, 14]} />
         <meshStandardMaterial color="#0f172a" />
       </mesh>
-      <mesh position={[-0.22, 0.58, -0.16]} rotation={[0.6, 0.3, 0]}>
-        <cylinderGeometry args={[0.05, 0.04, 0.36, 12]} />
+      
+      {/* Arm resting on desk facing table */}
+      <mesh position={[-0.2, 0.58, -0.18]} rotation={[0.65, 0.2, -0.15]}>
+        <cylinderGeometry args={[0.05, 0.04, 0.38, 12]} />
         <meshStandardMaterial color="#9f1239" />
       </mesh>
-      <mesh position={[0.22, 0.58, -0.16]} rotation={[0.6, -0.3, 0]}>
-        <cylinderGeometry args={[0.05, 0.04, 0.36, 12]} />
+      <mesh position={[0.2, 0.58, -0.18]} rotation={[0.65, -0.2, 0.15]}>
+        <cylinderGeometry args={[0.05, 0.04, 0.38, 12]} />
         <meshStandardMaterial color="#9f1239" />
       </mesh>
     </group>
@@ -598,7 +634,7 @@ function FrontViewCameraRig({ openRatio, isUserInteracting, isMobile }) {
   return null;
 }
 
-// Glass Cabin Office Room for Faculty Directorate
+// Glass Cabin Office Room for Faculty Directorate (Male and Female Seated Facing Each Other)
 function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, showLabels, isMobile }) {
   const isHovered = hoveredZone === 'faculty';
 
@@ -609,11 +645,13 @@ function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, show
       onPointerOver={(e) => { e.stopPropagation(); setHoveredZone('faculty'); }}
       onPointerOut={() => setHoveredZone(null)}
     >
+      {/* Floor Base */}
       <mesh position={[0, 0.1, 0]}>
         <boxGeometry args={[5.2, 0.2, 4.2]} />
         <meshStandardMaterial color={isHovered ? "#a855f7" : "#7e22ce"} emissive={isHovered ? "#9333ea" : "#581c87"} roughness={0.2} />
       </mesh>
 
+      {/* Cabin Support Columns */}
       {[[-2.55, -2.05], [2.55, -2.05], [-2.55, 2.05], [2.55, 2.05]].map(([x, z], idx) => (
         <mesh key={idx} position={[x, 1.7, z]}>
           <boxGeometry args={[0.1, 3.2, 0.1]} />
@@ -621,6 +659,7 @@ function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, show
         </mesh>
       ))}
 
+      {/* Glass Walls */}
       <mesh position={[0, 1.7, -2.05]}>
         <boxGeometry args={[5.0, 3.2, 0.04]} />
         <meshPhysicalMaterial color="#c084fc" transparent opacity={0.35} roughness={0.1} transmission={0.8} thickness={0.2} />
@@ -638,12 +677,15 @@ function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, show
         <meshPhysicalMaterial color="#a855f7" transparent opacity={0.4} roughness={0.1} />
       </mesh>
 
+      {/* Discussion Desk Between Them */}
       <mesh position={[0, 0.55, 0]}>
-        <boxGeometry args={[1.6, 0.65, 1.1]} />
+        <boxGeometry args={[1.5, 0.65, 1.0]} />
         <meshStandardMaterial color="#f8fafc" roughness={0.2} metalness={0.3} />
       </mesh>
 
+      {/* Items on Discussion Desk */}
       <group position={[0, 0.9, 0]}>
+        {/* Holographic Tablet */}
         <mesh position={[-0.2, 0, 0]} rotation={[0, 0.3, 0]}>
           <boxGeometry args={[0.42, 0.02, 0.28]} />
           <meshStandardMaterial color="#64748b" metalness={0.9} />
@@ -652,18 +694,25 @@ function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, show
           <boxGeometry args={[0.42, 0.24, 0.015]} />
           <meshBasicMaterial color="#38bdf8" />
         </mesh>
-        <mesh position={[0.3, 0.01, 0.1]} rotation={[0, -0.2, 0]}>
-          <boxGeometry args={[0.3, 0.01, 0.4]} />
+        {/* Coffee Cups */}
+        <mesh position={[0.3, 0.02, -0.2]}>
+          <cylinderGeometry args={[0.04, 0.03, 0.1, 12]} />
+          <meshStandardMaterial color="#00f0ff" />
+        </mesh>
+        <mesh position={[-0.3, 0.02, 0.2]}>
+          <cylinderGeometry args={[0.04, 0.03, 0.1, 12]} />
           <meshStandardMaterial color="#fbbf24" />
         </mesh>
       </group>
 
-      <group position={[-1.1, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
+      {/* Male Faculty Director seated on LEFT facing RIGHT (towards female) */}
+      <group position={[-1.0, 0, 0]} rotation={[0, Math.PI / 2 + 0.12, 0]}>
         <LuxuryFacultyDirectorChair3D position={[0, 0, 0]} color="#4c1d95" />
         <RealisticMaleAvatar3D position={[0, 0, 0]} />
       </group>
 
-      <group position={[1.1, 0, 0]} rotation={[0, -Math.PI / 2, 0]}>
+      {/* Female Faculty Director seated on RIGHT facing LEFT (towards male) */}
+      <group position={[1.0, 0, 0]} rotation={[0, -Math.PI / 2 - 0.12, 0]}>
         <LuxuryFacultyDirectorChair3D position={[0, 0, 0]} color="#831843" />
         <RealisticFemaleAvatar3D position={[0, 0, 0]} />
       </group>
