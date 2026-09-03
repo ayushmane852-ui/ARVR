@@ -3,16 +3,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Sparkles, Shield, Cpu, Layers, Crown, Terminal, Compass, Zap, Code2, X, Maximize2, 
   Users, UserPlus, Headphones, Video, Radio, Tv, Activity, Eye, GraduationCap, Award,
-  Flame, Laptop, ChevronRight, Grid, Target
+  Box, Grid, LayoutGrid
 } from 'lucide-react';
+import Office3DScene from './Office3DScene';
 
 export default function Team() {
+  const [viewMode, setViewMode] = useState('3D'); // '3D' or 'GRID'
   const [selectedMember, setSelectedMember] = useState(null);
   const [viewingTeamForDomain, setViewingTeamForDomain] = useState(null);
   const [selectedDeskGroup, setSelectedDeskGroup] = useState(null);
   const [hoveredDesk, setHoveredDesk] = useState(null);
 
-  // Mouse Cursor 3D Parallax Tracking & Spotlight Effect
+  // Mouse Cursor 3D Parallax Tracking
   const [mousePos, setMousePos] = useState({ x: 0, y: 0, px: 0, py: 0 });
   const sectionRef = useRef(null);
 
@@ -22,8 +24,6 @@ export default function Team() {
       const rect = sectionRef.current.getBoundingClientRect();
       const relativeX = e.clientX - rect.left;
       const relativeY = e.clientY - rect.top;
-      
-      // Normalized coordinates (-1 to 1) for parallax calculation
       const normalizedX = (relativeX / rect.width) * 2 - 1;
       const normalizedY = (relativeY / rect.height) * 2 - 1;
 
@@ -458,53 +458,44 @@ export default function Team() {
     },
   ];
 
-  // 6. AR/VR Laboratory Equipment & Stations
-  const arvrInstruments = [
-    {
-      id: 'inst_headset_bay',
-      name: 'SPATIAL HEADSET LAB BAY',
-      category: 'EQUIPMENT BAY // 01',
-      desc: 'Meta Quest 3 & Apple Vision Pro spatial computing test benches with real-time pass-through calibration.',
-      badge: 'SPATIAL HARDWARE',
-      icon: Headphones,
-      color: 'from-cyan-400 via-teal-400 to-blue-600',
-      borderColor: 'border-cyan-400/50 hover:border-cyan-300',
-      glowColor: 'rgba(0, 240, 255, 0.35)'
-    },
-    {
-      id: 'inst_vfx_studio',
-      name: 'VFX & VOLUMETRIC CAPTURE STUDIO',
-      category: 'EQUIPMENT BAY // 02',
-      desc: 'Unreal Engine virtual production rig, green screen studio, and real-time 3D spatial particle rendering node.',
-      badge: 'VFX & RENDERING',
-      icon: Video,
-      color: 'from-fuchsia-400 via-purple-500 to-pink-600',
-      borderColor: 'border-fuchsia-400/50 hover:border-fuchsia-300',
-      glowColor: 'rgba(232, 121, 249, 0.35)'
-    },
-    {
-      id: 'inst_haptics',
-      name: 'HAPTIC & TACTILE SENSOR BAY',
-      category: 'EQUIPMENT BAY // 03',
-      desc: 'Force-feedback glove testing arrays, EMG wristband telemetry, and tactile spatial feedback transducers.',
-      badge: 'TACTILE MATRIX',
-      icon: Radio,
-      color: 'from-emerald-400 via-teal-400 to-green-500',
-      borderColor: 'border-emerald-400/50 hover:border-emerald-300',
-      glowColor: 'rgba(52, 211, 153, 0.35)'
-    },
-    {
-      id: 'inst_hologram',
-      name: '3D HOLOGRAM & SOUNDFIELD POD',
-      category: 'EQUIPMENT BAY // 04',
-      desc: 'Lightfield holographic display tabletop coupled with 360-degree binaural spatial audio synthesis suite.',
-      badge: 'HOLOGRAM & AUDIO',
-      icon: Tv,
-      color: 'from-amber-400 via-yellow-500 to-orange-500',
-      borderColor: 'border-amber-400/50 hover:border-amber-300',
-      glowColor: 'rgba(251, 191, 36, 0.35)'
+  // 3D Scene Zone Click Handler
+  const handleSelect3DZone = (zoneKey) => {
+    if (zoneKey === 'faculty') {
+      setSelectedDeskGroup({
+        title: 'FACULTY DIRECTORATE DESK',
+        subtitle: 'CHIEF ACADEMIC PATRON & FACULTY COORDINATION',
+        members: facultyMembers,
+        color: 'from-amber-400 to-yellow-600'
+      });
+    } else if (zoneKey === 'executive') {
+      setSelectedDeskGroup({
+        title: 'EXECUTIVE COMMAND DESK',
+        subtitle: 'MAIN PANEL STRATEGIC DIRECTORS',
+        members: executiveMembers,
+        color: 'from-cyan-400 via-blue-500 to-indigo-600'
+      });
+    } else if (zoneKey === 'board') {
+      setSelectedDeskGroup({
+        title: 'CORE OPERATIONS BOARD DESK',
+        subtitle: 'ADMINISTRATIVE & TREASURY CONSOLE',
+        members: boardMembers,
+        color: 'from-purple-400 to-indigo-600'
+      });
+    } else if (zoneKey === 'coordinator') {
+      setSelectedDeskGroup({
+        title: 'DEPARTMENT COORDINATORS DESK HUB',
+        subtitle: 'ACADEMIC & DEPARTMENTAL LIAISON TERMINAL',
+        members: coordinatorMembers,
+        color: 'from-emerald-400 via-teal-500 to-green-600'
+      });
+    } else {
+      // Find matching domain member
+      const domHead = domainMembers.find((m) => m.id === zoneKey);
+      if (domHead) {
+        setSelectedMember(domHead);
+      }
     }
-  ];
+  };
 
   // Image loader component with graceful fallbacks
   const SmartImage = ({ src, fallbackSrcs = [], alt, className }) => {
@@ -563,7 +554,7 @@ export default function Team() {
       <div className="max-w-7xl mx-auto relative z-10">
         
         {/* Header Banner */}
-        <div className="flex flex-col items-center text-center mb-14 sm:mb-16">
+        <div className="flex flex-col items-center text-center mb-10 sm:mb-14">
           <motion.div 
             initial={{ opacity: 0, y: -15 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -572,505 +563,191 @@ export default function Team() {
           >
             <Sparkles size={14} className="text-cyan-400 animate-pulse" />
             <span className="font-mono text-xs text-cyan-300 tracking-widest uppercase font-semibold">
-              ARVR VIRTUAL COMMAND OFFICE // SPATIAL LAB
+              3D ARVR VIRTUAL OFFICE LAB // HEADQUARTERS
             </span>
           </motion.div>
 
           <h2 className="font-orbitron font-black text-4xl sm:text-6xl tracking-tight text-white text-glow-cyan">
-            ARVR HEADQUARTERS
+            3D ARVR OFFICE LAB
           </h2>
           <p className="font-space text-slate-300 text-sm sm:text-base max-w-2xl mt-3 font-light leading-relaxed">
-            Welcome to the ARVR Office Layout. Hover over any domain desk or lab station to inspect its operational terminal. Click any desk hub to open full team view on screen!
+            Explore our 3D ARVR Spatial Office Lab. Interact with the 3D HOD Cabin, Main Panel, Core Operations, and Domain Workstations. Click any 3D room to inspect team members!
           </p>
-          <div className="w-28 h-1 bg-gradient-to-r from-amber-400 via-cyan-400 to-purple-500 rounded-full mt-4" />
+
+          {/* VIEW MODE TOGGLE BUTTONS */}
+          <div className="mt-6 flex items-center justify-center gap-3 p-1.5 rounded-2xl glass-panel border border-cyan-500/30 bg-slate-950/80">
+            <button
+              onClick={() => setViewMode('3D')}
+              className={`flex items-center gap-2 px-5 py-2 rounded-xl font-orbitron font-bold text-xs tracking-wider uppercase transition-all cursor-pointer ${
+                viewMode === '3D'
+                  ? 'bg-cyan-500 text-slate-950 shadow-[0_0_20px_rgba(0,240,255,0.6)] scale-105'
+                  : 'text-slate-300 hover:text-white hover:bg-cyan-500/10'
+              }`}
+            >
+              <Box size={16} />
+              <span>3D SPATIAL LAB VIEW</span>
+            </button>
+
+            <button
+              onClick={() => setViewMode('GRID')}
+              className={`flex items-center gap-2 px-5 py-2 rounded-xl font-orbitron font-bold text-xs tracking-wider uppercase transition-all cursor-pointer ${
+                viewMode === 'GRID'
+                  ? 'bg-cyan-500 text-slate-950 shadow-[0_0_20px_rgba(0,240,255,0.6)] scale-105'
+                  : 'text-slate-300 hover:text-white hover:bg-cyan-500/10'
+              }`}
+            >
+              <LayoutGrid size={16} />
+              <span>DESK ROSTER GRID VIEW</span>
+            </button>
+          </div>
         </div>
 
-        {/* 3D PARALLAX FLOOR CONTAINER */}
-        <div 
-          className="transition-transform duration-200 ease-out"
-          style={{
-            transform: `perspective(1200px) rotateX(${mousePos.py * -2.5}deg) rotateY(${mousePos.px * 3}deg)`
-          }}
-        >
+        {/* 3D INTERACTIVE ARVR OFFICE SCENE VIEW */}
+        {viewMode === '3D' && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.4 }}
+            className="mb-16"
+          >
+            <Office3DScene onSelectZone={handleSelect3DZone} />
+          </motion.div>
+        )}
 
-          {/* ========================================================================= */}
-          {/* ZONE 1: CENTER COMMAND DESK — FACULTY DIRECTORATE */}
-          {/* ========================================================================= */}
-          <div className="mb-16 sm:mb-20">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <GraduationCap size={22} className="text-amber-400 animate-pulse" />
-              <h3 className="font-orbitron font-black text-xl sm:text-2xl tracking-wider uppercase text-amber-300">
-                FACULTY DIRECTORATE DESK
-              </h3>
-              <div className="w-16 h-[1px] bg-amber-500/40" />
-            </div>
+        {/* DESK GRID ROSTER VIEW */}
+        {viewMode === 'GRID' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.4 }}
+          >
+            {/* Faculty Desk */}
+            <div className="mb-16 sm:mb-20">
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <GraduationCap size={22} className="text-amber-400 animate-pulse" />
+                <h3 className="font-orbitron font-black text-xl sm:text-2xl tracking-wider uppercase text-amber-300">
+                  FACULTY DIRECTORATE DESK
+                </h3>
+              </div>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              onClick={() => setSelectedDeskGroup({
-                title: 'FACULTY DIRECTORATE DESK',
-                subtitle: 'CHIEF ACADEMIC PATRON & FACULTY COORDINATION',
-                members: facultyMembers,
-                color: 'from-amber-400 to-yellow-600'
-              })}
-              onMouseEnter={() => setHoveredDesk({
-                code: 'DESK // FACULTY_COMMAND',
-                title: 'Faculty Directorate Desk',
-                role: 'Dr. Lingaraj Hadimani (HOD CSE) & Anuradha Solanki (Faculty Coordinator)',
-                desc: 'Academic leadership steering the spatial engineering lab, research directions, and curriculum integration.'
-              })}
-              onMouseLeave={() => setHoveredDesk(null)}
-              className="max-w-4xl mx-auto glass-panel rounded-3xl p-6 sm:p-8 border border-amber-400/60 hover:border-amber-300 transition-all duration-500 relative group cursor-pointer shadow-[0_15px_40px_rgba(251,191,36,0.15)] hover:shadow-[0_20px_50px_rgba(251,191,36,0.3)] flex flex-col items-center"
-            >
               <div 
-                className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                style={{ boxShadow: '0 0 50px rgba(251, 191, 36, 0.35)' }}
-              />
-
-              <div className="w-full flex items-center justify-between font-mono text-xs text-amber-400/90 mb-6 border-b border-amber-500/20 pb-3">
-                <span className="flex items-center gap-2 font-bold">
-                  <Award size={14} className="text-amber-400" /> ACADEMIC CENTER DESK
-                </span>
-                <span className="flex items-center gap-1 text-amber-300 group-hover:scale-105 transition-transform font-bold">
-                  <Maximize2 size={13} /> CLICK TO OPEN FACULTY DESK
-                </span>
-              </div>
-
-              {/* Faculty Photos Side by Side */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-2xl">
-                {facultyMembers.map((fac) => (
-                  <div 
-                    key={fac.id}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedMember(fac);
-                    }}
-                    className="glass-panel p-4 rounded-2xl border border-amber-500/40 hover:border-amber-300 bg-slate-950/70 hover:bg-amber-500/10 transition-all flex flex-col items-center group/card"
-                  >
-                    <div className="relative w-44 h-44 sm:w-48 sm:h-48 rounded-xl p-0.5 bg-gradient-to-tr from-amber-400 via-yellow-500 to-amber-600 shadow-xl group-hover/card:scale-105 transition-transform">
-                      <div className="w-full h-full rounded-[10px] overflow-hidden bg-slate-950 relative">
-                        <SmartImage
-                          src={fac.image}
-                          fallbackSrcs={fac.fallbackImages}
-                          alt={fac.name}
-                          className="w-full h-full object-cover object-center group-hover/card:scale-110 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px] opacity-0 group-hover/card:opacity-100 transition-opacity flex items-center justify-center">
-                          <Maximize2 size={24} className="text-amber-300" />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="text-center mt-4">
-                      <h4 className="font-orbitron font-extrabold text-lg text-white group-hover/card:text-amber-300 transition-colors">
-                        {fac.name}
-                      </h4>
-                      <p className="font-mono text-xs text-amber-400/90 font-semibold mt-1">
-                        {fac.role}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-
-          {/* ========================================================================= */}
-          {/* ZONE 2: EXECUTIVE COMMAND DESK (MAIN PANEL) */}
-          {/* ========================================================================= */}
-          <div className="mb-16 sm:mb-20">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <Crown size={20} className="text-cyan-400" />
-              <h3 className="font-orbitron font-black text-xl tracking-wider uppercase text-cyan-300">
-                EXECUTIVE COMMAND DESK (MAIN PANEL)
-              </h3>
-              <div className="w-12 h-[1px] bg-cyan-500/30" />
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              onClick={() => setSelectedDeskGroup({
-                title: 'EXECUTIVE COMMAND DESK',
-                subtitle: 'MAIN PANEL STRATEGIC DIRECTORS',
-                members: executiveMembers,
-                color: 'from-cyan-400 via-blue-500 to-indigo-600'
-              })}
-              onMouseEnter={() => setHoveredDesk({
-                code: 'DESK // MAIN_PANEL_EXEC',
-                title: 'Executive Command Desk',
-                role: 'President, Club Coordinator & Vice Presidents',
-                desc: 'Strategic command bridge managing club operations, external partnerships, and spatial project execution.'
-              })}
-              onMouseLeave={() => setHoveredDesk(null)}
-              className="glass-panel rounded-3xl p-6 sm:p-8 border border-cyan-400/50 hover:border-cyan-300 transition-all duration-500 cursor-pointer group shadow-[0_10px_30px_rgba(0,240,255,0.15)] hover:shadow-[0_15px_45px_rgba(0,240,255,0.25)]"
-            >
-              <div className="flex items-center justify-between font-mono text-xs text-cyan-400/90 mb-6 border-b border-cyan-500/20 pb-3">
-                <span className="flex items-center gap-2 font-bold">
-                  <Crown size={14} /> MAIN PANEL DESK HUB
-                </span>
-                <span className="flex items-center gap-1 text-cyan-300 font-bold group-hover:scale-105 transition-transform">
-                  <Maximize2 size={13} /> CLICK TO SHOW ALL MAIN PANEL PHOTOS
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                {executiveMembers.map((member) => (
-                  <div
-                    key={member.id}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedMember(member);
-                    }}
-                    className="glass-panel p-3 sm:p-4 rounded-2xl border border-cyan-500/30 hover:border-cyan-300 bg-slate-950/70 hover:bg-cyan-500/10 transition-all flex flex-col items-center group/m"
-                  >
-                    <div className={`w-32 h-32 sm:w-40 sm:h-40 rounded-xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover/m:scale-105 transition-transform`}>
-                      <div className="w-full h-full rounded-[10px] overflow-hidden bg-slate-950 relative">
-                        <img
-                          src={member.image}
-                          alt={member.role}
-                          className="w-full h-full object-cover object-center group-hover/m:scale-110 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px] opacity-0 group-hover/m:opacity-100 transition-opacity flex items-center justify-center">
-                          <Maximize2 size={20} className="text-cyan-300" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-center mt-3">
-                      <h4 className="font-orbitron font-bold text-sm sm:text-base text-white group-hover/m:text-cyan-300 transition-colors">
-                        {member.role}
-                      </h4>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-
-          {/* ========================================================================= */}
-          {/* ZONE 3: CORE OPERATIONS BOARD DESK */}
-          {/* ========================================================================= */}
-          <div className="mb-16 sm:mb-20">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <Cpu size={20} className="text-purple-400" />
-              <h3 className="font-orbitron font-black text-xl tracking-wider uppercase text-purple-300">
-                CORE OPERATIONS BOARD DESK
-              </h3>
-              <div className="w-12 h-[1px] bg-purple-500/30" />
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              onClick={() => setSelectedDeskGroup({
-                title: 'CORE OPERATIONS BOARD DESK',
-                subtitle: 'ADMINISTRATIVE & TREASURY CONSOLE',
-                members: boardMembers,
-                color: 'from-purple-400 to-indigo-600'
-              })}
-              onMouseEnter={() => setHoveredDesk({
-                code: 'DESK // CORE_OPERATIONS',
-                title: 'Core Operations Board Desk',
-                role: 'General Secretary & Treasurer',
-                desc: 'Administrative control terminal managing operational documentation, asset management, and financial planning.'
-              })}
-              onMouseLeave={() => setHoveredDesk(null)}
-              className="max-w-3xl mx-auto glass-panel rounded-3xl p-6 sm:p-8 border border-purple-400/50 hover:border-purple-300 transition-all duration-500 cursor-pointer group shadow-[0_10px_30px_rgba(168,85,247,0.15)] hover:shadow-[0_15px_45px_rgba(168,85,247,0.25)]"
-            >
-              <div className="flex items-center justify-between font-mono text-xs text-purple-400/90 mb-6 border-b border-purple-500/20 pb-3">
-                <span className="flex items-center gap-2 font-bold">
-                  <Terminal size={14} /> OPERATIONS CONSOLE DESK
-                </span>
-                <span className="flex items-center gap-1 text-purple-300 font-bold group-hover:scale-105 transition-transform">
-                  <Maximize2 size={13} /> CLICK TO OPEN BOARD DESK
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {boardMembers.map((member) => (
-                  <div
-                    key={member.id}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedMember(member);
-                    }}
-                    className="glass-panel p-4 rounded-2xl border border-purple-500/30 hover:border-purple-300 bg-slate-950/70 hover:bg-purple-500/10 transition-all flex flex-col items-center group/m"
-                  >
-                    <div className={`w-36 h-36 sm:w-44 sm:h-44 rounded-xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover/m:scale-105 transition-transform`}>
-                      <div className="w-full h-full rounded-[10px] overflow-hidden bg-slate-950 relative">
-                        <img
-                          src={member.image}
-                          alt={member.role}
-                          className="w-full h-full object-cover object-center group-hover/m:scale-110 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px] opacity-0 group-hover/m:opacity-100 transition-opacity flex items-center justify-center">
-                          <Maximize2 size={20} className="text-purple-300" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-center mt-3">
-                      <h4 className="font-orbitron font-bold text-base text-white group-hover/m:text-purple-300 transition-colors">
-                        {member.role}
-                      </h4>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-
-          {/* ========================================================================= */}
-          {/* ZONE 4: AR/VR EQUIPMENT & LABORATORY STATIONS */}
-          {/* ========================================================================= */}
-          <div className="mb-16 sm:mb-20">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <Headphones size={20} className="text-cyan-400 animate-bounce" />
-              <h3 className="font-orbitron font-black text-xl tracking-wider uppercase text-cyan-300">
-                AR/VR EQUIPMENT & LAB BAYS
-              </h3>
-              <div className="w-12 h-[1px] bg-cyan-500/30" />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {arvrInstruments.map((inst, idx) => {
-                const IconComp = inst.icon;
-                return (
-                  <motion.div
-                    key={inst.id}
-                    initial={{ opacity: 0, y: 25 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.08 }}
-                    onMouseEnter={() => setHoveredDesk({
-                      code: inst.category,
-                      title: inst.name,
-                      role: inst.badge,
-                      desc: inst.desc
-                    })}
-                    onMouseLeave={() => setHoveredDesk(null)}
-                    className={`glass-panel rounded-3xl p-5 border ${inst.borderColor} transition-all duration-500 relative group hover:-translate-y-2 flex flex-col justify-between`}
-                    style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}
-                  >
+                onClick={() => setSelectedDeskGroup({
+                  title: 'FACULTY DIRECTORATE DESK',
+                  subtitle: 'CHIEF ACADEMIC PATRON & FACULTY COORDINATION',
+                  members: facultyMembers,
+                  color: 'from-amber-400 to-yellow-600'
+                })}
+                className="max-w-4xl mx-auto glass-panel rounded-3xl p-6 sm:p-8 border border-amber-400/60 hover:border-amber-300 transition-all duration-500 cursor-pointer shadow-[0_15px_40px_rgba(251,191,36,0.15)]"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-2xl mx-auto">
+                  {facultyMembers.map((fac) => (
                     <div 
-                      className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                      style={{ boxShadow: `0 0 35px ${inst.glowColor}` }}
-                    />
-
-                    <div>
-                      <div className="flex items-center justify-between font-mono text-[9px] text-slate-400 mb-3 border-b border-cyan-500/15 pb-2">
-                        <span>{inst.category}</span>
-                        <span className="text-cyan-400 font-semibold">{inst.badge}</span>
-                      </div>
-
-                      <div className="flex items-center justify-center my-4">
-                        <div className={`p-4 rounded-2xl bg-gradient-to-tr ${inst.color} shadow-lg text-white group-hover:scale-110 transition-transform duration-500`}>
-                          <IconComp size={32} />
+                      key={fac.id}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedMember(fac);
+                      }}
+                      className="glass-panel p-4 rounded-2xl border border-amber-500/40 hover:border-amber-300 bg-slate-950/70 hover:bg-amber-500/10 transition-all flex flex-col items-center group/card"
+                    >
+                      <div className="relative w-44 h-44 sm:w-48 sm:h-48 rounded-xl p-0.5 bg-gradient-to-tr from-amber-400 via-yellow-500 to-amber-600 shadow-xl group-hover/card:scale-105 transition-transform">
+                        <div className="w-full h-full rounded-[10px] overflow-hidden bg-slate-950 relative">
+                          <SmartImage
+                            src={fac.image}
+                            fallbackSrcs={fac.fallbackImages}
+                            alt={fac.name}
+                            className="w-full h-full object-cover object-center group-hover/card:scale-110 transition-transform duration-700"
+                          />
                         </div>
                       </div>
-
-                      <div className="text-center mt-2">
-                        <h4 className="font-orbitron font-bold text-sm text-white group-hover:text-cyan-300 transition-colors">
-                          {inst.name}
+                      <div className="text-center mt-4">
+                        <h4 className="font-orbitron font-extrabold text-lg text-white group-hover/card:text-amber-300 transition-colors">
+                          {fac.name}
                         </h4>
-                        <p className="font-space text-slate-400 text-xs mt-2 leading-relaxed font-light">
-                          {inst.desc}
+                        <p className="font-mono text-xs text-amber-400/90 font-semibold mt-1">
+                          {fac.role}
                         </p>
                       </div>
                     </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* ========================================================================= */}
-          {/* ZONE 5: DOMAIN LEADERSHIP DESKS GRID */}
-          {/* ========================================================================= */}
-          <div className="mb-16 sm:mb-20">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <Layers size={20} className="text-pink-400" />
-              <h3 className="font-orbitron font-black text-xl tracking-wider uppercase text-pink-300">
-                DOMAIN WORKBENCH DESKS
-              </h3>
-              <div className="w-12 h-[1px] bg-pink-500/30" />
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {domainMembers.map((member, idx) => {
-                const IconComp = member.icon;
-
-                return (
-                  <motion.div
-                    key={member.id}
-                    initial={{ opacity: 0, y: 25 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: idx * 0.05 }}
-                    onMouseEnter={() => setHoveredDesk({
-                      code: member.rank,
-                      title: member.deskName,
-                      role: `${member.role} (${member.tag})`,
-                      desc: `Specialized domain workstation managing spatial development, co-heads, and technical execution for ${member.role}.`
-                    })}
-                    onMouseLeave={() => setHoveredDesk(null)}
-                    className={`glass-panel rounded-3xl p-6 border ${member.borderColor} transition-all duration-500 relative group flex flex-col justify-between hover:-translate-y-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.4)]`}
-                  >
-                    <div>
-                      <div className="font-mono text-[9px] text-slate-400 mb-4 border-b border-cyan-500/15 pb-2 flex items-center justify-between">
-                        <span className="text-cyan-400/90 font-semibold">{member.rank}</span>
-                        <span className="text-pink-400 uppercase font-semibold">DOMAIN HEAD</span>
-                      </div>
-
-                      {/* Photo Click -> Lightbox */}
-                      <div 
-                        onClick={() => setSelectedMember(member)}
-                        className="relative mb-5 flex justify-center cursor-pointer"
-                      >
-                        <div className={`relative w-48 h-48 sm:w-52 sm:h-52 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform duration-500`}>
-                          <div className="w-full h-full rounded-[14px] overflow-hidden bg-slate-950 relative">
-                            <img
-                              src={member.image}
-                              alt={member.role}
-                              className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
-                            />
-                            <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                              <div className="p-2.5 rounded-full bg-pink-500/30 border border-pink-400/50 text-pink-300 shadow-[0_0_15px_rgba(244,63,94,0.5)]">
-                                <Maximize2 size={20} />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="text-center mb-4 mt-1">
-                        <h4 className="font-orbitron font-extrabold text-xl text-white group-hover:text-pink-300 transition-colors">
-                          {member.role}
-                        </h4>
-                      </div>
-                    </div>
-
-                    {/* View Team Button */}
-                    <div className="pt-3 border-t border-cyan-500/15">
-                      <button
-                        onClick={() => setViewingTeamForDomain(member)}
-                        className="w-full py-2.5 px-4 rounded-xl font-orbitron font-bold text-xs tracking-wider uppercase bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 hover:border-cyan-400/60 flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_0_15px_rgba(0,240,255,0.1)] group/btn"
-                      >
-                        <Users size={14} className="text-cyan-400 group-hover/btn:scale-110 transition-transform" />
-                        <span>VIEW TEAM ROSTER</span>
-                      </button>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* ========================================================================= */}
-          {/* ZONE 6: DEPARTMENT COORDINATORS DESK HUB */}
-          {/* ========================================================================= */}
-          <div>
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <Compass size={20} className="text-emerald-400" />
-              <h3 className="font-orbitron font-black text-xl tracking-wider uppercase text-emerald-300">
-                DEPARTMENT COORDINATORS DESK HUB
-              </h3>
-              <div className="w-12 h-[1px] bg-emerald-500/30" />
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              onClick={() => setSelectedDeskGroup({
-                title: 'DEPARTMENT COORDINATORS DESK HUB',
-                subtitle: 'ACADEMIC & DEPARTMENTAL LIAISON TERMINAL',
-                members: coordinatorMembers,
-                color: 'from-emerald-400 via-teal-500 to-green-600'
-              })}
-              onMouseEnter={() => setHoveredDesk({
-                code: 'DESK // DEPT_COORDINATORS',
-                title: 'Department Coordinators Terminal',
-                role: 'Biotech, Civil, CSBS, CSE, AIML, ENTC Leads',
-                desc: 'Inter-departmental liaison desk organizing cross-discipline workshops, events, and student outreach.'
-              })}
-              onMouseLeave={() => setHoveredDesk(null)}
-              className="glass-panel rounded-3xl p-6 sm:p-8 border border-emerald-400/50 hover:border-emerald-300 transition-all duration-500 cursor-pointer group shadow-[0_10px_30px_rgba(52,211,153,0.15)] hover:shadow-[0_15px_45px_rgba(52,211,153,0.25)]"
-            >
-              <div className="flex items-center justify-between font-mono text-xs text-emerald-400/90 mb-6 border-b border-emerald-500/20 pb-3">
-                <span className="flex items-center gap-2 font-bold">
-                  <Compass size={14} /> DEPT LIAISON TERMINAL
-                </span>
-                <span className="flex items-center gap-1 text-emerald-300 font-bold group-hover:scale-105 transition-transform">
-                  <Maximize2 size={13} /> CLICK TO SHOW ALL DEPT COORDINATOR PHOTOS
-                </span>
+            {/* Executive Command Grid */}
+            <div className="mb-16">
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <Crown size={20} className="text-cyan-400" />
+                <h3 className="font-orbitron font-black text-xl tracking-wider uppercase text-cyan-300">
+                  EXECUTIVE COMMAND (MAIN PANEL)
+                </h3>
               </div>
 
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                {coordinatorMembers.map((member) => (
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                {executiveMembers.map((member) => (
                   <div
                     key={member.id}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedMember(member);
-                    }}
-                    className="glass-panel p-4 rounded-2xl border border-emerald-500/30 hover:border-emerald-300 bg-slate-950/70 hover:bg-emerald-500/10 transition-all flex flex-col items-center group/m"
+                    onClick={() => setSelectedMember(member)}
+                    className="glass-panel p-4 rounded-2xl border border-cyan-500/40 hover:border-cyan-300 bg-slate-950/70 hover:bg-cyan-500/10 transition-all cursor-pointer flex flex-col items-center group"
                   >
-                    <div className={`w-36 h-36 sm:w-44 sm:h-44 rounded-xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover/m:scale-105 transition-transform`}>
+                    <div className={`w-36 h-36 sm:w-44 sm:h-44 rounded-xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg group-hover:scale-105 transition-transform`}>
                       <div className="w-full h-full rounded-[10px] overflow-hidden bg-slate-950 relative">
-                        <img
-                          src={member.image}
-                          alt={member.role}
-                          className="w-full h-full object-cover object-center group-hover/m:scale-110 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[2px] opacity-0 group-hover/m:opacity-100 transition-opacity flex items-center justify-center">
-                          <Maximize2 size={20} className="text-emerald-300" />
-                        </div>
+                        <img src={member.image} alt={member.role} className="w-full h-full object-cover" />
                       </div>
                     </div>
                     <div className="text-center mt-3">
-                      <h4 className="font-orbitron font-bold text-sm sm:text-base text-white group-hover/m:text-emerald-300 transition-colors">
+                      <h4 className="font-orbitron font-bold text-base text-white group-hover:text-cyan-300">
                         {member.role}
                       </h4>
                     </div>
                   </div>
                 ))}
               </div>
-            </motion.div>
-          </div>
-
-        </div>
-
-      </div>
-
-      {/* Dynamic Hover Tooltip Bar */}
-      <AnimatePresence>
-        {hoveredDesk && (
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 15 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-xl w-[90%] glass-panel border border-cyan-400/60 rounded-2xl p-4 shadow-[0_0_30px_rgba(0,240,255,0.3)] backdrop-blur-xl bg-slate-950/90 pointer-events-none"
-          >
-            <div className="flex items-center justify-between font-mono text-[10px] text-cyan-400 mb-1 border-b border-cyan-500/20 pb-1">
-              <span>{hoveredDesk.code}</span>
-              <span className="animate-pulse font-bold">TERMINAL ONLINE</span>
             </div>
-            <h4 className="font-orbitron font-extrabold text-base text-white text-glow-cyan">
-              {hoveredDesk.title}
-            </h4>
-            <p className="font-mono text-xs text-cyan-300 font-semibold mt-0.5">
-              {hoveredDesk.role}
-            </p>
-            <p className="font-space text-slate-300 text-xs mt-1 font-light">
-              {hoveredDesk.desc}
-            </p>
+
+            {/* Domain Leadership Grid */}
+            <div className="mb-16">
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <Layers size={20} className="text-pink-400" />
+                <h3 className="font-orbitron font-black text-xl tracking-wider uppercase text-pink-300">
+                  DOMAIN LEADERSHIP DESKS
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                {domainMembers.map((member) => (
+                  <div
+                    key={member.id}
+                    className="glass-panel rounded-3xl p-6 border border-pink-500/40 hover:border-pink-300 transition-all flex flex-col justify-between"
+                  >
+                    <div onClick={() => setSelectedMember(member)} className="cursor-pointer flex flex-col items-center">
+                      <div className={`w-48 h-48 sm:w-52 sm:h-52 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg mb-4`}>
+                        <div className="w-full h-full rounded-[14px] overflow-hidden bg-slate-950">
+                          <img src={member.image} alt={member.role} className="w-full h-full object-cover" />
+                        </div>
+                      </div>
+                      <h4 className="font-orbitron font-extrabold text-xl text-white hover:text-pink-300 transition-colors">
+                        {member.role}
+                      </h4>
+                    </div>
+                    <div className="pt-4 mt-4 border-t border-cyan-500/15">
+                      <button
+                        onClick={() => setViewingTeamForDomain(member)}
+                        className="w-full py-2.5 px-4 rounded-xl font-orbitron font-bold text-xs tracking-wider uppercase bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 flex items-center justify-center gap-2 cursor-pointer"
+                      >
+                        <Users size={14} />
+                        <span>VIEW TEAM ROSTER</span>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </motion.div>
         )}
-      </AnimatePresence>
+
+      </div>
 
       {/* FULL DESK GROUP MODAL (All Photos on Screen) */}
       <AnimatePresence>
@@ -1092,7 +769,7 @@ export default function Team() {
               <div className="flex items-center justify-between border-b border-cyan-500/20 pb-4 mb-6">
                 <div>
                   <span className="font-mono text-[10px] text-cyan-400 tracking-widest uppercase block">
-                    ARVR OFFICE DESK VIEW
+                    3D ARVR OFFICE ROOM VIEW
                   </span>
                   <h3 className="font-orbitron font-black text-2xl sm:text-3xl text-white text-glow-cyan mt-1">
                     {selectedDeskGroup.title}
