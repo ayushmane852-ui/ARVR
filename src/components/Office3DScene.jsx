@@ -699,14 +699,14 @@ function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, show
         </mesh>
       </group>
 
-      {/* Male Faculty Director seated on LEFT facing RIGHT (Enlarged) */}
-      <group position={[-1.3, 0, 0]} rotation={[0, -Math.PI / 2 + 0.15, 0]}>
+      {/* Male Faculty Director seated on LEFT facing RIGHT towards center table */}
+      <group position={[-1.3, 0, 0]} rotation={[0, Math.PI / 2 - 0.25, 0]}>
         <LuxuryFacultyDirectorChair3D position={[0, 0, 0]} color="#4c1d95" scale={1.3} />
         <RealisticMaleAvatar3D position={[0, 0, 0]} scale={1.3} />
       </group>
 
-      {/* Female Faculty Director seated on RIGHT facing LEFT (Enlarged) */}
-      <group position={[1.3, 0, 0]} rotation={[0, Math.PI / 2 - 0.15, 0]}>
+      {/* Female Faculty Director seated on RIGHT facing LEFT towards center table */}
+      <group position={[1.3, 0, 0]} rotation={[0, -Math.PI / 2 + 0.25, 0]}>
         <LuxuryFacultyDirectorChair3D position={[0, 0, 0]} color="#831843" scale={1.3} />
         <RealisticFemaleAvatar3D position={[0, 0, 0]} scale={1.3} />
       </group>

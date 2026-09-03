@@ -896,7 +896,7 @@ export default function Team() {
                 </button>
               </div>
 
-              <div className="flex flex-wrap justify-center items-center gap-6 max-h-[70vh] overflow-y-auto p-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto max-h-[70vh] overflow-y-auto p-2">
                 {selectedDeskGroup.members.map((member) => (
                   <motion.div
                     key={member.id}
