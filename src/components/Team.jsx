@@ -60,8 +60,14 @@ export default function Team() {
       role: 'HOD CSE',
       category: 'faculty',
       deskName: 'FACULTY DIRECTORATE DESK',
-      image: '/Images/Team/faculty/Dr Lingaraj Hadimani.jpeg',
-      fallbackImages: ['/Images/Team/faculty/HOD.jpeg', '/Images/Team/faculty/Dr Lingaraj Hadimani.jpg', '/Images/Team/faculty/HOD.jpg'],
+      image: '/Images/Team/faculty/hod.jpg',
+      fallbackImages: [
+        '/Images/Team/faculty/HOD.jpg',
+        '/Images/Team/faculty/hod.jpeg',
+        '/Images/Team/faculty/HOD.jpeg',
+        '/Images/Team/faculty/Dr Lingaraj Hadimani.jpeg',
+        '/Images/Team/faculty/Dr Lingaraj Hadimani.jpg'
+      ],
       tag: 'CHIEF FACULTY PATRON',
       status: 'ACADEMIC_HEAD',
       color: 'from-amber-400 via-yellow-500 to-amber-600',
