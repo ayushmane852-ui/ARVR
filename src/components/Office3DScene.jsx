@@ -513,8 +513,8 @@ function RealARVRVerticalVaultDoors3D({ openRatio, hasOpened }) {
     }
   });
 
-  // PERMANENT UNMOUNT ONCE OPENED!
-  if (hasOpened || openRatio >= 0.8) {
+  // PERMANENT UNMOUNT ONLY AFTER DOORS HAVE FULLY OPENED OFF-SCREEN!
+  if (hasOpened && openRatio >= 0.96) {
     return null;
   }
 
@@ -957,7 +957,7 @@ export default function Office3DScene({ onSelectZone }) {
       setSmoothRatio((prev) => {
         const diff = targetRatio - prev;
         if (Math.abs(diff) < 0.001) return targetRatio;
-        return prev + diff * 0.05;
+        return prev + diff * 0.035; // Cinematic smooth easing
       });
       animationFrame = requestAnimationFrame(updateSmoothRatio);
     };
@@ -965,9 +965,9 @@ export default function Office3DScene({ onSelectZone }) {
     return () => cancelAnimationFrame(animationFrame);
   }, [targetRatio]);
 
-  // Set permanent opened state once doors cross opening threshold
+  // Set permanent opened state ONLY once doors have fully opened off-screen
   useEffect(() => {
-    if (smoothRatio > 0.4 && !hasOpened) {
+    if (smoothRatio >= 0.96 && !hasOpened) {
       setHasOpened(true);
     }
   }, [smoothRatio, hasOpened]);
