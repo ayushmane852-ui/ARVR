@@ -1,7 +1,209 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html, Float } from '@react-three/drei';
 import * as THREE from 'three';
+
+// 3D Sub-Floor Solar System & Cosmic Galaxy Component
+function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
+  const solarGroupRef = useRef();
+  const sunCoreRef = useRef();
+
+  // Individual planet refs for circular revolving orbits
+  const p1Ref = useRef(); // Inner Cyan Planet
+  const p2Ref = useRef(); // Golden Core Planet
+  const p3Ref = useRef(); // Saturn Gas Giant with 3D Rings
+  const p4Ref = useRef(); // Magenta Hologram Planet
+  const p5Ref = useRef(); // Outer Deep Violet Planet
+
+  const angles = useRef({ p1: 0, p2: 1.2, p3: 2.8, p4: 4.2, p5: 5.5 });
+
+  // 2,500 Cosmic Particle Starfield points
+  const [starPositions, starColors] = useMemo(() => {
+    const count = 2500;
+    const pos = new Float32Array(count * 3);
+    const col = new Float32Array(count * 3);
+
+    const cCyan = new THREE.Color("#00f0ff");
+    const cViolet = new THREE.Color("#a855f7");
+    const cGold = new THREE.Color("#fbbf24");
+
+    for (let i = 0; i < count; i++) {
+      const radius = 3 + Math.random() * 18;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = (Math.random() - 0.5) * 0.4; // Disk height spread
+
+      pos[i * 3] = Math.cos(theta) * radius;
+      pos[i * 3 + 1] = phi * 2;
+      pos[i * 3 + 2] = Math.sin(theta) * radius;
+
+      const rand = Math.random();
+      let starColor = cCyan;
+      if (rand < 0.4) starColor = cViolet;
+      else if (rand < 0.7) starColor = cGold;
+
+      col[i * 3] = starColor.r;
+      col[i * 3 + 1] = starColor.g;
+      col[i * 3 + 2] = starColor.b;
+    }
+    return [pos, col];
+  }, []);
+
+  useFrame((_, delta) => {
+    if (solarGroupRef.current) {
+      solarGroupRef.current.rotation.y += delta * 0.05;
+    }
+
+    if (sunCoreRef.current) {
+      sunCoreRef.current.rotation.y -= delta * 0.15;
+    }
+
+    // Orbital velocities for revolving planets
+    angles.current.p1 += delta * 0.5;
+    angles.current.p2 += delta * 0.35;
+    angles.current.p3 += delta * 0.22;
+    angles.current.p4 += delta * 0.15;
+    angles.current.p5 += delta * 0.09;
+
+    if (p1Ref.current) {
+      const r = 4.0;
+      p1Ref.current.position.x = Math.cos(angles.current.p1) * r;
+      p1Ref.current.position.z = Math.sin(angles.current.p1) * r;
+      p1Ref.current.rotation.y += delta * 0.9;
+    }
+
+    if (p2Ref.current) {
+      const r = 6.5;
+      p2Ref.current.position.x = Math.cos(angles.current.p2) * r;
+      p2Ref.current.position.z = Math.sin(angles.current.p2) * r;
+      p2Ref.current.rotation.y += delta * 0.6;
+    }
+
+    if (p3Ref.current) {
+      const r = 9.0;
+      p3Ref.current.position.x = Math.cos(angles.current.p3) * r;
+      p3Ref.current.position.z = Math.sin(angles.current.p3) * r;
+      p3Ref.current.rotation.y += delta * 0.4;
+    }
+
+    if (p4Ref.current) {
+      const r = 11.5;
+      p4Ref.current.position.x = Math.cos(angles.current.p4) * r;
+      p4Ref.current.position.z = Math.sin(angles.current.p4) * r;
+      p4Ref.current.rotation.y += delta * 0.3;
+    }
+
+    if (p5Ref.current) {
+      const r = 14.0;
+      p5Ref.current.position.x = Math.cos(angles.current.p5) * r;
+      p5Ref.current.position.z = Math.sin(angles.current.p5) * r;
+      p5Ref.current.rotation.y += delta * 0.2;
+    }
+  });
+
+  return (
+    <group position={position} ref={solarGroupRef}>
+      
+      {/* 1. Central Galactic Core Sun */}
+      <group ref={sunCoreRef}>
+        <mesh>
+          <sphereGeometry args={[1.6, 32, 32]} />
+          <meshBasicMaterial color="#fbbf24" />
+        </mesh>
+        <mesh>
+          <sphereGeometry args={[2.0, 32, 32]} />
+          <meshBasicMaterial color="#f59e0b" transparent opacity={0.35} blending={THREE.AdditiveBlending} />
+        </mesh>
+        <mesh>
+          <icosahedronGeometry args={[2.4, 1]} />
+          <meshBasicMaterial color="#d97706" wireframe transparent opacity={0.4} />
+        </mesh>
+      </group>
+
+      {/* 2. Sub-Floor Starfield Particles */}
+      <points>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" args={[starPositions, 3]} />
+          <bufferAttribute attach="attributes-color" args={[starColors, 3]} />
+        </bufferGeometry>
+        <pointsMaterial
+          size={0.07}
+          vertexColors
+          transparent
+          opacity={0.8}
+          blending={THREE.AdditiveBlending}
+        />
+      </points>
+
+      {/* 3. Glowing Orbital Path Rings */}
+      {[4.0, 6.5, 9.0, 11.5, 14.0].map((radius, idx) => (
+        <mesh key={idx} rotation={[Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[radius - 0.04, radius + 0.04, 64]} />
+          <meshBasicMaterial 
+            color={idx % 2 === 0 ? "#00f0ff" : "#a855f7"} 
+            side={THREE.DoubleSide} 
+            transparent 
+            opacity={0.3} 
+          />
+        </mesh>
+      ))}
+
+      {/* 4. Revolving Planets */}
+      {/* Planet 1: Inner Cyan Planet */}
+      <group ref={p1Ref}>
+        <mesh>
+          <sphereGeometry args={[0.4, 24, 24]} />
+          <meshStandardMaterial color="#00f0ff" emissive="#0284c7" roughness={0.2} metalness={0.8} />
+        </mesh>
+      </group>
+
+      {/* Planet 2: Golden Core Planet */}
+      <group ref={p2Ref}>
+        <mesh>
+          <sphereGeometry args={[0.6, 24, 24]} />
+          <meshStandardMaterial color="#fbbf24" emissive="#d97706" roughness={0.3} />
+        </mesh>
+        <mesh>
+          <icosahedronGeometry args={[0.8, 1]} />
+          <meshBasicMaterial color="#f59e0b" wireframe transparent opacity={0.5} />
+        </mesh>
+      </group>
+
+      {/* Planet 3: Saturn Gas Giant with 3D Rings */}
+      <group ref={p3Ref}>
+        <mesh>
+          <sphereGeometry args={[0.85, 32, 32]} />
+          <meshStandardMaterial color="#38bdf8" emissive="#0284c7" roughness={0.4} />
+        </mesh>
+        {/* Saturn Ring System */}
+        <mesh rotation={[Math.PI / 3, 0.2, 0]}>
+          <ringGeometry args={[1.2, 1.7, 32]} />
+          <meshBasicMaterial color="#00f0ff" side={THREE.DoubleSide} transparent opacity={0.7} />
+        </mesh>
+      </group>
+
+      {/* Planet 4: Magenta Hologram Planet */}
+      <group ref={p4Ref}>
+        <mesh>
+          <sphereGeometry args={[0.7, 24, 24]} />
+          <meshStandardMaterial color="#e879f9" emissive="#c084fc" roughness={0.3} />
+        </mesh>
+      </group>
+
+      {/* Planet 5: Outer Deep Violet Planet */}
+      <group ref={p5Ref}>
+        <mesh>
+          <sphereGeometry args={[0.9, 32, 32]} />
+          <meshStandardMaterial color="#a855f7" emissive="#7e22ce" roughness={0.2} metalness={0.9} />
+        </mesh>
+        <mesh rotation={[Math.PI / 4, 0, 0]}>
+          <ringGeometry args={[1.2, 1.5, 32]} />
+          <meshBasicMaterial color="#c084fc" side={THREE.DoubleSide} transparent opacity={0.6} />
+        </mesh>
+      </group>
+
+    </group>
+  );
+}
 
 // Helper component for 3D Chair
 function OfficeChair3D({ position, color = "#1e293b", rotation = [0, 0, 0] }) {
@@ -419,69 +621,7 @@ function DomainWorkstation3D({ id, title, color, position, onSelect, hoveredZone
   );
 }
 
-// 5. 3D AR/VR Equipment & Lab Stations
-function ARVREquipmentBay3D({ position, title, type, color }) {
-  const meshRef = useRef();
-
-  useFrame((_, delta) => {
-    if (meshRef.current && type === 'hologram') {
-      meshRef.current.rotation.y += delta * 0.8;
-    }
-  });
-
-  return (
-    <group position={position}>
-      <mesh position={[0, 0.1, 0]}>
-        <cylinderGeometry args={[1.5, 1.8, 0.2, 24]} />
-        <meshStandardMaterial color="#0f172a" emissive={color} emissiveIntensity={0.2} />
-      </mesh>
-
-      {type === 'headset' && (
-        <group position={[0, 0.6, 0]}>
-          <mesh>
-            <boxGeometry args={[0.8, 0.4, 0.5]} />
-            <meshStandardMaterial color="#00f0ff" roughness={0.1} metalness={0.9} />
-          </mesh>
-          <mesh position={[0, 0, 0.26]}>
-            <planeGeometry args={[0.7, 0.3]} />
-            <meshBasicMaterial color="#ffffff" />
-          </mesh>
-        </group>
-      )}
-
-      {type === 'vfx' && (
-        <group position={[0, 1.0, 0]}>
-          <mesh>
-            <cylinderGeometry args={[0.3, 0.4, 0.8, 16]} />
-            <meshStandardMaterial color="#e040fb" metalness={0.8} />
-          </mesh>
-          <mesh position={[0, 0.5, 0]}>
-            <sphereGeometry args={[0.25, 16, 16]} />
-            <meshBasicMaterial color="#ff00ff" wireframe />
-          </mesh>
-        </group>
-      )}
-
-      {type === 'hologram' && (
-        <group ref={meshRef} position={[0, 0.9, 0]}>
-          <mesh>
-            <icosahedronGeometry args={[0.6, 1]} />
-            <meshBasicMaterial color="#fbbf24" wireframe />
-          </mesh>
-        </group>
-      )}
-
-      <Html position={[0, 2.0, 0]} center distanceFactor={15}>
-        <div className="px-3 py-1 rounded-xl glass-panel border border-cyan-400/40 bg-slate-950/85 text-center whitespace-nowrap shadow-[0_0_15px_rgba(0,240,255,0.3)]">
-          <span className="font-mono text-[8px] text-cyan-300 block font-bold">LAB EQUIPMENT BAY</span>
-          <span className="font-orbitron font-bold text-xs text-white">{title}</span>
-        </div>
-      </Html>
-    </group>
-  );
-}
-
-// 6. 3D Department Coordinators Terminal
+// 5. 3D Department Coordinators Terminal
 function DepartmentCoordinators3D({ onSelect, hoveredZone, setHoveredZone }) {
   const isHovered = hoveredZone === 'coordinator';
 
@@ -550,7 +690,7 @@ export default function Office3DScene({ onSelectZone }) {
 
       <Canvas camera={{ position: [0, 14, 18], fov: 50 }}>
         <color attach="background" args={['#020617']} />
-        <fog attach="fog" args={['#020617', 15, 40]} />
+        <fog attach="fog" args={['#020617', 15, 45]} />
 
         <ambientLight intensity={0.6} />
         <directionalLight position={[10, 20, 10]} intensity={1.5} color="#00f0ff" />
@@ -561,11 +701,15 @@ export default function Office3DScene({ onSelectZone }) {
           enableDamping 
           dampingFactor={0.05} 
           minDistance={6} 
-          maxDistance={26}
+          maxDistance={28}
           maxPolarAngle={Math.PI / 2 - 0.05}
         />
 
+        {/* Semi-transparent Reflective Cyber Floor Grid */}
         <gridHelper args={[40, 40, '#00f0ff', '#1e293b']} position={[0, 0, 0]} />
+
+        {/* Sub-Floor Solar System Cosmic Structure (Revolving under office floor) */}
+        <SubFloorSolarSystem3D position={[0, -4.5, 0]} />
 
         {/* 1. Center Faculty Directorate Pavilion (2 Chairs, Small Center Table, Seated HOD Man & Faculty Coordinator Woman) */}
         <FacultyPavilion3D 
@@ -602,12 +746,7 @@ export default function Office3DScene({ onSelectZone }) {
           />
         ))}
 
-        {/* 5. AR/VR Equipment Bays */}
-        <ARVREquipmentBay3D position={[-4, 0, -8]} title="VR HEADSET LAB" type="headset" color="#00f0ff" />
-        <ARVREquipmentBay3D position={[0, 0, -8]} title="VFX CAPTURE STUDIO" type="vfx" color="#e040fb" />
-        <ARVREquipmentBay3D position={[4, 0, -8]} title="HOLOGRAPHIC POD" type="hologram" color="#fbbf24" />
-
-        {/* 6. Department Coordinators Terminal */}
+        {/* 5. Department Coordinators Terminal */}
         <DepartmentCoordinators3D 
           onSelect={onSelectZone} 
           hoveredZone={hoveredZone} 
