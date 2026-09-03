@@ -4,7 +4,7 @@ import { OrbitControls, Html, Float } from '@react-three/drei';
 import * as THREE from 'three';
 
 // 3D Sub-Floor Solar System & Cosmic Galaxy Component (Logo Color Theme)
-function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
+function SubFloorSolarSystem3D({ position = [0, -5.5, 0] }) {
   const solarGroupRef = useRef();
   const sunCoreRef = useRef();
 
@@ -26,7 +26,7 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
     const cGold = new THREE.Color("#fbbf24");
 
     for (let i = 0; i < count; i++) {
-      const radius = 3 + Math.random() * 22;
+      const radius = 3 + Math.random() * 24;
       const theta = Math.random() * Math.PI * 2;
       const phi = (Math.random() - 0.5) * 0.5;
 
@@ -380,8 +380,8 @@ function GrandEntranceDoors3D({ openRatio }) {
 
   useFrame((_, delta) => {
     // Open doors apart smoothly based on openRatio (0 to 1)
-    const targetLeft = -2.1 - openRatio * 8.5;
-    const targetRight = 2.1 + openRatio * 8.5;
+    const targetLeft = -2.5 - openRatio * 11.5;
+    const targetRight = 2.5 + openRatio * 11.5;
 
     if (leftDoorRef.current) {
       leftDoorRef.current.position.x = THREE.MathUtils.lerp(leftDoorRef.current.position.x, targetLeft, delta * 6);
@@ -392,57 +392,57 @@ function GrandEntranceDoors3D({ openRatio }) {
   });
 
   return (
-    <group position={[0, 0, 17]}>
+    <group position={[0, 0, 18]}>
       {/* Dark Blocking Wall behind doors when closed to obscure room inside */}
       <mesh position={[0, 2.5, -0.4]}>
-        <planeGeometry args={[30, 20]} />
+        <planeGeometry args={[35, 25]} />
         <meshBasicMaterial color="#020617" transparent opacity={Math.max(0, 1 - openRatio * 3)} />
       </mesh>
 
       {/* Massive Outer Cyber Doorway Arch */}
-      <mesh position={[-4.5, 3.5, 0]}>
-        <boxGeometry args={[1.2, 8.5, 1.2]} />
+      <mesh position={[-5.2, 4.0, 0]}>
+        <boxGeometry args={[1.4, 9.5, 1.4]} />
         <meshStandardMaterial color="#00f0ff" emissive="#0284c7" metalness={0.9} roughness={0.1} />
       </mesh>
-      <mesh position={[4.5, 3.5, 0]}>
-        <boxGeometry args={[1.2, 8.5, 1.2]} />
+      <mesh position={[5.2, 4.0, 0]}>
+        <boxGeometry args={[1.4, 9.5, 1.4]} />
         <meshStandardMaterial color="#00f0ff" emissive="#0284c7" metalness={0.9} roughness={0.1} />
       </mesh>
-      <mesh position={[0, 7.2, 0]}>
-        <boxGeometry args={[10.2, 1.2, 1.2]} />
+      <mesh position={[0, 8.2, 0]}>
+        <boxGeometry args={[11.8, 1.4, 1.4]} />
         <meshStandardMaterial color="#00f0ff" emissive="#0284c7" metalness={0.9} roughness={0.1} />
       </mesh>
 
       {/* Left Heavy Sliding Vault Door */}
-      <group ref={leftDoorRef} position={[-2.1, 3.2, 0]}>
+      <group ref={leftDoorRef} position={[-2.5, 3.8, 0]}>
         <mesh>
-          <boxGeometry args={[4.2, 7.2, 0.4]} />
+          <boxGeometry args={[5.0, 8.2, 0.4]} />
           <meshStandardMaterial color="#070d1f" metalness={0.95} roughness={0.15} />
         </mesh>
         {/* Neon Holographic Circuit Grid */}
         <mesh position={[0, 0, 0.22]}>
-          <boxGeometry args={[3.8, 6.8, 0.02]} />
+          <boxGeometry args={[4.5, 7.8, 0.02]} />
           <meshBasicMaterial color="#00f0ff" wireframe transparent opacity={0.7} />
         </mesh>
-        <mesh position={[1.7, 0, 0.25]}>
-          <cylinderGeometry args={[0.12, 0.12, 2.2, 16]} />
+        <mesh position={[2.0, 0, 0.25]}>
+          <cylinderGeometry args={[0.14, 0.14, 2.5, 16]} />
           <meshStandardMaterial color="#fbbf24" metalness={0.9} emissive="#d97706" />
         </mesh>
       </group>
 
       {/* Right Heavy Sliding Vault Door */}
-      <group ref={rightDoorRef} position={[2.1, 3.2, 0]}>
+      <group ref={rightDoorRef} position={[2.5, 3.8, 0]}>
         <mesh>
-          <boxGeometry args={[4.2, 7.2, 0.4]} />
+          <boxGeometry args={[5.0, 8.2, 0.4]} />
           <meshStandardMaterial color="#070d1f" metalness={0.95} roughness={0.15} />
         </mesh>
         {/* Neon Holographic Circuit Grid */}
         <mesh position={[0, 0, 0.22]}>
-          <boxGeometry args={[3.8, 6.8, 0.02]} />
+          <boxGeometry args={[4.5, 7.8, 0.02]} />
           <meshBasicMaterial color="#a855f7" wireframe transparent opacity={0.7} />
         </mesh>
-        <mesh position={[-1.7, 0, 0.25]}>
-          <cylinderGeometry args={[0.12, 0.12, 2.2, 16]} />
+        <mesh position={[-2.0, 0, 0.25]}>
+          <cylinderGeometry args={[0.14, 0.14, 2.5, 16]} />
           <meshStandardMaterial color="#fbbf24" metalness={0.9} emissive="#d97706" />
         </mesh>
       </group>
@@ -450,23 +450,26 @@ function GrandEntranceDoors3D({ openRatio }) {
   );
 }
 
-// Front View Eye-Level Camera Rig with Smooth Zoom-In Transition
-function FrontViewCameraRig({ openRatio }) {
+// Entrance Camera Rig: Only animates camera DURING door transition (openRatio < 0.95).
+// Once inside (openRatio >= 0.95), stops overriding camera so OrbitControls has full control!
+function FrontViewCameraRig({ openRatio, isUserInteracting }) {
   useFrame(({ camera }) => {
-    // Initial Front View: Camera starts straight ahead at [0, 2.2, 25]
-    // Glides forward into room to [0, 3.8, 12] as user scrolls
-    const targetZ = 25 - openRatio * 13.0; // z: 25 -> 12
-    const targetY = 2.2 + openRatio * 1.6;  // y: 2.2 -> 3.8
+    // Only interpolate camera when opening doors and user hasn't started manually orbiting
+    if (openRatio < 0.95 && !isUserInteracting) {
+      // Smoothly fly from entrance [0, 2.2, 26] to room overview [0, 6.5, 23.5]
+      const targetZ = 26.0 - openRatio * 2.5; // z: 26.0 -> 23.5
+      const targetY = 2.2 + openRatio * 4.3;   // y: 2.2 -> 6.5
 
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.06);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.06);
-    camera.lookAt(0, 1.8, 0);
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.08);
+      camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.08);
+      camera.lookAt(0, 1.2, 0);
+    }
   });
 
   return null;
 }
 
-// 1. 3D Faculty Directorate Desk (Center of Room)
+// 1. 3D Faculty Directorate Desk (Center Front)
 function FacultyPavilion3D({ onSelect, hoveredZone, setHoveredZone }) {
   const ringRef = useRef();
   const isHovered = hoveredZone === 'faculty';
@@ -479,7 +482,7 @@ function FacultyPavilion3D({ onSelect, hoveredZone, setHoveredZone }) {
 
   return (
     <group 
-      position={[0, 0, 0]}
+      position={[0, 0, 1.5]}
       onClick={(e) => { e.stopPropagation(); onSelect('faculty'); }}
       onPointerOver={(e) => { e.stopPropagation(); setHoveredZone('faculty'); }}
       onPointerOut={() => setHoveredZone(null)}
@@ -544,20 +547,20 @@ function FacultyPavilion3D({ onSelect, hoveredZone, setHoveredZone }) {
         </mesh>
       </Float>
 
-      {/* Floating 3D Golden Crest Label */}
-      <Html position={[0, 3.2, 0]} center distanceFactor={15}>
+      {/* Floating 3D Golden Crest Label (Positioned clearly in center view) */}
+      <Html position={[0, 2.7, 0]} center distanceFactor={16}>
         <div 
           onClick={(e) => { e.stopPropagation(); onSelect('faculty'); }}
           className={`px-4 py-2 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
             isHovered 
               ? 'border-amber-300 bg-amber-500/30 shadow-[0_0_30px_rgba(251,191,36,0.9)] scale-110' 
-              : 'border-amber-400/60 bg-slate-950/80 shadow-[0_0_15px_rgba(251,191,36,0.3)]'
+              : 'border-amber-400/70 bg-slate-950/85 shadow-[0_0_15px_rgba(251,191,36,0.4)]'
           }`}
         >
           <span className="font-orbitron font-black text-sm text-white text-glow-amber">
             FACULTY DIRECTORATE DESK
           </span>
-          <button className="mt-2 px-3 py-1 rounded-lg bg-amber-500 text-slate-950 font-orbitron font-bold text-[9px] uppercase tracking-wider shadow-md hover:bg-amber-400 cursor-pointer">
+          <button className="mt-1.5 px-3 py-1 rounded-lg bg-amber-500 text-slate-950 font-orbitron font-bold text-[9px] uppercase tracking-wider shadow-md hover:bg-amber-400 cursor-pointer">
             VIEW FACULTY TEAM
           </button>
         </div>
@@ -566,13 +569,13 @@ function FacultyPavilion3D({ onSelect, hoveredZone, setHoveredZone }) {
   );
 }
 
-// 2. Executive Command Desk
+// 2. Executive Command Desk (Left Wing)
 function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
   const isHovered = hoveredZone === 'executive';
   
   return (
     <group 
-      position={[-8.5, 0, -2]}
+      position={[-8.5, 0, 1.0]}
       onClick={(e) => { e.stopPropagation(); onSelect('executive'); }}
       onPointerOver={(e) => { e.stopPropagation(); setHoveredZone('executive'); }}
       onPointerOut={() => setHoveredZone(null)}
@@ -602,11 +605,11 @@ function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
         </mesh>
       ))}
 
-      <Html position={[0, 2.6, 0]} center distanceFactor={15}>
+      <Html position={[0, 2.6, 0]} center distanceFactor={16}>
         <div 
           onClick={(e) => { e.stopPropagation(); onSelect('executive'); }}
-          className={`px-3 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
-            isHovered ? 'border-cyan-300 bg-cyan-500/30 scale-110 shadow-[0_0_25px_rgba(0,240,255,0.9)]' : 'border-cyan-400/50 bg-slate-950/80 shadow-[0_0_15px_rgba(0,240,255,0.3)]'
+          className={`px-3.5 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
+            isHovered ? 'border-cyan-300 bg-cyan-500/30 scale-110 shadow-[0_0_25px_rgba(0,240,255,0.9)]' : 'border-cyan-400/50 bg-slate-950/85 shadow-[0_0_15px_rgba(0,240,255,0.3)]'
           }`}
         >
           <span className="font-mono text-[8px] text-cyan-300 tracking-wider uppercase font-bold">MAIN PANEL ROOM</span>
@@ -620,13 +623,13 @@ function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
   );
 }
 
-// 3. Core Operations Board Room
+// 3. Core Operations Board Room (Right Wing)
 function BoardRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
   const isHovered = hoveredZone === 'board';
 
   return (
     <group 
-      position={[8.5, 0, -2]}
+      position={[8.5, 0, 1.0]}
       onClick={(e) => { e.stopPropagation(); onSelect('board'); }}
       onPointerOver={(e) => { e.stopPropagation(); setHoveredZone('board'); }}
       onPointerOut={() => setHoveredZone(null)}
@@ -656,11 +659,11 @@ function BoardRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
         </mesh>
       ))}
 
-      <Html position={[0, 2.6, 0]} center distanceFactor={15}>
+      <Html position={[0, 2.6, 0]} center distanceFactor={16}>
         <div 
           onClick={(e) => { e.stopPropagation(); onSelect('board'); }}
-          className={`px-3 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
-            isHovered ? 'border-purple-300 bg-purple-500/30 scale-110 shadow-[0_0_25px_rgba(168,85,247,0.9)]' : 'border-purple-400/50 bg-slate-950/80 shadow-[0_0_15px_rgba(168,85,247,0.3)]'
+          className={`px-3.5 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
+            isHovered ? 'border-purple-300 bg-purple-500/30 scale-110 shadow-[0_0_25px_rgba(168,85,247,0.9)]' : 'border-purple-400/50 bg-slate-950/85 shadow-[0_0_15px_rgba(168,85,247,0.3)]'
           }`}
         >
           <span className="font-mono text-[8px] text-purple-300 tracking-wider uppercase font-bold">OPERATIONS BOARD</span>
@@ -703,7 +706,7 @@ function DomainWorkstation3D({ id, title, color, position, onSelect, hoveredZone
         <meshStandardMaterial color="#64748b" />
       </mesh>
 
-      <Html position={[0, 1.8, 0]} center distanceFactor={15}>
+      <Html position={[0, 1.8, 0]} center distanceFactor={16}>
         <div 
           onClick={(e) => {
             e.stopPropagation();
@@ -723,8 +726,8 @@ function DomainWorkstation3D({ id, title, color, position, onSelect, hoveredZone
   );
 }
 
-// 5. Department Coordinators Terminal (Placed BEHIND Faculty Directorate Desk at position [0, 0, -8.5])
-function DepartmentCoordinators3D({ position = [0, 0, -8.5], onSelect, hoveredZone, setHoveredZone }) {
+// 5. Department Coordinators Terminal (Raised Platform BEHIND Faculty Directorate at position [0, 0.4, -7.5])
+function DepartmentCoordinators3D({ position = [0, 0.4, -7.5], onSelect, hoveredZone, setHoveredZone }) {
   const isHovered = hoveredZone === 'coordinator';
 
   return (
@@ -735,30 +738,31 @@ function DepartmentCoordinators3D({ position = [0, 0, -8.5], onSelect, hoveredZo
       onPointerOut={() => setHoveredZone(null)}
     >
       <mesh position={[0, 0.15, 0]}>
-        <cylinderGeometry args={[3.4, 3.8, 0.3, 32]} />
+        <cylinderGeometry args={[3.8, 4.2, 0.4, 32]} />
         <meshStandardMaterial color={isHovered ? "#34d399" : "#059669"} emissive="#047857" roughness={0.3} />
       </mesh>
 
       {/* 6 Chairs + 6 Seated Person Avatars */}
-      {[-2.2, -1.3, -0.4, 0.4, 1.3, 2.2].map((x, idx) => (
+      {[-2.5, -1.5, -0.5, 0.5, 1.5, 2.5].map((x, idx) => (
         <group key={idx}>
           <OfficeChair3D position={[x, 0, 0.5]} color="#059669" rotation={[0, Math.PI, 0]} />
           <SeatedPersonAvatar3D position={[x, 0, 0.5]} shirtColor="#059669" />
         </group>
       ))}
 
-      {[-2.2, -1.3, -0.4, 0.4, 1.3, 2.2].map((x, idx) => (
+      {[-2.5, -1.5, -0.5, 0.5, 1.5, 2.5].map((x, idx) => (
         <mesh key={idx} position={[x, 0.7, 0]}>
           <boxGeometry args={[0.6, 0.8, 0.4]} />
           <meshBasicMaterial color={isHovered ? "#34d399" : "#10b981"} />
         </mesh>
       ))}
 
-      <Html position={[0, 2.4, 0]} center distanceFactor={15}>
+      {/* Elevated floating label clearly visible above Faculty Directorate desk */}
+      <Html position={[0, 3.8, 0]} center distanceFactor={16}>
         <div 
           onClick={(e) => { e.stopPropagation(); onSelect('coordinator'); }}
-          className={`px-3.5 py-2 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
-            isHovered ? 'border-emerald-300 bg-emerald-500/30 scale-110 shadow-[0_0_25px_rgba(52,211,153,0.9)]' : 'border-emerald-400/50 bg-slate-950/80 shadow-[0_0_15px_rgba(52,211,153,0.3)]'
+          className={`px-4 py-2 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
+            isHovered ? 'border-emerald-300 bg-emerald-500/30 scale-110 shadow-[0_0_25px_rgba(52,211,153,0.9)]' : 'border-emerald-400/60 bg-slate-950/85 shadow-[0_0_15px_rgba(52,211,153,0.4)]'
           }`}
         >
           <span className="font-orbitron font-bold text-xs text-white">DEPARTMENT COORDINATORS</span>
@@ -773,22 +777,22 @@ function DepartmentCoordinators3D({ position = [0, 0, -8.5], onSelect, hoveredZo
 
 export default function Office3DScene({ onSelectZone }) {
   const outerStickyRef = useRef(null);
+  const orbitRef = useRef(null);
   const [hoveredZone, setHoveredZone] = useState(null);
   const [manualOpen, setManualOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isUserInteracting, setIsUserInteracting] = useState(false);
 
-  // High precision scroll calculation relative to the sticky section
+  // Scroll progress relative to sticky section
   useEffect(() => {
     const handleScroll = () => {
       if (!outerStickyRef.current) return;
       const rect = outerStickyRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      // Section total scrollable distance
       const totalDist = rect.height - windowHeight;
       if (totalDist <= 0) return;
 
-      // Progress goes from 0.0 (top of section locked) to 1.0 (bottom of section)
       const scrolled = -rect.top;
       const progress = Math.max(0, Math.min(1, scrolled / totalDist));
       setScrollProgress(progress);
@@ -799,28 +803,44 @@ export default function Office3DScene({ onSelectZone }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Wide semi-circular layout for all domain workstations so nothing is cut off in front view
   const domainDesks = [
-    { id: 'unity_head', title: 'TEAM UNITY', color: '#00f0ff', position: [-9, 0, 2] },
-    { id: 'technical_head', title: 'TECHNICAL TEAM', color: '#f43f5e', position: [-5, 0, 4] },
-    { id: 'content_creativity_head', title: 'CONTENT & CREATIVITY TEAM', color: '#f59e0b', position: [0, 0, 5] },
-    { id: 'doc_head', title: 'DOCUMENTATION TEAM', color: '#38bdf8', position: [5, 0, 4] },
-    { id: 'media_head', title: 'MEDIA TEAM', color: '#e879f9', position: [9, 0, 2] },
-    { id: 'design_head', title: 'DESIGN TEAM', color: '#a78bfa', position: [-9, 0, 7] },
-    { id: 'logistic_head', title: 'LOGISTICS TEAM', color: '#2dd4bf', position: [-5, 0, 8] },
-    { id: 'research_head', title: 'RESEARCH TEAM', color: '#06b6d4', position: [5, 0, 8] },
-    { id: 'event_head', title: 'EVENT MANAGEMENT TEAM', color: '#eab308', position: [9, 0, 7] },
+    { id: 'unity_head', title: 'TEAM UNITY', color: '#00f0ff', position: [-10.5, 0, 6.5] },
+    { id: 'technical_head', title: 'TECHNICAL TEAM', color: '#f43f5e', position: [-6.5, 0, 7.5] },
+    { id: 'content_creativity_head', title: 'CONTENT & CREATIVITY TEAM', color: '#f59e0b', position: [0, 0, 8.0] },
+    { id: 'doc_head', title: 'DOCUMENTATION TEAM', color: '#38bdf8', position: [6.5, 0, 7.5] },
+    { id: 'media_head', title: 'MEDIA TEAM', color: '#e879f9', position: [10.5, 0, 6.5] },
+    
+    { id: 'design_head', title: 'DESIGN TEAM', color: '#a78bfa', position: [-10.5, 0, -3.5] },
+    { id: 'logistic_head', title: 'LOGISTICS TEAM', color: '#2dd4bf', position: [-6.5, 0, -4.5] },
+    { id: 'research_head', title: 'RESEARCH TEAM', color: '#06b6d4', position: [6.5, 0, -4.5] },
+    { id: 'event_head', title: 'EVENT MANAGEMENT TEAM', color: '#eab308', position: [10.5, 0, -3.5] },
   ];
 
-  // Open ratio (0 = completely closed door, 1 = fully open inside room)
+  // Open ratio (0 = closed door, 1 = open room)
   const openRatio = manualOpen ? 1.0 : Math.max(0, Math.min(1.0, scrollProgress * 1.8));
-
-  // Text overlay opacity: 1.0 at start, smoothly fades out as scroll/open begins
   const textOpacity = manualOpen ? 0 : Math.max(0, 1.0 - openRatio * 2.2);
 
+  // Preset view buttons (Front View, Top View, Bottom View)
+  const handleResetCamera = (viewType) => {
+    if (!orbitRef.current) return;
+    setIsUserInteracting(true);
+
+    if (viewType === 'front') {
+      orbitRef.current.object.position.set(0, 6.5, 23.5);
+      orbitRef.current.target.set(0, 1.2, 0);
+    } else if (viewType === 'top') {
+      orbitRef.current.object.position.set(0, 24.0, 0.1);
+      orbitRef.current.target.set(0, 0, 0);
+    } else if (viewType === 'bottom') {
+      orbitRef.current.object.position.set(0, 1.8, 14.0);
+      orbitRef.current.target.set(0, 1.0, -2.0);
+    }
+    orbitRef.current.update();
+  };
+
   return (
-    // Sticky Scroll Container (180vh height ensures user scrolls inside this section to open doors!)
     <div ref={outerStickyRef} className="relative w-full h-[180vh] bg-[#020617]">
-      {/* Sticky Full Viewport 100vh Canvas View */}
       <div className="sticky top-0 w-full h-screen overflow-hidden">
         {/* OVERLAPPED OVERLAY TEXT: "WELCOME TO ARVR LAB" ON CLOSED VAULT DOORS */}
         <div 
@@ -850,54 +870,79 @@ export default function Office3DScene({ onSelectZone }) {
           </div>
         </div>
 
-        {/* Top Control Bar & Manual Door Toggle */}
-        <div className="absolute top-6 left-6 z-30 flex flex-wrap items-center gap-3">
-          <button
-            onClick={() => setManualOpen(!manualOpen)}
-            className={`px-5 py-2.5 rounded-xl font-orbitron font-bold text-xs tracking-wider uppercase transition-all cursor-pointer shadow-lg ${
-              openRatio > 0.4
-                ? 'bg-emerald-500 text-slate-950 shadow-[0_0_25px_rgba(52,211,153,0.7)] hover:bg-emerald-400'
-                : 'bg-gradient-to-r from-cyan-500 to-purple-600 text-white shadow-[0_0_25px_rgba(0,240,255,0.7)] animate-pulse'
-            }`}
-          >
-            {openRatio > 0.4 ? '🚪 DOORS OPEN // INSIDE ROOM' : '🔒 CLICK OR SCROLL TO OPEN DOORS'}
-          </button>
-
-          <div className="font-mono text-[11px] text-cyan-300/90 bg-slate-950/90 px-4 py-2 rounded-xl border border-cyan-500/40 pointer-events-none hidden sm:block shadow-md">
-            <span>EYE-LEVEL FRONT PERSPECTIVE • SCROLL DOWN TO ENTER • CLICK DESKS TO VIEW ROSTERS</span>
+        {/* Top Control Bar with Preset Views (Front View, Top View, Bottom View) */}
+        <div className="absolute top-6 left-6 right-6 z-30 flex flex-wrap items-center justify-between gap-3 pointer-events-auto">
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={() => setManualOpen(!manualOpen)}
+              className={`px-4 py-2 rounded-xl font-orbitron font-bold text-xs tracking-wider uppercase transition-all cursor-pointer shadow-lg ${
+                openRatio > 0.4
+                  ? 'bg-emerald-500 text-slate-950 shadow-[0_0_25px_rgba(52,211,153,0.7)] hover:bg-emerald-400'
+                  : 'bg-gradient-to-r from-cyan-500 to-purple-600 text-white shadow-[0_0_25px_rgba(0,240,255,0.7)] animate-pulse'
+              }`}
+            >
+              {openRatio > 0.4 ? '🚪 DOORS OPEN // INSIDE ROOM' : '🔒 CLICK OR SCROLL TO OPEN DOORS'}
+            </button>
           </div>
+
+          {/* Preset Camera View Mode Switcher (Visible when inside room) */}
+          {openRatio > 0.4 && (
+            <div className="flex items-center gap-2 p-1 rounded-xl glass-panel border border-cyan-500/40 bg-slate-950/90 shadow-[0_0_20px_rgba(0,240,255,0.3)]">
+              <button
+                onClick={() => handleResetCamera('front')}
+                className="px-3 py-1.5 rounded-lg font-orbitron font-bold text-[10px] uppercase text-cyan-300 hover:text-white hover:bg-cyan-500/20 transition-all cursor-pointer"
+              >
+                🎥 FRONT VIEW
+              </button>
+              <button
+                onClick={() => handleResetCamera('top')}
+                className="px-3 py-1.5 rounded-lg font-orbitron font-bold text-[10px] uppercase text-purple-300 hover:text-white hover:bg-purple-500/20 transition-all cursor-pointer"
+              >
+                🛸 TOP VIEW
+              </button>
+              <button
+                onClick={() => handleResetCamera('bottom')}
+                className="px-3 py-1.5 rounded-lg font-orbitron font-bold text-[10px] uppercase text-amber-300 hover:text-white hover:bg-amber-500/20 transition-all cursor-pointer"
+              >
+                👁️ LOW VIEW
+              </button>
+            </div>
+          )}
         </div>
 
-        <Canvas camera={{ position: [0, 2.2, 25], fov: 50 }}>
+        <Canvas camera={{ position: [0, 2.2, 26], fov: 48 }}>
           <color attach="background" args={['#020617']} />
-          <fog attach="fog" args={['#020617', 15, 55]} />
+          <fog attach="fog" args={['#020617', 15, 60]} />
 
-          <ambientLight intensity={0.7} />
-          <directionalLight position={[10, 20, 10]} intensity={2.0} color="#00f0ff" />
-          <pointLight position={[-10, 10, -10]} intensity={1.6} color="#a855f7" />
-          <pointLight position={[0, 8, 0]} intensity={2.5} color="#fbbf24" />
+          <ambientLight intensity={0.8} />
+          <directionalLight position={[10, 25, 15]} intensity={2.2} color="#00f0ff" />
+          <pointLight position={[-15, 12, -10]} intensity={1.8} color="#a855f7" />
+          <pointLight position={[15, 12, -10]} intensity={1.8} color="#00f0ff" />
+          <pointLight position={[0, 10, 0]} intensity={2.8} color="#fbbf24" />
 
           <OrbitControls 
+            ref={orbitRef}
             enableDamping 
             dampingFactor={0.05} 
-            minDistance={5} 
-            maxDistance={32}
-            maxPolarAngle={Math.PI / 2 - 0.05}
+            minDistance={4} 
+            maxDistance={40}
+            maxPolarAngle={Math.PI / 2 - 0.02}
+            onStart={() => setIsUserInteracting(true)}
           />
 
-          {/* Front-View Camera Rig */}
-          <FrontViewCameraRig openRatio={openRatio} />
+          {/* Entrance Camera Rig */}
+          <FrontViewCameraRig openRatio={openRatio} isUserInteracting={isUserInteracting} />
 
           {/* Floor Grid */}
-          <gridHelper args={[40, 40, '#00f0ff', '#1e293b']} position={[0, 0, 0]} />
+          <gridHelper args={[45, 45, '#00f0ff', '#1e293b']} position={[0, 0, 0]} />
 
           {/* Massive Cyber Vault Entrance Doors */}
           <GrandEntranceDoors3D openRatio={openRatio} />
 
           {/* Sub-Floor Solar System Cosmic Structure */}
-          <SubFloorSolarSystem3D position={[0, -4.5, 0]} />
+          <SubFloorSolarSystem3D position={[0, -5.5, 0]} />
 
-          {/* Inside Room Workstations (Revealed smoothly as doors open) */}
+          {/* Inside Room Workstations */}
           <group visible={openRatio > 0.05}>
             {/* 1. Center Faculty Directorate Desk */}
             <FacultyPavilion3D 
@@ -934,9 +979,9 @@ export default function Office3DScene({ onSelectZone }) {
               />
             ))}
 
-            {/* 5. Department Coordinators Terminal (Placed BEHIND Faculty Directorate Desk at position [0, 0, -8.5]) */}
+            {/* 5. Department Coordinators Terminal (Raised Platform BEHIND Faculty Directorate Desk at position [0, 0.4, -7.5]) */}
             <DepartmentCoordinators3D 
-              position={[0, 0, -8.5]}
+              position={[0, 0.4, -7.5]}
               onSelect={onSelectZone} 
               hoveredZone={hoveredZone} 
               setHoveredZone={setHoveredZone} 
