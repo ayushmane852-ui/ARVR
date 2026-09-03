@@ -601,9 +601,6 @@ export default function Team() {
           <h2 className="font-orbitron font-black text-4xl sm:text-6xl tracking-tight text-white text-glow-cyan">
             3D ARVR OFFICE LAB
           </h2>
-          <p className="font-space text-slate-300 text-sm sm:text-base max-w-2xl mt-3 font-light leading-relaxed">
-            Explore our 3D ARVR Office Lab. Seated 3D avatars for HOD CSE & Faculty Coordinator at the center desk. Click any 3D domain workstation or "View Team" to inspect team rosters!
-          </p>
 
           {/* VIEW MODE TOGGLE BUTTONS */}
           <div className="mt-6 flex items-center justify-center gap-3 p-1.5 rounded-2xl glass-panel border border-cyan-500/30 bg-slate-950/80">

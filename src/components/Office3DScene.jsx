@@ -8,16 +8,14 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
   const solarGroupRef = useRef();
   const sunCoreRef = useRef();
 
-  // Individual planet refs for circular revolving orbits
-  const p1Ref = useRef(); // Inner Cyan Planet
-  const p2Ref = useRef(); // Golden Core Planet
-  const p3Ref = useRef(); // Saturn Gas Giant with 3D Rings
-  const p4Ref = useRef(); // Magenta Hologram Planet
-  const p5Ref = useRef(); // Outer Deep Violet Planet
+  const p1Ref = useRef();
+  const p2Ref = useRef();
+  const p3Ref = useRef();
+  const p4Ref = useRef();
+  const p5Ref = useRef();
 
   const angles = useRef({ p1: 0, p2: 1.2, p3: 2.8, p4: 4.2, p5: 5.5 });
 
-  // 2,500 Cosmic Particle Starfield points
   const [starPositions, starColors] = useMemo(() => {
     const count = 2500;
     const pos = new Float32Array(count * 3);
@@ -30,7 +28,7 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
     for (let i = 0; i < count; i++) {
       const radius = 3 + Math.random() * 18;
       const theta = Math.random() * Math.PI * 2;
-      const phi = (Math.random() - 0.5) * 0.4; // Disk height spread
+      const phi = (Math.random() - 0.5) * 0.4;
 
       pos[i * 3] = Math.cos(theta) * radius;
       pos[i * 3 + 1] = phi * 2;
@@ -57,7 +55,6 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
       sunCoreRef.current.rotation.y -= delta * 0.15;
     }
 
-    // Orbital velocities for revolving planets
     angles.current.p1 += delta * 0.5;
     angles.current.p2 += delta * 0.35;
     angles.current.p3 += delta * 0.22;
@@ -102,8 +99,6 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
 
   return (
     <group position={position} ref={solarGroupRef}>
-      
-      {/* 1. Central Galactic Core Sun */}
       <group ref={sunCoreRef}>
         <mesh>
           <sphereGeometry args={[1.6, 32, 32]} />
@@ -119,7 +114,6 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
         </mesh>
       </group>
 
-      {/* 2. Sub-Floor Starfield Particles */}
       <points>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[starPositions, 3]} />
@@ -134,7 +128,6 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
         />
       </points>
 
-      {/* 3. Glowing Orbital Path Rings */}
       {[4.0, 6.5, 9.0, 11.5, 14.0].map((radius, idx) => (
         <mesh key={idx} rotation={[Math.PI / 2, 0, 0]}>
           <ringGeometry args={[radius - 0.04, radius + 0.04, 64]} />
@@ -147,8 +140,6 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
         </mesh>
       ))}
 
-      {/* 4. Revolving Planets */}
-      {/* Planet 1: Inner Cyan Planet */}
       <group ref={p1Ref}>
         <mesh>
           <sphereGeometry args={[0.4, 24, 24]} />
@@ -156,7 +147,6 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
         </mesh>
       </group>
 
-      {/* Planet 2: Golden Core Planet */}
       <group ref={p2Ref}>
         <mesh>
           <sphereGeometry args={[0.6, 24, 24]} />
@@ -168,20 +158,17 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
         </mesh>
       </group>
 
-      {/* Planet 3: Saturn Gas Giant with 3D Rings */}
       <group ref={p3Ref}>
         <mesh>
           <sphereGeometry args={[0.85, 32, 32]} />
           <meshStandardMaterial color="#38bdf8" emissive="#0284c7" roughness={0.4} />
         </mesh>
-        {/* Saturn Ring System */}
         <mesh rotation={[Math.PI / 3, 0.2, 0]}>
           <ringGeometry args={[1.2, 1.7, 32]} />
           <meshBasicMaterial color="#00f0ff" side={THREE.DoubleSide} transparent opacity={0.7} />
         </mesh>
       </group>
 
-      {/* Planet 4: Magenta Hologram Planet */}
       <group ref={p4Ref}>
         <mesh>
           <sphereGeometry args={[0.7, 24, 24]} />
@@ -189,7 +176,6 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
         </mesh>
       </group>
 
-      {/* Planet 5: Outer Deep Violet Planet */}
       <group ref={p5Ref}>
         <mesh>
           <sphereGeometry args={[0.9, 32, 32]} />
@@ -200,7 +186,6 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
           <meshBasicMaterial color="#c084fc" side={THREE.DoubleSide} transparent opacity={0.6} />
         </mesh>
       </group>
-
     </group>
   );
 }
@@ -209,35 +194,86 @@ function SubFloorSolarSystem3D({ position = [0, -5, 0] }) {
 function OfficeChair3D({ position, color = "#1e293b", rotation = [0, 0, 0] }) {
   return (
     <group position={position} rotation={rotation}>
-      {/* Chair Base & Wheel Stem */}
       <mesh position={[0, 0.15, 0]}>
         <cylinderGeometry args={[0.06, 0.08, 0.3, 12]} />
         <meshStandardMaterial color="#475569" metalness={0.8} />
       </mesh>
-      {/* Star Base Legs */}
       <mesh position={[0, 0.05, 0]}>
         <cylinderGeometry args={[0.3, 0.3, 0.05, 5]} />
         <meshStandardMaterial color="#0f172a" metalness={0.9} />
       </mesh>
-      {/* Seat Cushion */}
       <mesh position={[0, 0.35, 0]}>
         <boxGeometry args={[0.5, 0.08, 0.5]} />
         <meshStandardMaterial color={color} roughness={0.4} />
       </mesh>
-      {/* Backrest */}
       <mesh position={[0, 0.7, 0.22]} rotation={[-0.1, 0, 0]}>
         <boxGeometry args={[0.48, 0.65, 0.06]} />
         <meshStandardMaterial color={color} roughness={0.4} />
       </mesh>
-      {/* Left Armrest */}
       <mesh position={[-0.26, 0.5, 0]}>
         <boxGeometry args={[0.05, 0.25, 0.35]} />
         <meshStandardMaterial color="#334155" />
       </mesh>
-      {/* Right Armrest */}
       <mesh position={[0.26, 0.5, 0]}>
         <boxGeometry args={[0.05, 0.25, 0.35]} />
         <meshStandardMaterial color="#334155" />
+      </mesh>
+    </group>
+  );
+}
+
+// Reusable 3D Seated Person Avatar Component (Added for EVERY chair in room)
+function SeatedPersonAvatar3D({ 
+  position = [0, 0, 0], 
+  rotation = [0, Math.PI, 0], 
+  shirtColor = "#0284c7", 
+  pantsColor = "#0f172a", 
+  skinColor = "#ffdbac",
+  hairColor = "#1f2937" 
+}) {
+  return (
+    <group position={position} rotation={rotation}>
+      {/* Torso */}
+      <mesh position={[0, 0.62, 0]}>
+        <boxGeometry args={[0.38, 0.46, 0.22]} />
+        <meshStandardMaterial color={shirtColor} roughness={0.4} />
+      </mesh>
+      {/* Head */}
+      <mesh position={[0, 1.0, 0]}>
+        <sphereGeometry args={[0.14, 16, 16]} />
+        <meshStandardMaterial color={skinColor} roughness={0.5} />
+      </mesh>
+      {/* Hair */}
+      <mesh position={[0, 1.06, 0.02]}>
+        <sphereGeometry args={[0.15, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2.2]} />
+        <meshStandardMaterial color={hairColor} roughness={0.8} />
+      </mesh>
+      {/* Seated Thighs */}
+      <mesh position={[-0.1, 0.38, -0.12]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.07, 0.06, 0.32, 12]} />
+        <meshStandardMaterial color={pantsColor} />
+      </mesh>
+      <mesh position={[0.1, 0.38, -0.12]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.07, 0.06, 0.32, 12]} />
+        <meshStandardMaterial color={pantsColor} />
+      </mesh>
+      {/* Lower Legs */}
+      <mesh position={[-0.1, 0.18, -0.28]}>
+        <cylinderGeometry args={[0.06, 0.05, 0.32, 12]} />
+        <meshStandardMaterial color={pantsColor} />
+      </mesh>
+      <mesh position={[0.1, 0.18, -0.28]}>
+        <cylinderGeometry args={[0.06, 0.05, 0.32, 12]} />
+        <meshStandardMaterial color={pantsColor} />
+      </mesh>
+      {/* Arms resting on desk */}
+      <mesh position={[-0.22, 0.54, -0.15]} rotation={[0.4, 0.2, 0]}>
+        <cylinderGeometry args={[0.05, 0.04, 0.32, 12]} />
+        <meshStandardMaterial color={shirtColor} />
+      </mesh>
+      <mesh position={[0.22, 0.54, -0.15]} rotation={[0.4, -0.2, 0]}>
+        <cylinderGeometry args={[0.05, 0.04, 0.32, 12]} />
+        <meshStandardMaterial color={shirtColor} />
       </mesh>
     </group>
   );
@@ -247,32 +283,26 @@ function OfficeChair3D({ position, color = "#1e293b", rotation = [0, 0, 0] }) {
 function SeatedManAvatar3D({ position = [0, 0, 0] }) {
   return (
     <group position={position}>
-      {/* Torso / Executive Suit */}
       <mesh position={[0, 0.65, 0]}>
         <boxGeometry args={[0.42, 0.5, 0.25]} />
         <meshStandardMaterial color="#1e3a8a" roughness={0.3} />
       </mesh>
-      {/* Tie Accent */}
       <mesh position={[0, 0.7, -0.13]}>
         <boxGeometry args={[0.08, 0.3, 0.02]} />
         <meshStandardMaterial color="#d97706" emissive="#b45309" />
       </mesh>
-      {/* Head */}
       <mesh position={[0, 1.05, 0]}>
         <sphereGeometry args={[0.16, 20, 20]} />
         <meshStandardMaterial color="#ffdbac" roughness={0.5} />
       </mesh>
-      {/* Executive Hair Structure */}
       <mesh position={[0, 1.15, 0.02]}>
         <sphereGeometry args={[0.165, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2.2]} />
         <meshStandardMaterial color="#1f2937" roughness={0.8} />
       </mesh>
-      {/* Glasses Frame */}
       <mesh position={[0, 1.05, -0.16]}>
         <boxGeometry args={[0.24, 0.06, 0.02]} />
         <meshStandardMaterial color="#fbbf24" metalness={0.9} />
       </mesh>
-      {/* Seated Legs */}
       <mesh position={[-0.12, 0.38, -0.12]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.08, 0.07, 0.35, 12]} />
         <meshStandardMaterial color="#0f172a" />
@@ -281,7 +311,6 @@ function SeatedManAvatar3D({ position = [0, 0, 0] }) {
         <cylinderGeometry args={[0.08, 0.07, 0.35, 12]} />
         <meshStandardMaterial color="#0f172a" />
       </mesh>
-      {/* Lower Legs */}
       <mesh position={[-0.12, 0.18, -0.3]}>
         <cylinderGeometry args={[0.07, 0.06, 0.35, 12]} />
         <meshStandardMaterial color="#0f172a" />
@@ -290,7 +319,6 @@ function SeatedManAvatar3D({ position = [0, 0, 0] }) {
         <cylinderGeometry args={[0.07, 0.06, 0.35, 12]} />
         <meshStandardMaterial color="#0f172a" />
       </mesh>
-      {/* Arms Resting on Desk */}
       <mesh position={[-0.24, 0.55, -0.18]} rotation={[0.4, 0.2, 0]}>
         <cylinderGeometry args={[0.06, 0.05, 0.35, 12]} />
         <meshStandardMaterial color="#1e3a8a" />
@@ -307,22 +335,18 @@ function SeatedManAvatar3D({ position = [0, 0, 0] }) {
 function SeatedWomanAvatar3D({ position = [0, 0, 0] }) {
   return (
     <group position={position}>
-      {/* Torso / Elegant Professional Attire */}
       <mesh position={[0, 0.63, 0]}>
         <boxGeometry args={[0.38, 0.48, 0.22]} />
         <meshStandardMaterial color="#be185d" roughness={0.3} />
       </mesh>
-      {/* Neck Accent */}
       <mesh position={[0, 0.88, 0]}>
         <cylinderGeometry args={[0.06, 0.07, 0.1, 12]} />
         <meshStandardMaterial color="#ffdbac" />
       </mesh>
-      {/* Head */}
       <mesh position={[0, 1.03, 0]}>
         <sphereGeometry args={[0.15, 20, 20]} />
         <meshStandardMaterial color="#ffdbac" roughness={0.5} />
       </mesh>
-      {/* Hair Structure (Longer styled hair) */}
       <mesh position={[0, 1.05, 0.04]}>
         <sphereGeometry args={[0.17, 16, 16]} />
         <meshStandardMaterial color="#0f172a" roughness={0.8} />
@@ -331,7 +355,6 @@ function SeatedWomanAvatar3D({ position = [0, 0, 0] }) {
         <boxGeometry args={[0.28, 0.35, 0.12]} />
         <meshStandardMaterial color="#0f172a" roughness={0.8} />
       </mesh>
-      {/* Seated Legs */}
       <mesh position={[-0.1, 0.38, -0.12]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.07, 0.06, 0.35, 12]} />
         <meshStandardMaterial color="#881337" />
@@ -340,7 +363,6 @@ function SeatedWomanAvatar3D({ position = [0, 0, 0] }) {
         <cylinderGeometry args={[0.07, 0.06, 0.35, 12]} />
         <meshStandardMaterial color="#881337" />
       </mesh>
-      {/* Lower Legs */}
       <mesh position={[-0.1, 0.18, -0.3]}>
         <cylinderGeometry args={[0.06, 0.05, 0.35, 12]} />
         <meshStandardMaterial color="#881337" />
@@ -349,7 +371,6 @@ function SeatedWomanAvatar3D({ position = [0, 0, 0] }) {
         <cylinderGeometry args={[0.06, 0.05, 0.35, 12]} />
         <meshStandardMaterial color="#881337" />
       </mesh>
-      {/* Arms Resting on Desk */}
       <mesh position={[-0.22, 0.55, -0.18]} rotation={[0.4, 0.2, 0]}>
         <cylinderGeometry args={[0.05, 0.04, 0.35, 12]} />
         <meshStandardMaterial color="#be185d" />
@@ -358,6 +379,82 @@ function SeatedWomanAvatar3D({ position = [0, 0, 0] }) {
         <cylinderGeometry args={[0.05, 0.04, 0.35, 12]} />
         <meshStandardMaterial color="#be185d" />
       </mesh>
+    </group>
+  );
+}
+
+// 3D Cyber Entrance Vault Doors Component (Opens on scroll / enter)
+function CyberEntranceDoors3D({ isOpen }) {
+  const leftDoorRef = useRef();
+  const rightDoorRef = useRef();
+
+  useFrame((_, delta) => {
+    // Smooth sliding door animation
+    const targetLeft = isOpen ? -3.8 : -1.05;
+    const targetRight = isOpen ? 3.8 : 1.05;
+
+    if (leftDoorRef.current) {
+      leftDoorRef.current.position.x = THREE.MathUtils.lerp(leftDoorRef.current.position.x, targetLeft, delta * 4);
+    }
+    if (rightDoorRef.current) {
+      rightDoorRef.current.position.x = THREE.MathUtils.lerp(rightDoorRef.current.position.x, targetRight, delta * 4);
+    }
+  });
+
+  return (
+    <group position={[0, 0, 14.5]}>
+      {/* Outer Doorway Frame Arch */}
+      <mesh position={[-2.2, 1.8, 0]}>
+        <boxGeometry args={[0.4, 3.6, 0.4]} />
+        <meshStandardMaterial color="#00f0ff" emissive="#0284c7" metalness={0.9} />
+      </mesh>
+      <mesh position={[2.2, 1.8, 0]}>
+        <boxGeometry args={[0.4, 3.6, 0.4]} />
+        <meshStandardMaterial color="#00f0ff" emissive="#0284c7" metalness={0.9} />
+      </mesh>
+      <mesh position={[0, 3.7, 0]}>
+        <boxGeometry args={[4.8, 0.4, 0.4]} />
+        <meshStandardMaterial color="#00f0ff" emissive="#0284c7" metalness={0.9} />
+      </mesh>
+
+      {/* Top Holographic Sign Header */}
+      <Html position={[0, 4.4, 0]} center distanceFactor={15}>
+        <div className="px-4 py-1 rounded-xl bg-slate-950/90 border border-cyan-400 text-cyan-300 font-orbitron font-black text-[10px] tracking-widest uppercase shadow-[0_0_20px_rgba(0,240,255,0.6)]">
+          {isOpen ? '🚪 ARVR OFFICE LAB // ACCESS GRANTED' : '🔒 ARVR OFFICE LAB // ENTERING ROOM'}
+        </div>
+      </Html>
+
+      {/* Sliding Left Vault Door */}
+      <group ref={leftDoorRef} position={[-1.05, 1.8, 0]}>
+        <mesh>
+          <boxGeometry args={[2.0, 3.4, 0.15]} />
+          <meshStandardMaterial color="#0f172a" metalness={0.8} roughness={0.2} />
+        </mesh>
+        <mesh position={[0, 0, 0.09]}>
+          <boxGeometry args={[1.6, 2.8, 0.02]} />
+          <meshBasicMaterial color="#00f0ff" wireframe transparent opacity={0.4} />
+        </mesh>
+        <mesh position={[0.8, 0, 0.1]}>
+          <cylinderGeometry args={[0.04, 0.04, 0.8]} />
+          <meshStandardMaterial color="#fbbf24" metalness={0.9} />
+        </mesh>
+      </group>
+
+      {/* Sliding Right Vault Door */}
+      <group ref={rightDoorRef} position={[1.05, 1.8, 0]}>
+        <mesh>
+          <boxGeometry args={[2.0, 3.4, 0.15]} />
+          <meshStandardMaterial color="#0f172a" metalness={0.8} roughness={0.2} />
+        </mesh>
+        <mesh position={[0, 0, 0.09]}>
+          <boxGeometry args={[1.6, 2.8, 0.02]} />
+          <meshBasicMaterial color="#00f0ff" wireframe transparent opacity={0.4} />
+        </mesh>
+        <mesh position={[-0.8, 0, 0.1]}>
+          <cylinderGeometry args={[0.04, 0.04, 0.8]} />
+          <meshStandardMaterial color="#fbbf24" metalness={0.9} />
+        </mesh>
+      </group>
     </group>
   );
 }
@@ -380,7 +477,6 @@ function FacultyPavilion3D({ onSelect, hoveredZone, setHoveredZone }) {
       onPointerOver={(e) => { e.stopPropagation(); setHoveredZone('faculty'); }}
       onPointerOut={() => setHoveredZone(null)}
     >
-      {/* Octagonal Golden Floor Platform */}
       <mesh position={[0, 0.15, 0]}>
         <cylinderGeometry args={[3.2, 3.6, 0.3, 8]} />
         <meshStandardMaterial 
@@ -391,13 +487,11 @@ function FacultyPavilion3D({ onSelect, hoveredZone, setHoveredZone }) {
         />
       </mesh>
 
-      {/* Outer Golden Glowing Ring */}
       <mesh ref={ringRef} position={[0, 0.4, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <ringGeometry args={[3.7, 3.9, 32]} />
         <meshBasicMaterial color="#fbbf24" side={THREE.DoubleSide} transparent opacity={isHovered ? 0.9 : 0.6} />
       </mesh>
 
-      {/* 4 Corner Golden Pillars */}
       {[[-2.2, -2.2], [2.2, -2.2], [-2.2, 2.2], [2.2, 2.2]].map(([x, z], idx) => (
         <mesh key={idx} position={[x, 1.5, z]}>
           <cylinderGeometry args={[0.15, 0.2, 2.4, 16]} />
@@ -405,19 +499,16 @@ function FacultyPavilion3D({ onSelect, hoveredZone, setHoveredZone }) {
         </mesh>
       ))}
 
-      {/* Main Executive Faculty Desk */}
       <mesh position={[0, 0.6, -0.4]}>
         <boxGeometry args={[3.2, 0.75, 0.9]} />
         <meshStandardMaterial color="#0f172a" metalness={0.8} roughness={0.2} />
       </mesh>
 
-      {/* Small Center Coffee/Display Table between chairs */}
       <mesh position={[0, 0.4, 0.4]}>
         <cylinderGeometry args={[0.45, 0.5, 0.4, 16]} />
         <meshStandardMaterial color="#d97706" emissive="#78350f" metalness={0.8} />
       </mesh>
 
-      {/* Center Table Hologram Orb */}
       <Float speed={3} floatIntensity={0.5}>
         <mesh position={[0, 0.7, 0.4]}>
           <sphereGeometry args={[0.12, 16, 16]} />
@@ -425,15 +516,14 @@ function FacultyPavilion3D({ onSelect, hoveredZone, setHoveredZone }) {
         </mesh>
       </Float>
 
-      {/* Left Chair + Seated HOD Man Avatar (Dr. Lingaraj Hadimani - HOD CSE) */}
+      {/* Left Chair + Seated HOD Man Avatar */}
       <OfficeChair3D position={[-0.9, 0, 0.4]} color="#d97706" rotation={[0, Math.PI, 0]} />
       <SeatedManAvatar3D position={[-0.9, 0, 0.4]} />
 
-      {/* Right Chair + Seated Faculty Coordinator Woman Avatar (Anuradha Solanki) */}
+      {/* Right Chair + Seated Faculty Coordinator Woman Avatar */}
       <OfficeChair3D position={[0.9, 0, 0.4]} color="#be185d" rotation={[0, Math.PI, 0]} />
       <SeatedWomanAvatar3D position={[0.9, 0, 0.4]} />
 
-      {/* Floating 3D Golden Crest Core */}
       <Float speed={2} rotationIntensity={1} floatIntensity={1.5}>
         <mesh position={[0, 2.2, -0.4]}>
           <octahedronGeometry args={[0.7]} />
@@ -447,23 +537,20 @@ function FacultyPavilion3D({ onSelect, hoveredZone, setHoveredZone }) {
         </mesh>
       </Float>
 
-      {/* Floating 3D Holographic Label */}
-      <Html position={[0, 3.4, 0]} center distanceFactor={15}>
-        <div className={`px-4 py-2 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
-          isHovered 
-            ? 'border-amber-300 bg-amber-500/30 shadow-[0_0_30px_rgba(251,191,36,0.8)] scale-110' 
-            : 'border-amber-400/60 bg-slate-950/80 shadow-[0_0_15px_rgba(251,191,36,0.3)]'
-        }`}>
-          <span className="font-mono text-[9px] text-amber-300 font-bold tracking-widest uppercase block">
+      {/* Floating 3D Golden Crest Label (Faculty name removed as requested) */}
+      <Html position={[0, 3.2, 0]} center distanceFactor={15}>
+        <div 
+          onClick={(e) => { e.stopPropagation(); onSelect('faculty'); }}
+          className={`px-4 py-2 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
+            isHovered 
+              ? 'border-amber-300 bg-amber-500/30 shadow-[0_0_30px_rgba(251,191,36,0.8)] scale-110' 
+              : 'border-amber-400/60 bg-slate-950/80 shadow-[0_0_15px_rgba(251,191,36,0.3)]'
+          }`}
+        >
+          <span className="font-orbitron font-black text-sm text-white text-glow-amber">
             FACULTY DIRECTORATE DESK
           </span>
-          <span className="font-orbitron font-black text-sm text-white text-glow-amber">
-            HOD & FACULTY DIRECTORATE
-          </span>
-          <span className="font-mono text-[10px] text-amber-200 mt-0.5 font-semibold">
-            Dr. Lingaraj Hadimani (HOD CSE) & Anuradha Solanki
-          </span>
-          <button className="mt-2 px-3 py-1 rounded-lg bg-amber-500 text-slate-950 font-orbitron font-bold text-[9px] uppercase tracking-wider shadow-md hover:bg-amber-400">
+          <button className="mt-2 px-3 py-1 rounded-lg bg-amber-500 text-slate-950 font-orbitron font-bold text-[9px] uppercase tracking-wider shadow-md hover:bg-amber-400 cursor-pointer">
             VIEW FACULTY TEAM
           </button>
         </div>
@@ -472,7 +559,7 @@ function FacultyPavilion3D({ onSelect, hoveredZone, setHoveredZone }) {
   );
 }
 
-// 2. 3D Main Panel / Executive Command Room
+// 2. 3D Main Panel / Executive Command Room (With seated avatars on chairs)
 function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
   const isHovered = hoveredZone === 'executive';
   
@@ -493,9 +580,12 @@ function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
         <meshStandardMaterial color="#0f172a" metalness={0.8} />
       </mesh>
 
-      {/* Chairs behind Executive Console */}
+      {/* Chairs + Seated Person Avatars behind Executive Console */}
       {[-1.2, 0, 1.2].map((x, idx) => (
-        <OfficeChair3D key={idx} position={[x, 0, 0.3]} color="#0284c7" rotation={[0, Math.PI, 0]} />
+        <group key={idx}>
+          <OfficeChair3D position={[x, 0, 0.3]} color="#0284c7" rotation={[0, Math.PI, 0]} />
+          <SeatedPersonAvatar3D position={[x, 0, 0.3]} shirtColor="#0284c7" hairColor="#0f172a" />
+        </group>
       ))}
 
       {[-1.2, 0, 1.2].map((x, i) => (
@@ -506,9 +596,12 @@ function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
       ))}
 
       <Html position={[0, 2.6, 0]} center distanceFactor={15}>
-        <div className={`px-3 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
-          isHovered ? 'border-cyan-300 bg-cyan-500/30 scale-110 shadow-[0_0_25px_rgba(0,240,255,0.8)]' : 'border-cyan-400/50 bg-slate-950/80 shadow-[0_0_15px_rgba(0,240,255,0.3)]'
-        }`}>
+        <div 
+          onClick={(e) => { e.stopPropagation(); onSelect('executive'); }}
+          className={`px-3 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
+            isHovered ? 'border-cyan-300 bg-cyan-500/30 scale-110 shadow-[0_0_25px_rgba(0,240,255,0.8)]' : 'border-cyan-400/50 bg-slate-950/80 shadow-[0_0_15px_rgba(0,240,255,0.3)]'
+          }`}
+        >
           <span className="font-mono text-[8px] text-cyan-300 tracking-wider uppercase font-bold">MAIN PANEL ROOM</span>
           <span className="font-orbitron font-bold text-xs text-white">EXECUTIVE COMMAND</span>
           <button className="mt-1.5 px-2.5 py-0.5 rounded bg-cyan-500 text-slate-950 font-orbitron font-bold text-[8px] uppercase">
@@ -520,7 +613,7 @@ function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
   );
 }
 
-// 3. 3D Core Operations Board Console
+// 3. 3D Core Operations Board Console (With seated avatars on chairs)
 function BoardRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
   const isHovered = hoveredZone === 'board';
 
@@ -541,9 +634,12 @@ function BoardRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
         <meshStandardMaterial color="#0f172a" metalness={0.8} />
       </mesh>
 
-      {/* Chairs behind Operations Console */}
+      {/* Chairs + Seated Person Avatars behind Operations Console */}
       {[-1, 1].map((x, idx) => (
-        <OfficeChair3D key={idx} position={[x, 0, 0.3]} color="#7e22ce" rotation={[0, Math.PI, 0]} />
+        <group key={idx}>
+          <OfficeChair3D position={[x, 0, 0.3]} color="#7e22ce" rotation={[0, Math.PI, 0]} />
+          <SeatedPersonAvatar3D position={[x, 0, 0.3]} shirtColor="#7e22ce" hairColor="#3b0764" />
+        </group>
       ))}
 
       {[-1, 1].map((x, i) => (
@@ -554,9 +650,12 @@ function BoardRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
       ))}
 
       <Html position={[0, 2.6, 0]} center distanceFactor={15}>
-        <div className={`px-3 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
-          isHovered ? 'border-purple-300 bg-purple-500/30 scale-110 shadow-[0_0_25px_rgba(168,85,247,0.8)]' : 'border-purple-400/50 bg-slate-950/80 shadow-[0_0_15px_rgba(168,85,247,0.3)]'
-        }`}>
+        <div 
+          onClick={(e) => { e.stopPropagation(); onSelect('board'); }}
+          className={`px-3 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
+            isHovered ? 'border-purple-300 bg-purple-500/30 scale-110 shadow-[0_0_25px_rgba(168,85,247,0.8)]' : 'border-purple-400/50 bg-slate-950/80 shadow-[0_0_15px_rgba(168,85,247,0.3)]'
+          }`}
+        >
           <span className="font-mono text-[8px] text-purple-300 tracking-wider uppercase font-bold">OPERATIONS BOARD</span>
           <span className="font-orbitron font-bold text-xs text-white">SECRETARY & TREASURER</span>
           <button className="mt-1.5 px-2.5 py-0.5 rounded bg-purple-500 text-white font-orbitron font-bold text-[8px] uppercase">
@@ -568,50 +667,49 @@ function BoardRoom3D({ onSelect, hoveredZone, setHoveredZone }) {
   );
 }
 
-// 4. 3D Domain Workstations Grid
+// 4. 3D Domain Workstations Grid (With seated avatars on chairs)
 function DomainWorkstation3D({ id, title, color, position, onSelect, hoveredZone, setHoveredZone }) {
   const isHovered = hoveredZone === id;
 
   return (
     <group 
       position={position}
-      onClick={(e) => { e.stopPropagation(); onSelect(id); }}
+      onClick={(e) => { e.stopPropagation(); onSelect(id, 'view_team'); }}
       onPointerOver={(e) => { e.stopPropagation(); setHoveredZone(id); }}
       onPointerOut={() => setHoveredZone(null)}
     >
-      {/* Desk Base */}
       <mesh position={[0, 0.35, 0]}>
         <boxGeometry args={[2.0, 0.7, 1.2]} />
         <meshStandardMaterial color="#1e293b" metalness={0.6} />
       </mesh>
 
-      {/* Office Chair behind Desk */}
+      {/* Office Chair + Seated Person Avatar behind Desk */}
       <OfficeChair3D position={[0, 0, 0.8]} color={color} rotation={[0, Math.PI, 0]} />
+      <SeatedPersonAvatar3D position={[0, 0, 0.8]} shirtColor={color} />
 
-      {/* Glowing Desktop Monitor */}
       <mesh position={[0, 1.05, -0.3]}>
         <boxGeometry args={[1.1, 0.65, 0.08]} />
         <meshBasicMaterial color={isHovered ? "#ffffff" : color} />
       </mesh>
 
-      {/* Monitor Stand */}
       <mesh position={[0, 0.75, -0.3]}>
         <cylinderGeometry args={[0.05, 0.08, 0.2]} />
         <meshStandardMaterial color="#64748b" />
       </mesh>
 
-      {/* Floating Label with VIEW TEAM button */}
       <Html position={[0, 1.8, 0]} center distanceFactor={15}>
-        <div className={`px-2.5 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
-          isHovered ? 'scale-110 bg-cyan-500/30 border-cyan-300 shadow-[0_0_20px_rgba(0,240,255,0.7)]' : 'bg-slate-950/85 border-cyan-500/30'
-        }`}>
+        <div 
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelect(id, 'view_team');
+          }}
+          className={`px-2.5 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
+            isHovered ? 'scale-110 bg-cyan-500/30 border-cyan-300 shadow-[0_0_20px_rgba(0,240,255,0.7)]' : 'bg-slate-950/85 border-cyan-500/30'
+          }`}
+        >
           <span className="font-orbitron font-bold text-[10px] text-white">{title}</span>
           <button 
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect(id, 'view_team');
-            }}
-            className="mt-1 px-2 py-0.5 rounded bg-cyan-500 text-slate-950 font-orbitron font-bold text-[8px] uppercase hover:bg-cyan-300 transition-colors"
+            className="mt-1 px-2 py-0.5 rounded bg-cyan-500 text-slate-950 font-orbitron font-bold text-[8px] uppercase hover:bg-cyan-300 transition-colors cursor-pointer"
           >
             VIEW TEAM
           </button>
@@ -621,7 +719,7 @@ function DomainWorkstation3D({ id, title, color, position, onSelect, hoveredZone
   );
 }
 
-// 5. 3D Department Coordinators Terminal
+// 5. 3D Department Coordinators Terminal (With Liaison Terminal text removed & seated avatars on chairs)
 function DepartmentCoordinators3D({ onSelect, hoveredZone, setHoveredZone }) {
   const isHovered = hoveredZone === 'coordinator';
 
@@ -637,9 +735,12 @@ function DepartmentCoordinators3D({ onSelect, hoveredZone, setHoveredZone }) {
         <meshStandardMaterial color={isHovered ? "#34d399" : "#059669"} emissive="#047857" roughness={0.3} />
       </mesh>
 
-      {/* 6 Chairs behind Coordinator Displays */}
+      {/* 6 Chairs + 6 Seated Person Avatars behind Coordinator Displays */}
       {[-2, -1.2, -0.4, 0.4, 1.2, 2].map((x, idx) => (
-        <OfficeChair3D key={idx} position={[x, 0, 0.5]} color="#059669" rotation={[0, Math.PI, 0]} />
+        <group key={idx}>
+          <OfficeChair3D position={[x, 0, 0.5]} color="#059669" rotation={[0, Math.PI, 0]} />
+          <SeatedPersonAvatar3D position={[x, 0, 0.5]} shirtColor="#059669" />
+        </group>
       ))}
 
       {[-2, -1.2, -0.4, 0.4, 1.2, 2].map((x, idx) => (
@@ -649,13 +750,16 @@ function DepartmentCoordinators3D({ onSelect, hoveredZone, setHoveredZone }) {
         </mesh>
       ))}
 
+      {/* Departmental Coordinators Label (Liaison Terminal text removed) */}
       <Html position={[0, 2.2, 0]} center distanceFactor={15}>
-        <div className={`px-3 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
-          isHovered ? 'border-emerald-300 bg-emerald-500/30 scale-110 shadow-[0_0_25px_rgba(52,211,153,0.8)]' : 'border-emerald-400/50 bg-slate-950/80 shadow-[0_0_15px_rgba(52,211,153,0.3)]'
-        }`}>
-          <span className="font-mono text-[8px] text-emerald-300 tracking-wider uppercase font-bold">LIAISON TERMINAL</span>
+        <div 
+          onClick={(e) => { e.stopPropagation(); onSelect('coordinator'); }}
+          className={`px-3 py-1.5 rounded-xl glass-panel border transition-all duration-300 flex flex-col items-center cursor-pointer whitespace-nowrap ${
+            isHovered ? 'border-emerald-300 bg-emerald-500/30 scale-110 shadow-[0_0_25px_rgba(52,211,153,0.8)]' : 'border-emerald-400/50 bg-slate-950/80 shadow-[0_0_15px_rgba(52,211,153,0.3)]'
+          }`}
+        >
           <span className="font-orbitron font-bold text-xs text-white">DEPARTMENT COORDINATORS</span>
-          <button className="mt-1.5 px-2.5 py-0.5 rounded bg-emerald-500 text-slate-950 font-orbitron font-bold text-[8px] uppercase">
+          <button className="mt-1.5 px-2.5 py-0.5 rounded bg-emerald-500 text-slate-950 font-orbitron font-bold text-[8px] uppercase cursor-pointer">
             VIEW TEAM
           </button>
         </div>
@@ -666,8 +770,8 @@ function DepartmentCoordinators3D({ onSelect, hoveredZone, setHoveredZone }) {
 
 export default function Office3DScene({ onSelectZone }) {
   const [hoveredZone, setHoveredZone] = useState(null);
+  const [doorsOpen, setDoorsOpen] = useState(false);
 
-  // Exact previous domain section titles requested by user
   const domainDesks = [
     { id: 'unity_head', title: 'TEAM UNITY', color: '#00f0ff', position: [-9, 0, 2] },
     { id: 'technical_head', title: 'TECHNICAL TEAM', color: '#f43f5e', position: [-5, 0, 4] },
@@ -683,12 +787,25 @@ export default function Office3DScene({ onSelectZone }) {
   return (
     <div className="w-full h-[580px] sm:h-[680px] relative rounded-3xl overflow-hidden glass-panel border border-cyan-500/40 shadow-[0_0_50px_rgba(0,240,255,0.2)] bg-[#020617]">
       
-      {/* 3D Controls Overlay Helper */}
-      <div className="absolute top-4 left-4 z-10 font-mono text-[10px] text-cyan-300/80 bg-slate-950/80 px-3 py-1.5 rounded-lg border border-cyan-500/30 pointer-events-none">
-        <span>3D VIRTUAL OFFICE LAB // LEFT CLICK ROTATE • SCROLL ZOOM • CLICK DESKS TO VIEW TEAMS</span>
+      {/* 3D Controls & Door Entrance Toggle Overlay */}
+      <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-3">
+        <button
+          onClick={() => setDoorsOpen(!doorsOpen)}
+          className={`px-4 py-2 rounded-xl font-orbitron font-bold text-xs tracking-wider uppercase transition-all cursor-pointer shadow-lg ${
+            doorsOpen
+              ? 'bg-emerald-500 text-slate-950 shadow-[0_0_20px_rgba(52,211,153,0.6)]'
+              : 'bg-cyan-500 text-slate-950 shadow-[0_0_20px_rgba(0,240,255,0.6)] animate-pulse'
+          }`}
+        >
+          {doorsOpen ? '🚪 DOORS OPEN // INSIDE ROOM' : '🔒 CLICK TO OPEN DOORS & ENTER ROOM'}
+        </button>
+
+        <div className="font-mono text-[10px] text-cyan-300/80 bg-slate-950/80 px-3 py-2 rounded-xl border border-cyan-500/30 pointer-events-none hidden sm:block">
+          <span>LEFT CLICK ROTATE • SCROLL ZOOM • CLICK DESKS TO VIEW ROSTERS</span>
+        </div>
       </div>
 
-      <Canvas camera={{ position: [0, 14, 18], fov: 50 }}>
+      <Canvas camera={{ position: [0, 14, 19], fov: 50 }}>
         <color attach="background" args={['#020617']} />
         <fog attach="fog" args={['#020617', 15, 45]} />
 
@@ -700,7 +817,7 @@ export default function Office3DScene({ onSelectZone }) {
         <OrbitControls 
           enableDamping 
           dampingFactor={0.05} 
-          minDistance={6} 
+          minDistance={5} 
           maxDistance={28}
           maxPolarAngle={Math.PI / 2 - 0.05}
         />
@@ -708,10 +825,13 @@ export default function Office3DScene({ onSelectZone }) {
         {/* Semi-transparent Reflective Cyber Floor Grid */}
         <gridHelper args={[40, 40, '#00f0ff', '#1e293b']} position={[0, 0, 0]} />
 
+        {/* 3D Cyber Entrance Vault Doors (Opens on scroll/click) */}
+        <CyberEntranceDoors3D isOpen={doorsOpen} />
+
         {/* Sub-Floor Solar System Cosmic Structure (Revolving under office floor) */}
         <SubFloorSolarSystem3D position={[0, -4.5, 0]} />
 
-        {/* 1. Center Faculty Directorate Pavilion (2 Chairs, Small Center Table, Seated HOD Man & Faculty Coordinator Woman) */}
+        {/* 1. Center Faculty Directorate Pavilion */}
         <FacultyPavilion3D 
           onSelect={onSelectZone} 
           hoveredZone={hoveredZone} 
@@ -752,7 +872,6 @@ export default function Office3DScene({ onSelectZone }) {
           hoveredZone={hoveredZone} 
           setHoveredZone={setHoveredZone} 
         />
-
       </Canvas>
     </div>
   );
