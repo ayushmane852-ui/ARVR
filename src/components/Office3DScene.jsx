@@ -144,11 +144,90 @@ function SubFloorSolarSystem3D({ position = [0, -5.5, 0] }) {
   );
 }
 
+// LABORATORY ROOM ENCLOSURE WALLS & GIANT BACK SCREEN ("ARVR Team")
+function LaboratoryRoomEnclosure3D() {
+  return (
+    <group>
+      {/* BACK WALL */}
+      <mesh position={[0, 7.5, -15.0]}>
+        <boxGeometry args={[44.0, 17.0, 0.5]} />
+        <meshStandardMaterial color="#0b1329" metalness={0.85} roughness={0.2} />
+      </mesh>
+
+      {/* LEFT WALL */}
+      <mesh position={[-22.0, 7.5, -1.0]}>
+        <boxGeometry args={[0.5, 17.0, 28.0]} />
+        <meshStandardMaterial color="#091126" metalness={0.85} roughness={0.2} />
+      </mesh>
+
+      {/* RIGHT WALL */}
+      <mesh position={[22.0, 7.5, -1.0]}>
+        <boxGeometry args={[0.5, 17.0, 28.0]} />
+        <meshStandardMaterial color="#091126" metalness={0.85} roughness={0.2} />
+      </mesh>
+
+      {/* CEILING ROOF WITH LED STRIPS */}
+      <mesh position={[0, 15.8, -1.0]}>
+        <boxGeometry args={[44.0, 0.5, 28.0]} />
+        <meshStandardMaterial color="#070d1e" metalness={0.9} roughness={0.1} />
+      </mesh>
+
+      {/* Futuristic Ceiling LED Glow Bars */}
+      {[-12, -4, 4, 12].map((x, idx) => (
+        <mesh key={idx} position={[x, 15.5, -1.0]}>
+          <boxGeometry args={[0.3, 0.1, 26.0]} />
+          <meshBasicMaterial color={idx % 2 === 0 ? "#00f0ff" : "#a855f7"} />
+        </mesh>
+      ))}
+
+      {/* GIANT CURVED HOLOGRAPHIC SCREEN ON BACK WALL ("ARVR Team") */}
+      <group position={[0, 9.8, -14.6]}>
+        {/* Screen Frame Border */}
+        <mesh>
+          <boxGeometry args={[24.0, 8.5, 0.2]} />
+          <meshStandardMaterial color="#1e293b" metalness={0.95} roughness={0.1} />
+        </mesh>
+
+        {/* Outer Glow Border Line */}
+        <mesh position={[0, 0, 0.11]}>
+          <boxGeometry args={[23.6, 8.1, 0.02]} />
+          <meshBasicMaterial color="#00f0ff" />
+        </mesh>
+
+        {/* Display Screen Surface */}
+        <mesh position={[0, 0, 0.12]}>
+          <planeGeometry args={[23.2, 7.7]} />
+          <meshBasicMaterial color="#030712" />
+        </mesh>
+
+        {/* Neon Text Display on Screen ("ARVR Team") */}
+        <Html position={[0, 0, 0.15]} transform center distanceFactor={14}>
+          <div className="flex flex-col items-center justify-center p-6 text-center select-none w-[900px]">
+            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-cyan-400/50 bg-cyan-950/80 mb-3 shadow-[0_0_20px_rgba(0,240,255,0.6)]">
+              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
+              <span className="font-mono text-sm text-cyan-300 tracking-[0.3em] uppercase font-bold">
+                HEADQUARTERS MAIN DISPLAY
+              </span>
+            </div>
+
+            <h1 className="font-orbitron font-black text-7xl sm:text-8xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-amber-300 drop-shadow-[0_0_45px_rgba(0,240,255,0.9)] uppercase">
+              ARVR Team
+            </h1>
+
+            <p className="mt-2 font-mono text-xs sm:text-sm text-slate-300 tracking-[0.25em] uppercase font-semibold">
+              ADVANCED IMMERSIVE TECHNOLOGIES LABORATORY // CORE ROSTER
+            </p>
+          </div>
+        </Html>
+      </group>
+    </group>
+  );
+}
+
 // Luxury High-Back Faculty Director Leather Chair
 function LuxuryFacultyDirectorChair3D({ position, color = "#581c87", rotation = [0, 0, 0] }) {
   return (
     <group position={position} rotation={rotation}>
-      {/* 5-Star Chrome Base */}
       {[0, 72, 144, 216, 288].map((deg, i) => {
         const rad = (deg * Math.PI) / 180;
         return (
@@ -165,31 +244,26 @@ function LuxuryFacultyDirectorChair3D({ position, color = "#581c87", rotation = 
         );
       })}
 
-      {/* Hydraulic Lift Column */}
       <mesh position={[0, 0.22, 0]}>
         <cylinderGeometry args={[0.05, 0.06, 0.38, 16]} />
         <meshStandardMaterial color="#e2e8f0" metalness={0.95} roughness={0.1} />
       </mesh>
 
-      {/* Heavy Plush Leather Cushion Seat */}
       <mesh position={[0, 0.44, 0]}>
         <boxGeometry args={[0.62, 0.12, 0.62]} />
         <meshStandardMaterial color={color} roughness={0.3} />
       </mesh>
 
-      {/* High Ergonomic Contoured Backrest with Headrest */}
       <mesh position={[0, 0.88, 0.24]} rotation={[-0.1, 0, 0]}>
         <boxGeometry args={[0.56, 0.88, 0.08]} />
         <meshStandardMaterial color={color} roughness={0.3} />
       </mesh>
 
-      {/* Plush Leather Headrest Pillow */}
       <mesh position={[0, 1.32, 0.22]}>
         <boxGeometry args={[0.42, 0.22, 0.1]} />
         <meshStandardMaterial color="#3b0764" roughness={0.4} />
       </mesh>
 
-      {/* Curved Polished Chrome Armrests */}
       <group position={[-0.32, 0.62, 0]}>
         <boxGeometry args={[0.05, 0.26, 0.38]} />
         <meshStandardMaterial color="#cbd5e1" metalness={0.95} roughness={0.1} />
@@ -245,20 +319,14 @@ function RealisticOfficeChair3D({ position, color = "#0284c7", rotation = [0, 0,
   );
 }
 
-// REALISTIC MALE FACULTY DIRECTOR AVATAR (MALE SUIT & DISCUSSION GESTURE)
-function RealisticMaleAvatar3D({ 
-  position = [0, 0, 0], 
-  rotation = [0, 0, 0]
-}) {
+// REALISTIC MALE FACULTY DIRECTOR AVATAR
+function RealisticMaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] }) {
   return (
     <group position={position} rotation={rotation}>
-      {/* Torso - Navy Suit Jacket & Tie */}
       <mesh position={[0, 0.68, 0]}>
         <boxGeometry args={[0.46, 0.52, 0.26]} />
         <meshStandardMaterial color="#1e3a8a" roughness={0.3} />
       </mesh>
-
-      {/* Shirt Collar & Red Tie */}
       <mesh position={[0, 0.82, -0.13]}>
         <boxGeometry args={[0.12, 0.22, 0.02]} />
         <meshStandardMaterial color="#ffffff" />
@@ -267,26 +335,18 @@ function RealisticMaleAvatar3D({
         <boxGeometry args={[0.05, 0.24, 0.02]} />
         <meshStandardMaterial color="#b91c1c" />
       </mesh>
-
-      {/* Neck */}
       <mesh position={[0, 0.96, 0]}>
         <cylinderGeometry args={[0.07, 0.08, 0.12, 16]} />
         <meshStandardMaterial color="#ffdbac" />
       </mesh>
-
-      {/* Head */}
       <mesh position={[0, 1.08, 0]}>
         <sphereGeometry args={[0.16, 24, 24]} />
         <meshStandardMaterial color="#ffdbac" roughness={0.5} />
       </mesh>
-
-      {/* Male Short Styled Hair */}
       <mesh position={[0, 1.14, 0.01]}>
         <sphereGeometry args={[0.168, 20, 20, 0, Math.PI * 2, 0, Math.PI / 2.1]} />
         <meshStandardMaterial color="#0f172a" roughness={0.9} />
       </mesh>
-
-      {/* Seated Legs */}
       <mesh position={[-0.12, 0.42, -0.16]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.08, 0.07, 0.38, 14]} />
         <meshStandardMaterial color="#0f172a" />
@@ -295,8 +355,6 @@ function RealisticMaleAvatar3D({
         <cylinderGeometry args={[0.08, 0.07, 0.38, 14]} />
         <meshStandardMaterial color="#0f172a" />
       </mesh>
-
-      {/* Gesturing Arms Forward Towards Table */}
       <mesh position={[-0.24, 0.6, -0.18]} rotation={[0.6, 0.3, 0]}>
         <cylinderGeometry args={[0.055, 0.045, 0.38, 12]} />
         <meshStandardMaterial color="#1e3a8a" />
@@ -309,38 +367,26 @@ function RealisticMaleAvatar3D({
   );
 }
 
-// REALISTIC FEMALE FACULTY DIRECTOR AVATAR (FEMALE BLAZER & DISCUSSION GESTURE)
-function RealisticFemaleAvatar3D({ 
-  position = [0, 0, 0], 
-  rotation = [0, 0, 0]
-}) {
+// REALISTIC FEMALE FACULTY DIRECTOR AVATAR
+function RealisticFemaleAvatar3D({ position = [0, 0, 0], rotation = [0, 0, 0] }) {
   return (
     <group position={position} rotation={rotation}>
-      {/* Torso - Tailored Magenta Blazer */}
       <mesh position={[0, 0.66, 0]}>
         <boxGeometry args={[0.4, 0.48, 0.24]} />
         <meshStandardMaterial color="#9f1239" roughness={0.4} />
       </mesh>
-
-      {/* White Inner Top */}
       <mesh position={[0, 0.78, -0.12]}>
         <boxGeometry args={[0.14, 0.2, 0.02]} />
         <meshStandardMaterial color="#ffffff" />
       </mesh>
-
-      {/* Neck */}
       <mesh position={[0, 0.94, 0]}>
         <cylinderGeometry args={[0.06, 0.07, 0.12, 16]} />
         <meshStandardMaterial color="#f1c27d" />
       </mesh>
-
-      {/* Female Head */}
       <mesh position={[0, 1.06, 0]}>
         <sphereGeometry args={[0.15, 24, 24]} />
         <meshStandardMaterial color="#f1c27d" roughness={0.5} />
       </mesh>
-
-      {/* Female Shoulder-Length Hair Bob */}
       <mesh position={[0, 1.08, 0.02]}>
         <sphereGeometry args={[0.165, 20, 20, 0, Math.PI * 2, 0, Math.PI / 1.8]} />
         <meshStandardMaterial color="#291d09" roughness={0.7} />
@@ -353,8 +399,6 @@ function RealisticFemaleAvatar3D({
         <boxGeometry args={[0.06, 0.3, 0.14]} />
         <meshStandardMaterial color="#291d09" roughness={0.7} />
       </mesh>
-
-      {/* Seated Legs */}
       <mesh position={[-0.11, 0.4, -0.15]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.07, 0.06, 0.35, 14]} />
         <meshStandardMaterial color="#0f172a" />
@@ -363,8 +407,6 @@ function RealisticFemaleAvatar3D({
         <cylinderGeometry args={[0.07, 0.06, 0.35, 14]} />
         <meshStandardMaterial color="#0f172a" />
       </mesh>
-
-      {/* Gesturing Arms Forward Towards Table */}
       <mesh position={[-0.22, 0.58, -0.16]} rotation={[0.6, 0.3, 0]}>
         <cylinderGeometry args={[0.05, 0.04, 0.36, 12]} />
         <meshStandardMaterial color="#9f1239" />
@@ -378,14 +420,7 @@ function RealisticFemaleAvatar3D({
 }
 
 // Standard Seated Avatar
-function RealisticSeatedAvatar3D({ 
-  position = [0, 0, 0], 
-  rotation = [0, Math.PI, 0], 
-  shirtColor = "#0284c7", 
-  pantsColor = "#0f172a", 
-  skinColor = "#ffdbac",
-  hairColor = "#1e293b" 
-}) {
+function RealisticSeatedAvatar3D({ position = [0, 0, 0], rotation = [0, Math.PI, 0], shirtColor = "#0284c7", pantsColor = "#0f172a", skinColor = "#ffdbac", hairColor = "#1e293b" }) {
   return (
     <group position={position} rotation={rotation}>
       <mesh position={[0, 0.65, 0]}>
@@ -405,11 +440,11 @@ function RealisticSeatedAvatar3D({
         <meshStandardMaterial color={hairColor} roughness={0.8} />
       </mesh>
       <mesh position={[-0.11, 0.4, -0.15]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.07, 0.06, 0.35, 12]} />
+        <cylinderGeometry args={[0.07, 0.06, 0.35, 14]} />
         <meshStandardMaterial color={pantsColor} />
       </mesh>
       <mesh position={[0.11, 0.4, -0.15]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.07, 0.06, 0.35, 12]} />
+        <cylinderGeometry args={[0.07, 0.06, 0.35, 14]} />
         <meshStandardMaterial color={pantsColor} />
       </mesh>
       <mesh position={[-0.23, 0.58, -0.16]} rotation={[0.5, 0.2, 0]}>
@@ -424,101 +459,89 @@ function RealisticSeatedAvatar3D({
   );
 }
 
-// REALISTIC VERTICAL ARVR VAULT DOOR COMPONENT
-function RealARVRVerticalVaultDoors3D({ openRatio }) {
+// MASSIVE TALL VERTICAL ARVR VAULT DOOR PANEL
+// ONCE OPENED (hasOpened === true), DOORS & FRAMES PERMANENTLY UNMOUNT AND DISAPPEAR COMPLETELY!
+function RealARVRVerticalVaultDoors3D({ openRatio, hasOpened }) {
   const leftDoorRef = useRef();
   const rightDoorRef = useRef();
   const emblemRef = useRef();
 
   useFrame((_, delta) => {
-    const targetLeft = -3.2 - openRatio * 14.0;
-    const targetRight = 3.2 + openRatio * 14.0;
+    const targetLeft = -10.0 - openRatio * 22.0;
+    const targetRight = 10.0 + openRatio * 22.0;
 
     if (leftDoorRef.current) {
-      leftDoorRef.current.position.x = THREE.MathUtils.lerp(leftDoorRef.current.position.x, targetLeft, delta * 6);
+      leftDoorRef.current.position.x = THREE.MathUtils.lerp(leftDoorRef.current.position.x, targetLeft, delta * 5);
     }
     if (rightDoorRef.current) {
-      rightDoorRef.current.position.x = THREE.MathUtils.lerp(rightDoorRef.current.position.x, targetRight, delta * 6);
+      rightDoorRef.current.position.x = THREE.MathUtils.lerp(rightDoorRef.current.position.x, targetRight, delta * 5);
     }
     if (emblemRef.current) {
       emblemRef.current.rotation.z += delta * 0.8;
     }
   });
 
-  if (openRatio >= 0.85) {
+  // PERMANENT UNMOUNT ONCE OPENED! DOORS WILL NEVER REAPPEAR UPON ZOOMING IN OR OUT!
+  if (hasOpened || openRatio >= 0.8) {
     return null;
   }
 
   return (
-    <group position={[0, 0, 18]}>
-      <mesh position={[0, 4.0, -0.5]}>
-        <planeGeometry args={[45, 30]} />
+    <group position={[0, 5.0, 18.5]}>
+      {/* Dark Backdrop Curtain obscuring room interior while closed */}
+      <mesh position={[0, 0, -0.5]}>
+        <planeGeometry args={[60, 45]} />
         <meshBasicMaterial color="#020617" transparent opacity={Math.max(0, 1 - openRatio * 2.5)} />
       </mesh>
 
-      <mesh position={[-6.8, 5.0, 0]}>
-        <boxGeometry args={[1.6, 15.0, 1.6]} />
-        <meshStandardMaterial color="#0b1329" metalness={0.9} roughness={0.1} />
-      </mesh>
-      <mesh position={[6.8, 5.0, 0]}>
-        <boxGeometry args={[1.6, 15.0, 1.6]} />
-        <meshStandardMaterial color="#0b1329" metalness={0.9} roughness={0.1} />
-      </mesh>
-
-      <mesh position={[-5.9, 5.0, 0.82]}>
-        <boxGeometry args={[0.1, 14.8, 0.05]} />
-        <meshBasicMaterial color="#00f0ff" />
-      </mesh>
-      <mesh position={[5.9, 5.0, 0.82]}>
-        <boxGeometry args={[0.1, 14.8, 0.05]} />
-        <meshBasicMaterial color="#00f0ff" />
-      </mesh>
-
-      <group ref={leftDoorRef} position={[-3.2, 5.0, 0]}>
+      {/* LEFT MASSIVE VERTICAL DOOR PANEL (Edge-to-edge covering viewport from top to bottom) */}
+      <group ref={leftDoorRef} position={[-10.0, 0, 0]}>
         <mesh>
-          <boxGeometry args={[6.4, 14.8, 0.6]} />
+          <boxGeometry args={[20.0, 35.0, 0.8]} />
           <meshStandardMaterial color="#091126" metalness={0.95} roughness={0.15} />
         </mesh>
-        <mesh position={[0, 0, 0.31]}>
-          <boxGeometry args={[5.8, 14.2, 0.04]} />
+        <mesh position={[0, 0, 0.42]}>
+          <boxGeometry args={[18.5, 33.0, 0.05]} />
           <meshStandardMaterial color="#111d38" metalness={0.8} roughness={0.3} />
         </mesh>
-        <mesh position={[0, 0, 0.34]}>
-          <boxGeometry args={[5.2, 13.5, 0.02]} />
+        <mesh position={[0, 0, 0.46]}>
+          <boxGeometry args={[17.0, 31.0, 0.02]} />
           <meshBasicMaterial color="#00f0ff" wireframe transparent opacity={0.6} />
         </mesh>
-        <mesh position={[2.8, 0, 0.38]}>
-          <cylinderGeometry args={[0.16, 0.16, 4.5, 16]} />
+        <mesh position={[9.2, 0, 0.52]}>
+          <cylinderGeometry args={[0.25, 0.25, 12.0, 16]} />
           <meshStandardMaterial color="#fbbf24" emissive="#d97706" metalness={0.95} />
         </mesh>
       </group>
 
-      <group ref={rightDoorRef} position={[3.2, 5.0, 0]}>
+      {/* RIGHT MASSIVE VERTICAL DOOR PANEL */}
+      <group ref={rightDoorRef} position={[10.0, 0, 0]}>
         <mesh>
-          <boxGeometry args={[6.4, 14.8, 0.6]} />
+          <boxGeometry args={[20.0, 35.0, 0.8]} />
           <meshStandardMaterial color="#091126" metalness={0.95} roughness={0.15} />
         </mesh>
-        <mesh position={[0, 0, 0.31]}>
-          <boxGeometry args={[5.8, 14.2, 0.04]} />
+        <mesh position={[0, 0, 0.42]}>
+          <boxGeometry args={[18.5, 33.0, 0.05]} />
           <meshStandardMaterial color="#111d38" metalness={0.8} roughness={0.3} />
         </mesh>
-        <mesh position={[0, 0, 0.34]}>
-          <boxGeometry args={[5.2, 13.5, 0.02]} />
+        <mesh position={[0, 0, 0.46]}>
+          <boxGeometry args={[17.0, 31.0, 0.02]} />
           <meshBasicMaterial color="#a855f7" wireframe transparent opacity={0.6} />
         </mesh>
-        <mesh position={[-2.8, 0, 0.38]}>
-          <cylinderGeometry args={[0.16, 0.16, 4.5, 16]} />
+        <mesh position={[-9.2, 0, 0.52]}>
+          <cylinderGeometry args={[0.25, 0.25, 12.0, 16]} />
           <meshStandardMaterial color="#fbbf24" emissive="#d97706" metalness={0.95} />
         </mesh>
       </group>
 
-      <group position={[0, 5.0, 0.45]} ref={emblemRef}>
+      {/* Central Rotating ARVR Emblem Core */}
+      <group position={[0, 0, 0.6]} ref={emblemRef}>
         <mesh>
-          <torusGeometry args={[1.4, 0.08, 16, 64]} />
+          <torusGeometry args={[2.5, 0.12, 16, 64]} />
           <meshBasicMaterial color="#00f0ff" />
         </mesh>
         <mesh rotation={[0, 0, Math.PI / 4]}>
-          <torusGeometry args={[1.8, 0.05, 16, 64]} />
+          <torusGeometry args={[3.2, 0.08, 16, 64]} />
           <meshBasicMaterial color="#a855f7" />
         </mesh>
       </group>
@@ -533,8 +556,8 @@ function FrontViewCameraRig({ openRatio, isUserInteracting, isMobile }) {
       const targetZ = (isMobile ? 32.0 : 26.0) - openRatio * (isMobile ? 3.0 : 2.5);
       const targetY = 2.2 + openRatio * (isMobile ? 5.5 : 4.3);
 
-      camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.06);
-      camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.06);
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.05);
+      camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.05);
       camera.lookAt(0, 1.2, 0);
     }
   });
@@ -542,8 +565,7 @@ function FrontViewCameraRig({ openRatio, isUserInteracting, isMobile }) {
   return null;
 }
 
-// 1. FUTURISTIC GLASS CABIN OFFICE ROOM FOR FACULTY DIRECTORATE DESK
-// FEATURES TWO PERSONS (ONE REAL MAN, ONE REAL WOMAN) SEATED FACING TOWARDS EACH OTHER ACROSS A SMALL DISCUSSION TABLE
+// Glass Cabin Office Room for Faculty Directorate
 function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, showLabels, isMobile }) {
   const isHovered = hoveredZone === 'faculty';
 
@@ -554,17 +576,11 @@ function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, show
       onPointerOver={(e) => { e.stopPropagation(); setHoveredZone('faculty'); }}
       onPointerOut={() => setHoveredZone(null)}
     >
-      {/* Illuminated Purple Base Floor */}
       <mesh position={[0, 0.1, 0]}>
         <boxGeometry args={[5.2, 0.2, 4.2]} />
-        <meshStandardMaterial 
-          color={isHovered ? "#a855f7" : "#7e22ce"} 
-          emissive={isHovered ? "#9333ea" : "#581c87"} 
-          roughness={0.2} 
-        />
+        <meshStandardMaterial color={isHovered ? "#a855f7" : "#7e22ce"} emissive={isHovered ? "#9333ea" : "#581c87"} roughness={0.2} />
       </mesh>
 
-      {/* Dark Metallic Corner Support Pillars */}
       {[[-2.55, -2.05], [2.55, -2.05], [-2.55, 2.05], [2.55, 2.05]].map(([x, z], idx) => (
         <mesh key={idx} position={[x, 1.7, z]}>
           <boxGeometry args={[0.1, 3.2, 0.1]} />
@@ -572,7 +588,6 @@ function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, show
         </mesh>
       ))}
 
-      {/* Transparent Physical Glass Enclosure Walls */}
       <mesh position={[0, 1.7, -2.05]}>
         <boxGeometry args={[5.0, 3.2, 0.04]} />
         <meshPhysicalMaterial color="#c084fc" transparent opacity={0.35} roughness={0.1} transmission={0.8} thickness={0.2} />
@@ -590,13 +605,11 @@ function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, show
         <meshPhysicalMaterial color="#a855f7" transparent opacity={0.4} roughness={0.1} />
       </mesh>
 
-      {/* SMALL DISCUSSION TABLE BETWEEN THE TWO FACULTY MEMBERS */}
       <mesh position={[0, 0.55, 0]}>
         <boxGeometry args={[1.6, 0.65, 1.1]} />
         <meshStandardMaterial color="#f8fafc" roughness={0.2} metalness={0.3} />
       </mesh>
 
-      {/* Discussion Laptop & Document Folder on Small Table */}
       <group position={[0, 0.9, 0]}>
         <mesh position={[-0.2, 0, 0]} rotation={[0, 0.3, 0]}>
           <boxGeometry args={[0.42, 0.02, 0.28]} />
@@ -606,26 +619,22 @@ function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, show
           <boxGeometry args={[0.42, 0.24, 0.015]} />
           <meshBasicMaterial color="#38bdf8" />
         </mesh>
-
         <mesh position={[0.3, 0.01, 0.1]} rotation={[0, -0.2, 0]}>
           <boxGeometry args={[0.3, 0.01, 0.4]} />
           <meshStandardMaterial color="#fbbf24" />
         </mesh>
       </group>
 
-      {/* FACULTY MEMBER 1: REAL MAN SEATED ON LEFT FACING RIGHT TOWARDS WOMAN */}
       <group position={[-1.1, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
         <LuxuryFacultyDirectorChair3D position={[0, 0, 0]} color="#4c1d95" />
         <RealisticMaleAvatar3D position={[0, 0, 0]} />
       </group>
 
-      {/* FACULTY MEMBER 2: REAL WOMAN SEATED ON RIGHT FACING LEFT TOWARDS MAN */}
       <group position={[1.1, 0, 0]} rotation={[0, -Math.PI / 2, 0]}>
         <LuxuryFacultyDirectorChair3D position={[0, 0, 0]} color="#831843" />
         <RealisticFemaleAvatar3D position={[0, 0, 0]} />
       </group>
 
-      {/* Floating Gold/Amber Label above Glass Cabin */}
       {showLabels && (
         <Html position={[0, 3.9, 0]} center distanceFactor={isMobile ? 24 : 16}>
           <div 
@@ -647,7 +656,7 @@ function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, show
   );
 }
 
-// 2. Executive Command Desk
+// Executive Command Desk
 function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone, showLabels, isMobile }) {
   const isHovered = hoveredZone === 'executive';
 
@@ -702,7 +711,7 @@ function ExecutiveRoom3D({ onSelect, hoveredZone, setHoveredZone, showLabels, is
   );
 }
 
-// 3. Core Operations Board Room
+// Core Operations Board Room
 function BoardRoom3D({ onSelect, hoveredZone, setHoveredZone, showLabels, isMobile }) {
   const isHovered = hoveredZone === 'board';
 
@@ -757,7 +766,7 @@ function BoardRoom3D({ onSelect, hoveredZone, setHoveredZone, showLabels, isMobi
   );
 }
 
-// 4. Domain Workstation Desk Component
+// Domain Workstation Desk Component
 function DomainWorkstation3D({ id, title, color, position, onSelect, hoveredZone, setHoveredZone, showLabels, isMobile }) {
   const isHovered = hoveredZone === id;
 
@@ -803,7 +812,7 @@ function DomainWorkstation3D({ id, title, color, position, onSelect, hoveredZone
   );
 }
 
-// 5. Department Coordinators Terminal
+// Department Coordinators Terminal
 function DepartmentCoordinators3D({ position = [0, 0.4, -7.5], onSelect, hoveredZone, setHoveredZone, showLabels, isMobile }) {
   const isHovered = hoveredZone === 'coordinator';
 
@@ -853,11 +862,12 @@ export default function Office3DScene({ onSelectZone }) {
   const [hoveredZone, setHoveredZone] = useState(null);
   const [targetRatio, setTargetRatio] = useState(0); // 0 = closed door, 1 = open room
   const [smoothRatio, setSmoothRatio] = useState(0);
+  const [hasOpened, setHasOpened] = useState(false); // Track permanent door unmount
 
   const handleWheel = (e) => {
     if (e.deltaY > 0) {
       setTargetRatio(1.0);
-    } else if (e.deltaY < 0) {
+    } else if (e.deltaY < 0 && !hasOpened) {
       setTargetRatio(0.0);
     }
   };
@@ -867,14 +877,21 @@ export default function Office3DScene({ onSelectZone }) {
     const updateSmoothRatio = () => {
       setSmoothRatio((prev) => {
         const diff = targetRatio - prev;
-        if (Math.abs(diff) < 0.002) return targetRatio;
-        return prev + diff * 0.08;
+        if (Math.abs(diff) < 0.001) return targetRatio;
+        return prev + diff * 0.05;
       });
       animationFrame = requestAnimationFrame(updateSmoothRatio);
     };
     animationFrame = requestAnimationFrame(updateSmoothRatio);
     return () => cancelAnimationFrame(animationFrame);
   }, [targetRatio]);
+
+  // Set permanent opened state once doors cross opening threshold
+  useEffect(() => {
+    if (smoothRatio > 0.4 && !hasOpened) {
+      setHasOpened(true);
+    }
+  }, [smoothRatio, hasOpened]);
 
   const domainDesks = [
     { id: 'unity_head', title: 'TEAM UNITY', color: '#00f0ff', position: [0, 0, 8.0] },
@@ -890,7 +907,7 @@ export default function Office3DScene({ onSelectZone }) {
   ];
 
   const textOpacity = Math.max(0, 1.0 - smoothRatio * 2.2);
-  const showDeskLabels = smoothRatio > 0.55;
+  const showDeskLabels = hasOpened || smoothRatio > 0.55;
 
   return (
     <div 
@@ -898,39 +915,41 @@ export default function Office3DScene({ onSelectZone }) {
       onWheel={handleWheel}
       className="relative w-full h-screen bg-[#020617] overflow-hidden select-none"
     >
-      {/* OVERLAY TEXT ON CLOSED VAULT DOOR */}
-      <div 
-        onClick={() => setTargetRatio(1.0)}
-        className={`absolute inset-0 z-20 flex flex-col items-center justify-center transition-all duration-700 ${
-          smoothRatio > 0.6 ? 'pointer-events-none opacity-0 scale-105' : 'cursor-pointer opacity-100 scale-100'
-        }`}
-        style={{ opacity: textOpacity }}
-      >
-        <div className="text-center px-4 max-w-4xl mx-auto flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel border-cyan-500/40 bg-slate-950/80 mb-3 shadow-[0_0_25px_rgba(0,240,255,0.4)]">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-            <span className="font-mono text-[10px] sm:text-xs text-cyan-300 tracking-[0.2em] uppercase font-bold">
-              SECURE AR/VR HQ VAULT ENTRANCE
-            </span>
-          </div>
+      {/* OVERLAY TEXT ON CLOSED VAULT DOOR (Disappears permanently once opened) */}
+      {!hasOpened && (
+        <div 
+          onClick={() => setTargetRatio(1.0)}
+          className={`absolute inset-0 z-20 flex flex-col items-center justify-center transition-all duration-700 ${
+            smoothRatio > 0.6 ? 'pointer-events-none opacity-0 scale-105' : 'cursor-pointer opacity-100 scale-100'
+          }`}
+          style={{ opacity: textOpacity }}
+        >
+          <div className="text-center px-4 max-w-4xl mx-auto flex flex-col items-center">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel border-cyan-500/40 bg-slate-950/80 mb-3 shadow-[0_0_25px_rgba(0,240,255,0.4)]">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+              <span className="font-mono text-[10px] sm:text-xs text-cyan-300 tracking-[0.2em] uppercase font-bold">
+                SECURE AR/VR HQ VAULT ENTRANCE
+              </span>
+            </div>
 
-          <h1 className="font-orbitron font-black text-3xl sm:text-6xl md:text-7xl lg:text-8xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-amber-300 drop-shadow-[0_0_40px_rgba(0,240,255,0.8)] tracking-tight leading-none mb-4">
-            WELCOME TO ARVR LAB
-          </h1>
+            <h1 className="font-orbitron font-black text-3xl sm:text-6xl md:text-7xl lg:text-8xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-amber-300 drop-shadow-[0_0_40px_rgba(0,240,255,0.8)] tracking-tight leading-none mb-4">
+              WELCOME TO ARVR LAB
+            </h1>
 
-          <div className="mt-2 px-5 py-2.5 rounded-2xl glass-panel border border-cyan-400/50 bg-slate-950/90 shadow-[0_0_30px_rgba(0,240,255,0.3)] animate-bounce flex items-center gap-2">
-            <span className="font-mono text-[11px] sm:text-sm text-cyan-300 font-bold uppercase tracking-wider">
-              Scroll down or tap to open vault doors & enter room ↓
-            </span>
+            <div className="mt-2 px-5 py-2.5 rounded-2xl glass-panel border border-cyan-400/50 bg-slate-950/90 shadow-[0_0_30px_rgba(0,240,255,0.3)] animate-bounce flex items-center gap-2">
+              <span className="font-mono text-[11px] sm:text-sm text-cyan-300 font-bold uppercase tracking-wider">
+                Scroll down or tap to open vault doors & enter room ↓
+              </span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <Canvas camera={{ position: [0, 2.2, isMobile ? 32 : 26], fov: isMobile ? 65 : 48 }}>
         <color attach="background" args={['#020617']} />
         <fog attach="fog" args={['#020617', 15, 60]} />
 
-        <ambientLight intensity={0.85} />
+        <ambientLight intensity={0.9} />
         <directionalLight position={[10, 25, 15]} intensity={2.2} color="#00f0ff" />
         <pointLight position={[-15, 12, -10]} intensity={1.8} color="#a855f7" />
         <pointLight position={[15, 12, -10]} intensity={1.8} color="#00f0ff" />
@@ -949,12 +968,17 @@ export default function Office3DScene({ onSelectZone }) {
 
         <gridHelper args={[45, 45, '#00f0ff', '#1e293b']} position={[0, 0, 0]} />
 
-        <RealARVRVerticalVaultDoors3D openRatio={smoothRatio} />
+        {/* MASSIVE TALL VERTICAL ARVR VAULT DOOR (PERMANENTLY DISAPPEARS UPON OPENING!) */}
+        <RealARVRVerticalVaultDoors3D openRatio={smoothRatio} hasOpened={hasOpened} />
 
+        {/* Sub-Floor Solar System Cosmic Structure */}
         <SubFloorSolarSystem3D position={[0, -5.5, 0]} />
 
-        <group visible={smoothRatio > 0.05}>
-          {/* Faculty Directorate Glass Cabin with 2 Seated Avatars (Man & Woman facing each other across a small table) */}
+        {/* 3D LABORATORY ROOM ENCLOSURE WALLS & GIANT BACK DISPLAY ("ARVR Team") */}
+        <LaboratoryRoomEnclosure3D />
+
+        {/* Inside Room Workstations & Avatars */}
+        <group visible={hasOpened || smoothRatio > 0.05}>
           <GlassCabinFacultyOffice3D 
             onSelect={onSelectZone} 
             hoveredZone={hoveredZone} 
