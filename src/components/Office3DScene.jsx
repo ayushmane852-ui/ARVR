@@ -144,7 +144,65 @@ function SubFloorSolarSystem3D({ position = [0, -5.5, 0] }) {
   );
 }
 
-// Realistic Ergonomic Office Chair
+// Luxury High-Back Faculty Director Leather Chair
+function LuxuryFacultyDirectorChair3D({ position, color = "#581c87", rotation = [0, 0, 0] }) {
+  return (
+    <group position={position} rotation={rotation}>
+      {/* 5-Star Chrome Base */}
+      {[0, 72, 144, 216, 288].map((deg, i) => {
+        const rad = (deg * Math.PI) / 180;
+        return (
+          <group key={i} rotation={[0, rad, 0]}>
+            <mesh position={[0, 0.06, 0.24]}>
+              <boxGeometry args={[0.05, 0.04, 0.32]} />
+              <meshStandardMaterial color="#cbd5e1" metalness={0.95} roughness={0.1} />
+            </mesh>
+            <mesh position={[0, 0.03, 0.38]}>
+              <sphereGeometry args={[0.045, 8, 8]} />
+              <meshStandardMaterial color="#020617" />
+            </mesh>
+          </group>
+        );
+      })}
+
+      {/* Hydraulic Lift Column */}
+      <mesh position={[0, 0.22, 0]}>
+        <cylinderGeometry args={[0.05, 0.06, 0.38, 16]} />
+        <meshStandardMaterial color="#e2e8f0" metalness={0.95} roughness={0.1} />
+      </mesh>
+
+      {/* Heavy Plush Leather Cushion Seat */}
+      <mesh position={[0, 0.44, 0]}>
+        <boxGeometry args={[0.62, 0.12, 0.62]} />
+        <meshStandardMaterial color={color} roughness={0.3} />
+      </mesh>
+
+      {/* High Ergonomic Contoured Backrest with Headrest */}
+      <mesh position={[0, 0.88, 0.24]} rotation={[-0.1, 0, 0]}>
+        <boxGeometry args={[0.56, 0.88, 0.08]} />
+        <meshStandardMaterial color={color} roughness={0.3} />
+      </mesh>
+
+      {/* Plush Leather Headrest Pillow */}
+      <mesh position={[0, 1.32, 0.22]}>
+        <boxGeometry args={[0.42, 0.22, 0.1]} />
+        <meshStandardMaterial color="#3b0764" roughness={0.4} />
+      </mesh>
+
+      {/* Curved Polished Chrome Armrests */}
+      <group position={[-0.32, 0.62, 0]}>
+        <boxGeometry args={[0.05, 0.26, 0.38]} />
+        <meshStandardMaterial color="#cbd5e1" metalness={0.95} roughness={0.1} />
+      </group>
+      <group position={[0.32, 0.62, 0]}>
+        <boxGeometry args={[0.05, 0.26, 0.38]} />
+        <meshStandardMaterial color="#cbd5e1" metalness={0.95} roughness={0.1} />
+      </group>
+    </group>
+  );
+}
+
+// Standard Ergonomic Office Chair
 function RealisticOfficeChair3D({ position, color = "#0284c7", rotation = [0, 0, 0] }) {
   return (
     <group position={position} rotation={rotation}>
@@ -183,20 +241,143 @@ function RealisticOfficeChair3D({ position, color = "#0284c7", rotation = [0, 0,
         <boxGeometry args={[0.42, 0.6, 0.02]} />
         <meshStandardMaterial color={color} transparent opacity={0.8} />
       </mesh>
-
-      <group position={[-0.27, 0.54, 0]}>
-        <boxGeometry args={[0.04, 0.22, 0.32]} />
-        <meshStandardMaterial color="#334155" metalness={0.8} />
-      </group>
-      <group position={[0.27, 0.54, 0]}>
-        <boxGeometry args={[0.04, 0.22, 0.32]} />
-        <meshStandardMaterial color="#334155" metalness={0.8} />
-      </group>
     </group>
   );
 }
 
-// Realistic 3D Human Avatar
+// REALISTIC MALE FACULTY DIRECTOR AVATAR (MALE SUIT & DISCUSSION GESTURE)
+function RealisticMaleAvatar3D({ 
+  position = [0, 0, 0], 
+  rotation = [0, 0, 0]
+}) {
+  return (
+    <group position={position} rotation={rotation}>
+      {/* Torso - Navy Suit Jacket & Tie */}
+      <mesh position={[0, 0.68, 0]}>
+        <boxGeometry args={[0.46, 0.52, 0.26]} />
+        <meshStandardMaterial color="#1e3a8a" roughness={0.3} />
+      </mesh>
+
+      {/* Shirt Collar & Red Tie */}
+      <mesh position={[0, 0.82, -0.13]}>
+        <boxGeometry args={[0.12, 0.22, 0.02]} />
+        <meshStandardMaterial color="#ffffff" />
+      </mesh>
+      <mesh position={[0, 0.76, -0.14]}>
+        <boxGeometry args={[0.05, 0.24, 0.02]} />
+        <meshStandardMaterial color="#b91c1c" />
+      </mesh>
+
+      {/* Neck */}
+      <mesh position={[0, 0.96, 0]}>
+        <cylinderGeometry args={[0.07, 0.08, 0.12, 16]} />
+        <meshStandardMaterial color="#ffdbac" />
+      </mesh>
+
+      {/* Head */}
+      <mesh position={[0, 1.08, 0]}>
+        <sphereGeometry args={[0.16, 24, 24]} />
+        <meshStandardMaterial color="#ffdbac" roughness={0.5} />
+      </mesh>
+
+      {/* Male Short Styled Hair */}
+      <mesh position={[0, 1.14, 0.01]}>
+        <sphereGeometry args={[0.168, 20, 20, 0, Math.PI * 2, 0, Math.PI / 2.1]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.9} />
+      </mesh>
+
+      {/* Seated Legs */}
+      <mesh position={[-0.12, 0.42, -0.16]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.08, 0.07, 0.38, 14]} />
+        <meshStandardMaterial color="#0f172a" />
+      </mesh>
+      <mesh position={[0.12, 0.42, -0.16]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.08, 0.07, 0.38, 14]} />
+        <meshStandardMaterial color="#0f172a" />
+      </mesh>
+
+      {/* Gesturing Arms Forward Towards Table */}
+      <mesh position={[-0.24, 0.6, -0.18]} rotation={[0.6, 0.3, 0]}>
+        <cylinderGeometry args={[0.055, 0.045, 0.38, 12]} />
+        <meshStandardMaterial color="#1e3a8a" />
+      </mesh>
+      <mesh position={[0.24, 0.6, -0.18]} rotation={[0.6, -0.3, 0]}>
+        <cylinderGeometry args={[0.055, 0.045, 0.38, 12]} />
+        <meshStandardMaterial color="#1e3a8a" />
+      </mesh>
+    </group>
+  );
+}
+
+// REALISTIC FEMALE FACULTY DIRECTOR AVATAR (FEMALE BLAZER & DISCUSSION GESTURE)
+function RealisticFemaleAvatar3D({ 
+  position = [0, 0, 0], 
+  rotation = [0, 0, 0]
+}) {
+  return (
+    <group position={position} rotation={rotation}>
+      {/* Torso - Tailored Magenta Blazer */}
+      <mesh position={[0, 0.66, 0]}>
+        <boxGeometry args={[0.4, 0.48, 0.24]} />
+        <meshStandardMaterial color="#9f1239" roughness={0.4} />
+      </mesh>
+
+      {/* White Inner Top */}
+      <mesh position={[0, 0.78, -0.12]}>
+        <boxGeometry args={[0.14, 0.2, 0.02]} />
+        <meshStandardMaterial color="#ffffff" />
+      </mesh>
+
+      {/* Neck */}
+      <mesh position={[0, 0.94, 0]}>
+        <cylinderGeometry args={[0.06, 0.07, 0.12, 16]} />
+        <meshStandardMaterial color="#f1c27d" />
+      </mesh>
+
+      {/* Female Head */}
+      <mesh position={[0, 1.06, 0]}>
+        <sphereGeometry args={[0.15, 24, 24]} />
+        <meshStandardMaterial color="#f1c27d" roughness={0.5} />
+      </mesh>
+
+      {/* Female Shoulder-Length Hair Bob */}
+      <mesh position={[0, 1.08, 0.02]}>
+        <sphereGeometry args={[0.165, 20, 20, 0, Math.PI * 2, 0, Math.PI / 1.8]} />
+        <meshStandardMaterial color="#291d09" roughness={0.7} />
+      </mesh>
+      <mesh position={[-0.14, 0.95, -0.02]}>
+        <boxGeometry args={[0.06, 0.3, 0.14]} />
+        <meshStandardMaterial color="#291d09" roughness={0.7} />
+      </mesh>
+      <mesh position={[0.14, 0.95, -0.02]}>
+        <boxGeometry args={[0.06, 0.3, 0.14]} />
+        <meshStandardMaterial color="#291d09" roughness={0.7} />
+      </mesh>
+
+      {/* Seated Legs */}
+      <mesh position={[-0.11, 0.4, -0.15]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.07, 0.06, 0.35, 14]} />
+        <meshStandardMaterial color="#0f172a" />
+      </mesh>
+      <mesh position={[0.11, 0.4, -0.15]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.07, 0.06, 0.35, 14]} />
+        <meshStandardMaterial color="#0f172a" />
+      </mesh>
+
+      {/* Gesturing Arms Forward Towards Table */}
+      <mesh position={[-0.22, 0.58, -0.16]} rotation={[0.6, 0.3, 0]}>
+        <cylinderGeometry args={[0.05, 0.04, 0.36, 12]} />
+        <meshStandardMaterial color="#9f1239" />
+      </mesh>
+      <mesh position={[0.22, 0.58, -0.16]} rotation={[0.6, -0.3, 0]}>
+        <cylinderGeometry args={[0.05, 0.04, 0.36, 12]} />
+        <meshStandardMaterial color="#9f1239" />
+      </mesh>
+    </group>
+  );
+}
+
+// Standard Seated Avatar
 function RealisticSeatedAvatar3D({ 
   position = [0, 0, 0], 
   rotation = [0, Math.PI, 0], 
@@ -229,14 +410,6 @@ function RealisticSeatedAvatar3D({
       </mesh>
       <mesh position={[0.11, 0.4, -0.15]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.07, 0.06, 0.35, 12]} />
-        <meshStandardMaterial color={pantsColor} />
-      </mesh>
-      <mesh position={[-0.11, 0.18, -0.32]}>
-        <cylinderGeometry args={[0.06, 0.05, 0.35, 12]} />
-        <meshStandardMaterial color={pantsColor} />
-      </mesh>
-      <mesh position={[0.11, 0.18, -0.32]}>
-        <cylinderGeometry args={[0.06, 0.05, 0.35, 12]} />
         <meshStandardMaterial color={pantsColor} />
       </mesh>
       <mesh position={[-0.23, 0.58, -0.16]} rotation={[0.5, 0.2, 0]}>
@@ -369,7 +542,8 @@ function FrontViewCameraRig({ openRatio, isUserInteracting, isMobile }) {
   return null;
 }
 
-// 1. FUTURISTIC GLASS CABIN OFFICE ROOM FOR FACULTY DIRECTORATE DESK (MATCHING USER IMAGE)
+// 1. FUTURISTIC GLASS CABIN OFFICE ROOM FOR FACULTY DIRECTORATE DESK
+// FEATURES TWO PERSONS (ONE REAL MAN, ONE REAL WOMAN) SEATED FACING TOWARDS EACH OTHER ACROSS A SMALL DISCUSSION TABLE
 function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, showLabels, isMobile }) {
   const isHovered = hoveredZone === 'faculty';
 
@@ -390,7 +564,7 @@ function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, show
         />
       </mesh>
 
-      {/* Dark Metallic Corner Pillars */}
+      {/* Dark Metallic Corner Support Pillars */}
       {[[-2.55, -2.05], [2.55, -2.05], [-2.55, 2.05], [2.55, 2.05]].map(([x, z], idx) => (
         <mesh key={idx} position={[x, 1.7, z]}>
           <boxGeometry args={[0.1, 3.2, 0.1]} />
@@ -398,60 +572,58 @@ function GlassCabinFacultyOffice3D({ onSelect, hoveredZone, setHoveredZone, show
         </mesh>
       ))}
 
-      {/* Transparent Glass Walls */}
-      {/* Back Glass Wall */}
+      {/* Transparent Physical Glass Enclosure Walls */}
       <mesh position={[0, 1.7, -2.05]}>
         <boxGeometry args={[5.0, 3.2, 0.04]} />
-        <meshPhysicalMaterial 
-          color="#c084fc" 
-          transparent 
-          opacity={0.35} 
-          roughness={0.1} 
-          transmission={0.8} 
-          thickness={0.2} 
-        />
+        <meshPhysicalMaterial color="#c084fc" transparent opacity={0.35} roughness={0.1} transmission={0.8} thickness={0.2} />
       </mesh>
-      {/* Left Glass Wall */}
       <mesh position={[-2.55, 1.7, 0]}>
         <boxGeometry args={[0.04, 3.2, 4.0]} />
         <meshPhysicalMaterial color="#c084fc" transparent opacity={0.35} roughness={0.1} transmission={0.8} thickness={0.2} />
       </mesh>
-      {/* Right Glass Wall */}
       <mesh position={[2.55, 1.7, 0]}>
         <boxGeometry args={[0.04, 3.2, 4.0]} />
         <meshPhysicalMaterial color="#c084fc" transparent opacity={0.35} roughness={0.1} transmission={0.8} thickness={0.2} />
       </mesh>
-      {/* Glass Ceiling Roof */}
       <mesh position={[0, 3.3, 0]}>
         <boxGeometry args={[5.2, 0.05, 4.2]} />
         <meshPhysicalMaterial color="#a855f7" transparent opacity={0.4} roughness={0.1} />
       </mesh>
 
-      {/* Sleek Executive Desk */}
-      <mesh position={[0, 0.6, -0.2]}>
-        <boxGeometry args={[2.4, 0.7, 0.9]} />
-        <meshStandardMaterial color="#e2e8f0" roughness={0.3} metalness={0.2} />
+      {/* SMALL DISCUSSION TABLE BETWEEN THE TWO FACULTY MEMBERS */}
+      <mesh position={[0, 0.55, 0]}>
+        <boxGeometry args={[1.6, 0.65, 1.1]} />
+        <meshStandardMaterial color="#f8fafc" roughness={0.2} metalness={0.3} />
       </mesh>
 
-      {/* Desktop Computer Monitor */}
-      <group position={[0, 1.15, -0.2]}>
-        <mesh>
-          <boxGeometry args={[0.75, 0.45, 0.04]} />
-          <meshBasicMaterial color="#0f172a" />
+      {/* Discussion Laptop & Document Folder on Small Table */}
+      <group position={[0, 0.9, 0]}>
+        <mesh position={[-0.2, 0, 0]} rotation={[0, 0.3, 0]}>
+          <boxGeometry args={[0.42, 0.02, 0.28]} />
+          <meshStandardMaterial color="#64748b" metalness={0.9} />
         </mesh>
-        <mesh position={[0, -0.26, 0]}>
-          <cylinderGeometry args={[0.04, 0.08, 0.15]} />
-          <meshStandardMaterial color="#475569" />
+        <mesh position={[-0.2, 0.12, -0.1]} rotation={[-0.4, 0.3, 0]}>
+          <boxGeometry args={[0.42, 0.24, 0.015]} />
+          <meshBasicMaterial color="#38bdf8" />
+        </mesh>
+
+        <mesh position={[0.3, 0.01, 0.1]} rotation={[0, -0.2, 0]}>
+          <boxGeometry args={[0.3, 0.01, 0.4]} />
+          <meshStandardMaterial color="#fbbf24" />
         </mesh>
       </group>
 
-      {/* Executive HOD Director Chair & Avatar (Behind Desk) */}
-      <RealisticOfficeChair3D position={[0, 0, -0.85]} color="#7e22ce" rotation={[0, 0, 0]} />
-      <RealisticSeatedAvatar3D position={[0, 0, -0.85]} shirtColor="#1e3a8a" hairColor="#0f172a" rotation={[0, 0, 0]} />
+      {/* FACULTY MEMBER 1: REAL MAN SEATED ON LEFT FACING RIGHT TOWARDS WOMAN */}
+      <group position={[-1.1, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
+        <LuxuryFacultyDirectorChair3D position={[0, 0, 0]} color="#4c1d95" />
+        <RealisticMaleAvatar3D position={[0, 0, 0]} />
+      </group>
 
-      {/* Visitor / Coordinator Chair & Avatar (Facing Desk) */}
-      <RealisticOfficeChair3D position={[-0.8, 0, 0.65]} color="#be185d" rotation={[0, Math.PI, 0]} />
-      <RealisticSeatedAvatar3D position={[-0.8, 0, 0.65]} shirtColor="#be185d" hairColor="#0f172a" rotation={[0, Math.PI, 0]} />
+      {/* FACULTY MEMBER 2: REAL WOMAN SEATED ON RIGHT FACING LEFT TOWARDS MAN */}
+      <group position={[1.1, 0, 0]} rotation={[0, -Math.PI / 2, 0]}>
+        <LuxuryFacultyDirectorChair3D position={[0, 0, 0]} color="#831843" />
+        <RealisticFemaleAvatar3D position={[0, 0, 0]} />
+      </group>
 
       {/* Floating Gold/Amber Label above Glass Cabin */}
       {showLabels && (
@@ -682,7 +854,6 @@ export default function Office3DScene({ onSelectZone }) {
   const [targetRatio, setTargetRatio] = useState(0); // 0 = closed door, 1 = open room
   const [smoothRatio, setSmoothRatio] = useState(0);
 
-  // Smooth Wheel / Touch Handler inside 100vh window
   const handleWheel = (e) => {
     if (e.deltaY > 0) {
       setTargetRatio(1.0);
@@ -691,14 +862,13 @@ export default function Office3DScene({ onSelectZone }) {
     }
   };
 
-  // Ultra-Smooth Lerp Animation for Door Opening & Camera Glide
   useEffect(() => {
     let animationFrame;
     const updateSmoothRatio = () => {
       setSmoothRatio((prev) => {
         const diff = targetRatio - prev;
         if (Math.abs(diff) < 0.002) return targetRatio;
-        return prev + diff * 0.08; // Smooth exponential easing
+        return prev + diff * 0.08;
       });
       animationFrame = requestAnimationFrame(updateSmoothRatio);
     };
@@ -706,9 +876,6 @@ export default function Office3DScene({ onSelectZone }) {
     return () => cancelAnimationFrame(animationFrame);
   }, [targetRatio]);
 
-  // SWAPPED WORKSTATION LOCATIONS:
-  // TEAM UNITY IS NOW AT CENTER FRONT [0, 0, 8.0]
-  // CONTENT & CREATIVITY TEAM IS NOW AT LEFT FRONT [-10.5, 0, 6.5]
   const domainDesks = [
     { id: 'unity_head', title: 'TEAM UNITY', color: '#00f0ff', position: [0, 0, 8.0] },
     { id: 'content_creativity_head', title: 'CONTENT & CREATIVITY TEAM', color: '#f59e0b', position: [-10.5, 0, 6.5] },
@@ -769,7 +936,6 @@ export default function Office3DScene({ onSelectZone }) {
         <pointLight position={[15, 12, -10]} intensity={1.8} color="#00f0ff" />
         <pointLight position={[0, 10, 0]} intensity={2.8} color="#fbbf24" />
 
-        {/* RESTRICTED ZOOM IN LIMIT: minDistance={16} (prevents extreme zoom in) */}
         <OrbitControls 
           ref={orbitRef}
           enableDamping 
@@ -783,15 +949,12 @@ export default function Office3DScene({ onSelectZone }) {
 
         <gridHelper args={[45, 45, '#00f0ff', '#1e293b']} position={[0, 0, 0]} />
 
-        {/* Real ARVR Vertical Vault Doors (COMPLETELY DISAPPEARS WHEN INSIDE ROOM!) */}
         <RealARVRVerticalVaultDoors3D openRatio={smoothRatio} />
 
-        {/* Sub-Floor Solar System Cosmic Structure */}
         <SubFloorSolarSystem3D position={[0, -5.5, 0]} />
 
-        {/* Inside Room Workstations & Avatars */}
         <group visible={smoothRatio > 0.05}>
-          {/* Faculty Directorate Desk: Futuristic Glass Cabin Office Room (Matching User Image) */}
+          {/* Faculty Directorate Glass Cabin with 2 Seated Avatars (Man & Woman facing each other across a small table) */}
           <GlassCabinFacultyOffice3D 
             onSelect={onSelectZone} 
             hoveredZone={hoveredZone} 
