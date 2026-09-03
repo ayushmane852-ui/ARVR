@@ -633,11 +633,11 @@ export default function Team() {
         {/* 3D INTERACTIVE ARVR OFFICE SCENE VIEW */}
         {viewMode === '3D' && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="mb-16"
+            className="w-full mb-12"
           >
             <Office3DScene onSelectZone={handleSelect3DZone} />
           </motion.div>
