@@ -606,22 +606,22 @@ function RealARVRVerticalVaultDoors3D({ openRatio, hasOpened }) {
   );
 }
 
-// Camera Rig Animation - Smooth Zoom & Full Door View
+// Camera Rig Animation - Smooth Zoom & Center Room Alignment
 function FrontViewCameraRig({ openRatio, isUserInteracting, isMobile }) {
   useFrame(({ camera }) => {
-    if (openRatio < 0.95 && !isUserInteracting) {
+    if (!isUserInteracting) {
       const startZ = isMobile ? 48.0 : 42.0;
-      const openZ = isMobile ? 32.0 : 26.0;
+      const openZ = isMobile ? 34.0 : 28.0;
 
       const startY = 4.5;
-      const openY = 2.2;
+      const openY = 5.0;
 
       const targetZ = THREE.MathUtils.lerp(startZ, openZ, openRatio);
       const targetY = THREE.MathUtils.lerp(startY, openY, openRatio);
 
       camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.06);
       camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.06);
-      camera.lookAt(0, THREE.MathUtils.lerp(4.5, 1.2, openRatio), 0);
+      camera.lookAt(0, THREE.MathUtils.lerp(4.5, 5.0, openRatio), 0);
     }
   });
 
@@ -1040,6 +1040,7 @@ export default function Office3DScene({ onSelectZone }) {
           dampingFactor={0.05} 
           minDistance={16} 
           maxDistance={50}
+          target={[0, 5.0, 0]}
           maxPolarAngle={Math.PI / 2 - 0.02}
         />
 
