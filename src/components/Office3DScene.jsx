@@ -606,10 +606,10 @@ function RealARVRVerticalVaultDoors3D({ openRatio, hasOpened }) {
   );
 }
 
-// Camera Rig Animation - Smooth Zoom & Center Room Alignment
-function FrontViewCameraRig({ openRatio, isUserInteracting, isMobile }) {
+// Camera Rig Animation - Smooth Door Transition (Stops after opening to allow free OrbitControls zooming)
+function FrontViewCameraRig({ openRatio, hasOpened, isUserInteracting, isMobile }) {
   useFrame(({ camera }) => {
-    if (!isUserInteracting) {
+    if (!hasOpened && openRatio < 0.98 && !isUserInteracting) {
       const startZ = isMobile ? 48.0 : 42.0;
       const openZ = isMobile ? 34.0 : 28.0;
 
@@ -1044,7 +1044,7 @@ export default function Office3DScene({ onSelectZone }) {
           maxPolarAngle={Math.PI / 2 - 0.02}
         />
 
-        <FrontViewCameraRig openRatio={smoothRatio} isUserInteracting={false} isMobile={isMobile} />
+        <FrontViewCameraRig openRatio={smoothRatio} hasOpened={hasOpened} isUserInteracting={false} isMobile={isMobile} />
 
         <gridHelper args={[45, 45, '#00f0ff', '#1e293b']} position={[0, 0, 0]} />
 
