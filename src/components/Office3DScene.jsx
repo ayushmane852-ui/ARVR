@@ -204,7 +204,7 @@ function LaboratoryRoomEnclosure3D({ showScreenText }) {
         {showScreenText && (
           <Html position={[0, 0, 0.15]} transform center distanceFactor={14}>
             <div className="flex flex-col items-center justify-center p-6 text-center select-none w-[800px]">
-              {/* Small ARVR Logo on screen above text */}
+              {/* Enlarged ARVR Logo on screen above text */}
               <img
                 src="/Images/arvr logo.png"
                 onError={(e) => {
@@ -213,7 +213,7 @@ function LaboratoryRoomEnclosure3D({ showScreenText }) {
                   }
                 }}
                 alt="ARVR Logo"
-                className="w-20 h-20 sm:w-24 sm:h-24 mb-2 object-contain filter drop-shadow-[0_0_25px_rgba(0,240,255,0.85)] animate-pulse"
+                className="w-36 h-36 sm:w-44 sm:h-44 mb-3 object-contain filter drop-shadow-[0_0_35px_rgba(0,240,255,0.9)] animate-pulse"
               />
 
               {/* ARVR Team Title */}
