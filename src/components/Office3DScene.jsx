@@ -503,10 +503,10 @@ function RealARVRVerticalVaultDoors3D({ openRatio, hasOpened }) {
     const targetRight = 8.2 + openRatio * 18.0;
 
     if (leftDoorRef.current) {
-      leftDoorRef.current.position.x = THREE.MathUtils.lerp(leftDoorRef.current.position.x, targetLeft, delta * 5);
+      leftDoorRef.current.position.x = THREE.MathUtils.lerp(leftDoorRef.current.position.x, targetLeft, delta * 12);
     }
     if (rightDoorRef.current) {
-      rightDoorRef.current.position.x = THREE.MathUtils.lerp(rightDoorRef.current.position.x, targetRight, delta * 5);
+      rightDoorRef.current.position.x = THREE.MathUtils.lerp(rightDoorRef.current.position.x, targetRight, delta * 12);
     }
     if (emblemRef.current) {
       emblemRef.current.rotation.z += delta * 0.8;
@@ -619,8 +619,8 @@ function FrontViewCameraRig({ openRatio, hasOpened, isUserInteracting, isMobile 
       const targetZ = THREE.MathUtils.lerp(startZ, openZ, openRatio);
       const targetY = THREE.MathUtils.lerp(startY, openY, openRatio);
 
-      camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.06);
-      camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.06);
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.16);
+      camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.16);
       camera.lookAt(0, THREE.MathUtils.lerp(4.5, 5.0, openRatio), 0);
     }
   });
@@ -957,7 +957,7 @@ export default function Office3DScene({ onSelectZone }) {
       setSmoothRatio((prev) => {
         const diff = targetRatio - prev;
         if (Math.abs(diff) < 0.001) return targetRatio;
-        return prev + diff * 0.035; // Cinematic smooth easing
+        return prev + diff * 0.1; // Fast and smooth transition
       });
       animationFrame = requestAnimationFrame(updateSmoothRatio);
     };
