@@ -554,7 +554,7 @@ export default function Team() {
   const fullDomainTeamList = viewingTeamForDomain ? [
     {
       id: viewingTeamForDomain.id,
-      role: `${viewingTeamForDomain.role} (Lead)`,
+      role: viewingTeamForDomain.role,
       name: viewingTeamForDomain.name,
       image: viewingTeamForDomain.image,
       fallbackImages: viewingTeamForDomain.fallbackImages,
@@ -896,13 +896,13 @@ export default function Team() {
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[70vh] overflow-y-auto pr-2">
+              <div className="flex flex-wrap justify-center items-center gap-6 max-h-[70vh] overflow-y-auto p-2">
                 {selectedDeskGroup.members.map((member) => (
                   <motion.div
                     key={member.id}
                     whileHover={{ scale: 1.03 }}
                     onClick={() => setSelectedMember(member)}
-                    className="glass-panel p-4 rounded-2xl border border-cyan-500/30 hover:border-cyan-400 bg-slate-950/70 hover:bg-cyan-500/10 transition-all cursor-pointer flex flex-col items-center group text-center"
+                    className="glass-panel p-4 rounded-2xl border border-cyan-500/30 hover:border-cyan-400 bg-slate-950/70 hover:bg-cyan-500/10 transition-all cursor-pointer flex flex-col items-center group text-center w-full sm:w-60"
                   >
                     <div className={`w-44 h-44 sm:w-48 sm:h-48 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color || selectedDeskGroup.color} shadow-xl mb-3`}>
                       <div className="w-full h-full rounded-[14px] overflow-hidden bg-slate-950 relative">
@@ -1025,18 +1025,18 @@ export default function Team() {
               </div>
 
               {fullDomainTeamList && fullDomainTeamList.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[65vh] overflow-y-auto pr-2">
+                <div className="flex flex-wrap justify-center items-center gap-6 max-h-[65vh] overflow-y-auto p-2">
                   {fullDomainTeamList.map((member) => (
                     <motion.div
                       key={member.id}
                       onClick={() => setSelectedMember(member)}
-                      className={`glass-panel p-4 rounded-2xl border transition-all cursor-pointer flex flex-col items-center group text-center ${
+                      className={`glass-panel p-4 rounded-2xl border transition-all cursor-pointer flex flex-col items-center group text-center w-full sm:w-60 ${
                         member.isHead 
-                          ? 'border-amber-400/70 bg-amber-500/10 hover:bg-amber-500/20' 
+                          ? 'border-amber-400/70 bg-amber-500/10 hover:bg-amber-500/20 shadow-[0_0_20px_rgba(251,191,36,0.15)]' 
                           : 'border-cyan-500/30 hover:border-cyan-400 bg-slate-950/60 hover:bg-cyan-500/10'
                       }`}
                     >
-                      <div className={`w-36 h-36 sm:w-40 sm:h-40 rounded-2xl overflow-hidden border mb-3 relative ${
+                      <div className={`w-40 h-40 sm:w-44 sm:h-44 rounded-2xl overflow-hidden border mb-3 relative ${
                         member.isHead ? 'border-amber-400' : 'border-cyan-400/40'
                       }`}>
                         <SmartImage 
@@ -1054,11 +1054,6 @@ export default function Team() {
                         <h4 className="font-orbitron font-bold text-base sm:text-lg text-white group-hover:text-cyan-300 transition-colors">
                           {member.role}
                         </h4>
-                        {member.isHead && (
-                          <span className="inline-block mt-1 px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] font-bold border border-amber-400/40 uppercase">
-                            DOMAIN LEAD
-                          </span>
-                        )}
                       </div>
                     </motion.div>
                   ))}
