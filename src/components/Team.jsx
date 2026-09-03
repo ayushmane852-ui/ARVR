@@ -196,13 +196,14 @@ export default function Team() {
     },
   ];
 
-  // 4. Domain Leadership
+  // 4. Domain Leadership & Previous Domain Section Titles
   const domainMembers = [
     {
       id: 'unity_head',
+      domainTitle: 'Team Unity',
       role: 'Unity Head',
       category: 'domain',
-      deskName: 'UNITY SPATIAL ENGINE WORKBENCH',
+      deskName: 'TEAM UNITY WORKBENCH',
       image: '/Images/Team/Unity/Unity Head.jpeg',
       tag: 'UNITY LEAD',
       status: 'UNITY_ENGINE',
@@ -213,20 +214,21 @@ export default function Team() {
       rank: '07 // UNITY_HEAD',
       icon: Cpu,
       subTeam: [
-        { id: 'unity_team_1', role: 'Team Unity', image: '/Images/Team/Unity/Team Unity.jpeg' },
-        { id: 'unity_team_2', role: 'Team Unity', image: '/Images/Team/Unity/Team Unity (2).jpeg' },
-        { id: 'unity_team_3', role: 'Team Unity', image: '/Images/Team/Unity/Team Unity (3).jpeg' },
-        { id: 'unity_team_4', role: 'Team Unity', image: '/Images/Team/Unity/Team Unity (4).jpeg' },
-        { id: 'unity_team_5', role: 'Team Unity', image: '/Images/Team/Unity/Team Unity (5).jpeg' },
-        { id: 'unity_team_6', role: 'Team Unity', image: '/Images/Team/Unity/Team Unity (6).jpeg' },
-        { id: 'unity_team_7', role: 'Team Unity', image: '/Images/Team/Unity/Team Unity (7).jpeg' },
+        { id: 'unity_team_1', role: 'Team Unity Member', image: '/Images/Team/Unity/Team Unity.jpeg' },
+        { id: 'unity_team_2', role: 'Team Unity Member', image: '/Images/Team/Unity/Team Unity (2).jpeg' },
+        { id: 'unity_team_3', role: 'Team Unity Member', image: '/Images/Team/Unity/Team Unity (3).jpeg' },
+        { id: 'unity_team_4', role: 'Team Unity Member', image: '/Images/Team/Unity/Team Unity (4).jpeg' },
+        { id: 'unity_team_5', role: 'Team Unity Member', image: '/Images/Team/Unity/Team Unity (5).jpeg' },
+        { id: 'unity_team_6', role: 'Team Unity Member', image: '/Images/Team/Unity/Team Unity (6).jpeg' },
+        { id: 'unity_team_7', role: 'Team Unity Member', image: '/Images/Team/Unity/Team Unity (7).jpeg' },
       ]
     },
     {
       id: 'technical_head',
+      domainTitle: 'Technical Team',
       role: 'Technical Head',
       category: 'domain',
-      deskName: 'SPATIAL ARCHITECTURE WORKBENCH',
+      deskName: 'TECHNICAL TEAM WORKBENCH',
       image: '/Images/Team/technical/Technical head.jpeg',
       tag: 'TECHNICAL LEAD',
       status: 'TECH_ARCHITECTURE',
@@ -243,9 +245,10 @@ export default function Team() {
     },
     {
       id: 'content_creativity_head',
+      domainTitle: 'Content & Creativity Team',
       role: 'Content & Creativity Head',
       category: 'domain',
-      deskName: 'CREATIVE DIRECTION WORKBENCH',
+      deskName: 'CONTENT & CREATIVITY WORKBENCH',
       image: '/Images/Team/content & Creativity/Content and Creativity head.jpeg',
       tag: 'CREATIVE LEAD',
       status: 'CREATIVE_DIRECTION',
@@ -259,9 +262,10 @@ export default function Team() {
     },
     {
       id: 'doc_head',
+      domainTitle: 'Documentation Team',
       role: 'Documentation Head',
       category: 'domain',
-      deskName: 'RESEARCH & DOCUMENTATION CONSOLE',
+      deskName: 'DOCUMENTATION WORKBENCH',
       image: '/Images/Team/Documentation/Documentation Head.jpeg',
       tag: 'DOCUMENTATION HEAD',
       status: 'RESEARCH_DOCS',
@@ -279,9 +283,10 @@ export default function Team() {
     },
     {
       id: 'media_head',
+      domainTitle: 'Media Team',
       role: 'Media Head',
       category: 'domain',
-      deskName: 'MEDIA & PUBLIC RELATIONS WORKBENCH',
+      deskName: 'MEDIA TEAM WORKBENCH',
       image: '/Images/Team/Media/Media head.jpeg',
       tag: 'MEDIA & PR HEAD',
       status: 'PUBLIC_RELATIONS',
@@ -297,9 +302,10 @@ export default function Team() {
     },
     {
       id: 'design_head',
+      domainTitle: 'Design Team',
       role: 'Design Head',
       category: 'domain',
-      deskName: 'UI/UX & SPATIAL DESIGN WORKBENCH',
+      deskName: 'DESIGN TEAM WORKBENCH',
       image: '/Images/Team/Design/Design head.jpeg',
       tag: 'DESIGN HEAD',
       status: 'CREATIVE_DESIGN',
@@ -315,9 +321,10 @@ export default function Team() {
     },
     {
       id: 'logistic_head',
+      domainTitle: 'Logistics Team',
       role: 'Logistic Head',
       category: 'domain',
-      deskName: 'SPATIAL LOGISTICS WORKBENCH',
+      deskName: 'LOGISTICS TEAM WORKBENCH',
       image: '/Images/Team/Logistic/Logistic Head.jpeg',
       tag: 'LOGISTICS HEAD',
       status: 'OPERATIONS_SUPPORT',
@@ -333,11 +340,12 @@ export default function Team() {
     },
     {
       id: 'research_head',
+      domainTitle: 'Research Team',
       role: 'Research Head',
       category: 'domain',
-      deskName: 'R&D SPATIAL COMPUTING LAB WORKBENCH',
+      deskName: 'RESEARCH TEAM WORKBENCH',
       image: '/Images/Team/Research Head/Research Head.jpeg',
-      tag: 'RESEARCH & R&D HEAD',
+      tag: 'RESEARCH HEAD',
       status: 'SPATIAL_RESEARCH',
       color: 'from-cyan-400 to-blue-600',
       glowColor: 'rgba(6, 182, 212, 0.35)',
@@ -351,9 +359,10 @@ export default function Team() {
     },
     {
       id: 'event_head',
+      domainTitle: 'Event Management Team',
       role: 'Event Head',
       category: 'domain',
-      deskName: 'EVENT MANAGEMENT & STAGING WORKBENCH',
+      deskName: 'EVENT MANAGEMENT WORKBENCH',
       image: '/Images/Team/Event Heads/Event Head.jpeg',
       tag: 'EVENT HEAD',
       status: 'EVENTS_COMMAND',
@@ -374,7 +383,7 @@ export default function Team() {
   const coordinatorMembers = [
     {
       id: 'coord_biotech',
-      role: 'BioTechnology',
+      role: 'BioTechnology Coordinator',
       category: 'coordinator',
       deskName: 'DEPARTMENT COORDINATORS TERMINAL',
       image: '/Images/Team/Department Co-ordinators/BioTechnology.jpeg',
@@ -389,7 +398,7 @@ export default function Team() {
     },
     {
       id: 'coord_civil',
-      role: 'Civil Engineering',
+      role: 'Civil Engineering Coordinator',
       category: 'coordinator',
       deskName: 'DEPARTMENT COORDINATORS TERMINAL',
       image: '/Images/Team/Department Co-ordinators/Civil Engineering.jpeg',
@@ -404,7 +413,7 @@ export default function Team() {
     },
     {
       id: 'coord_csbs',
-      role: 'Computer Science & Business System',
+      role: 'CSBS Department Coordinator',
       category: 'coordinator',
       deskName: 'DEPARTMENT COORDINATORS TERMINAL',
       image: '/Images/Team/Department Co-ordinators/Computer Science & Business System.jpeg',
@@ -419,7 +428,7 @@ export default function Team() {
     },
     {
       id: 'coord_cse',
-      role: 'Computer Science & Engineering',
+      role: 'CSE Department Coordinator',
       category: 'coordinator',
       deskName: 'DEPARTMENT COORDINATORS TERMINAL',
       image: '/Images/Team/Department Co-ordinators/Computer Science & Engineering.jpeg',
@@ -434,7 +443,7 @@ export default function Team() {
     },
     {
       id: 'coord_aiml',
-      role: 'CSE (AIML)',
+      role: 'CSE (AIML) Coordinator',
       category: 'coordinator',
       deskName: 'DEPARTMENT COORDINATORS TERMINAL',
       image: '/Images/Team/Department Co-ordinators/CSE (AIML).jpeg',
@@ -449,7 +458,7 @@ export default function Team() {
     },
     {
       id: 'coord_entc',
-      role: 'Electronics & Telecommunication',
+      role: 'ENTC Department Coordinator',
       category: 'coordinator',
       deskName: 'DEPARTMENT COORDINATORS TERMINAL',
       image: '/Images/Team/Department Co-ordinators/Electronics & Telecommunication Engineering.jpeg',
@@ -465,7 +474,7 @@ export default function Team() {
   ];
 
   // 3D Scene Zone Click Handler
-  const handleSelect3DZone = (zoneKey) => {
+  const handleSelect3DZone = (zoneKey, action) => {
     if (zoneKey === 'faculty') {
       setSelectedDeskGroup({
         title: 'FACULTY DIRECTORATE DESK',
@@ -495,10 +504,13 @@ export default function Team() {
         color: 'from-emerald-400 via-teal-500 to-green-600'
       });
     } else {
-      // Find matching domain member
       const domHead = domainMembers.find((m) => m.id === zoneKey);
       if (domHead) {
-        setSelectedMember(domHead);
+        if (action === 'view_team') {
+          setViewingTeamForDomain(domHead);
+        } else {
+          setViewingTeamForDomain(domHead);
+        }
       }
     }
   };
@@ -537,6 +549,19 @@ export default function Team() {
       />
     );
   };
+
+  // Combine Domain Head + SubTeam into full domain team list for View Team modal
+  const fullDomainTeamList = viewingTeamForDomain ? [
+    {
+      id: viewingTeamForDomain.id,
+      role: `${viewingTeamForDomain.role} (Lead)`,
+      name: viewingTeamForDomain.name,
+      image: viewingTeamForDomain.image,
+      fallbackImages: viewingTeamForDomain.fallbackImages,
+      isHead: true
+    },
+    ...(viewingTeamForDomain.subTeam || [])
+  ] : [];
 
   return (
     <section 
@@ -577,7 +602,7 @@ export default function Team() {
             3D ARVR OFFICE LAB
           </h2>
           <p className="font-space text-slate-300 text-sm sm:text-base max-w-2xl mt-3 font-light leading-relaxed">
-            Explore our 3D ARVR Spatial Office Lab. Interact with the 3D HOD Cabin, Main Panel, Core Operations, and Domain Workstations. Click any 3D room to inspect team members!
+            Explore our 3D ARVR Office Lab. Seated 3D avatars for HOD CSE & Faculty Coordinator at the center desk. Click any 3D domain workstation or "View Team" to inspect team rosters!
           </p>
 
           {/* VIEW MODE TOGGLE BUTTONS */}
@@ -712,7 +737,7 @@ export default function Team() {
               </div>
             </div>
 
-            {/* Domain Leadership Grid */}
+            {/* Domain Leadership Grid with Previous Domain Names */}
             <div className="mb-16">
               <div className="flex items-center justify-center gap-3 mb-6">
                 <Layers size={20} className="text-pink-400" />
@@ -727,23 +752,29 @@ export default function Team() {
                     key={member.id}
                     className="glass-panel rounded-3xl p-6 border border-pink-500/40 hover:border-pink-300 transition-all flex flex-col justify-between"
                   >
-                    <div onClick={() => setSelectedMember(member)} className="cursor-pointer flex flex-col items-center">
+                    <div onClick={() => setViewingTeamForDomain(member)} className="cursor-pointer flex flex-col items-center">
+                      <div className="font-mono text-[10px] text-cyan-400 font-bold uppercase tracking-widest mb-1">
+                        {member.domainTitle}
+                      </div>
                       <div className={`w-48 h-48 sm:w-52 sm:h-52 rounded-2xl p-0.5 bg-gradient-to-tr ${member.color} shadow-lg mb-4`}>
                         <div className="w-full h-full rounded-[14px] overflow-hidden bg-slate-950">
                           <img src={member.image} alt={member.role} className="w-full h-full object-cover" />
                         </div>
                       </div>
-                      <h4 className="font-orbitron font-extrabold text-xl text-white hover:text-pink-300 transition-colors">
-                        {member.role}
+                      <h4 className="font-orbitron font-extrabold text-xl text-white hover:text-pink-300 transition-colors text-center">
+                        {member.domainTitle}
                       </h4>
+                      <p className="font-mono text-xs text-cyan-400 font-semibold mt-1">
+                        {member.role}
+                      </p>
                     </div>
                     <div className="pt-4 mt-4 border-t border-cyan-500/15">
                       <button
                         onClick={() => setViewingTeamForDomain(member)}
-                        className="w-full py-2.5 px-4 rounded-xl font-orbitron font-bold text-xs tracking-wider uppercase bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 flex items-center justify-center gap-2 cursor-pointer"
+                        className="w-full py-2.5 px-4 rounded-xl font-orbitron font-bold text-xs tracking-wider uppercase bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 flex items-center justify-center gap-2 cursor-pointer transition-colors"
                       >
                         <Users size={14} />
-                        <span>VIEW TEAM ROSTER</span>
+                        <span>VIEW TEAM ({member.domainTitle})</span>
                       </button>
                     </div>
                   </div>
@@ -755,7 +786,7 @@ export default function Team() {
 
       </div>
 
-      {/* FULL DESK GROUP MODAL (All Photos on Screen) */}
+      {/* FULL DESK GROUP MODAL (Faculty / Executive / Board / Coordinators) */}
       <AnimatePresence>
         {selectedDeskGroup && (
           <motion.div
@@ -882,7 +913,7 @@ export default function Team() {
         )}
       </AnimatePresence>
 
-      {/* DOMAIN SUB-TEAM MODAL ("VIEW TEAM") */}
+      {/* DOMAIN SUB-TEAM MODAL ("VIEW TEAM") - SHOWS ALL DOMAIN MEMBERS (HEAD + SUBTEAM) */}
       <AnimatePresence>
         {viewingTeamForDomain && (
           <motion.div
@@ -898,16 +929,19 @@ export default function Team() {
               exit={{ scale: 0.85, opacity: 0, y: 20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-w-3xl w-full glass-panel border border-cyan-500/40 rounded-3xl p-6 sm:p-8 overflow-hidden shadow-[0_0_80px_rgba(0,240,255,0.25)] flex flex-col cursor-default my-auto"
+              className="relative max-w-4xl w-full glass-panel border border-cyan-500/40 rounded-3xl p-6 sm:p-8 overflow-hidden shadow-[0_0_80px_rgba(0,240,255,0.25)] flex flex-col cursor-default my-auto"
             >
               <div className="flex items-center justify-between border-b border-cyan-500/20 pb-4 mb-6">
                 <div>
                   <span className="font-mono text-[10px] text-cyan-400 tracking-widest uppercase block">
-                    DEPARTMENT WORKBENCH MEMBERS
+                    DOMAIN TEAM ROSTER
                   </span>
                   <h3 className="font-orbitron font-black text-2xl sm:text-3xl text-white text-glow-cyan mt-1">
-                    {viewingTeamForDomain.role.replace(/\s+Head$/i, '')} TEAM
+                    {viewingTeamForDomain.domainTitle}
                   </h3>
+                  <p className="font-space text-xs text-slate-300 mt-1">
+                    Displaying Domain Leadership, Co-Heads, and Spatial Engineers
+                  </p>
                 </div>
 
                 <button
@@ -919,29 +953,41 @@ export default function Team() {
                 </button>
               </div>
 
-              {viewingTeamForDomain.subTeam && viewingTeamForDomain.subTeam.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {viewingTeamForDomain.subTeam.map((member) => (
+              {fullDomainTeamList && fullDomainTeamList.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[65vh] overflow-y-auto pr-2">
+                  {fullDomainTeamList.map((member) => (
                     <motion.div
                       key={member.id}
                       onClick={() => setSelectedMember(member)}
-                      className="glass-panel p-4 rounded-2xl border border-cyan-500/30 hover:border-cyan-400 bg-slate-950/60 hover:bg-cyan-500/10 transition-all cursor-pointer flex items-center gap-4 group"
+                      className={`glass-panel p-4 rounded-2xl border transition-all cursor-pointer flex flex-col items-center group text-center ${
+                        member.isHead 
+                          ? 'border-amber-400/70 bg-amber-500/10 hover:bg-amber-500/20' 
+                          : 'border-cyan-500/30 hover:border-cyan-400 bg-slate-950/60 hover:bg-cyan-500/10'
+                      }`}
                     >
-                      <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border border-cyan-400/40 flex-shrink-0 relative">
-                        <img 
+                      <div className={`w-36 h-36 sm:w-40 sm:h-40 rounded-2xl overflow-hidden border mb-3 relative ${
+                        member.isHead ? 'border-amber-400' : 'border-cyan-400/40'
+                      }`}>
+                        <SmartImage 
                           src={member.image} 
+                          fallbackSrcs={member.fallbackImages}
                           alt={member.role} 
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
                         />
                         <div className="absolute inset-0 bg-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                          <Maximize2 size={16} className="text-white" />
+                          <Maximize2 size={20} className="text-white" />
                         </div>
                       </div>
 
-                      <div className="text-left flex-grow">
+                      <div className="text-center">
                         <h4 className="font-orbitron font-bold text-base sm:text-lg text-white group-hover:text-cyan-300 transition-colors">
                           {member.role}
                         </h4>
+                        {member.isHead && (
+                          <span className="inline-block mt-1 px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] font-bold border border-amber-400/40 uppercase">
+                            DOMAIN LEAD
+                          </span>
+                        )}
                       </div>
                     </motion.div>
                   ))}
@@ -952,7 +998,7 @@ export default function Team() {
                     <UserPlus size={28} />
                   </div>
                   <h4 className="font-orbitron font-bold text-lg text-white">
-                    RECRUITMENT ACTIVE FOR {viewingTeamForDomain.role.toUpperCase()}
+                    RECRUITMENT ACTIVE FOR {viewingTeamForDomain.domainTitle.toUpperCase()}
                   </h4>
                   <p className="font-space text-slate-400 text-xs sm:text-sm max-w-md">
                     Team members for this department will be displayed here soon. Stay tuned as new spatial engineers join the club!
