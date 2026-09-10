@@ -18,7 +18,24 @@ import SocialSidebar from './components/SocialSidebar';
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [windowScrollProgress, setWindowScrollProgress] = useState(0);
+  const [isGalaxyView, setIsGalaxyView] = useState(false);
   const location = useLocation();
+
+  // Reset galaxy view on route change
+  React.useEffect(() => {
+    setIsGalaxyView(false);
+  }, [location.pathname]);
+
+  // Handle ESC key to exit VR galaxy view
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isGalaxyView) {
+        setIsGalaxyView(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isGalaxyView]);
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -72,28 +89,41 @@ export default function App() {
       </AnimatePresence>
 
       {/* 2. Interactive 3D Background Canvas */}
-      <Scene3D scrollProgress={scrollProgress} />
+      <Scene3D
+        scrollProgress={scrollProgress}
+        isGalaxyView={isGalaxyView}
+        onCloseGalaxyView={() => setIsGalaxyView(false)}
+      />
 
       {/* 3. Floating Social Sidebar Dock */}
-      <SocialSidebar />
+      <div className={isGalaxyView ? 'opacity-0 pointer-events-none transition-opacity duration-300' : 'opacity-100 transition-opacity duration-300'}>
+        <SocialSidebar />
+      </div>
 
       {/* 4. Main Multi-Page Interface Overlay */}
-      <div className="relative z-10 flex flex-col min-h-screen justify-between">
+      <div
+        className={`relative z-10 flex flex-col ${
+          location.pathname === '/' ? 'h-screen h-[100dvh] overflow-hidden' : 'min-h-screen justify-between'
+        } transition-opacity duration-500 ${
+          isGalaxyView ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
+      >
         <Navbar />
         
-        <main className="flex-grow pt-16">
+        <main className={`flex-grow ${location.pathname === '/' ? 'h-full overflow-hidden flex flex-col' : 'pt-16'}`}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route 
                 path="/" 
                 element={
                   <motion.div
+                    className="h-full w-full flex-1 flex flex-col"
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -15 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <Hero />
+                    <Hero onExploreVR={() => setIsGalaxyView(true)} />
                   </motion.div>
                 } 
               />
@@ -167,7 +197,7 @@ export default function App() {
           </AnimatePresence>
         </main>
 
-        <Footer />
+        {location.pathname !== '/' && <Footer />}
       </div>
     </div>
   );

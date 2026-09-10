@@ -1,5 +1,7 @@
 import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
+import { X } from 'lucide-react';
 import * as THREE from 'three';
 
 // Global window mouse & touch listener for smooth 3D motion
@@ -20,7 +22,7 @@ if (typeof window !== 'undefined') {
 }
 
 // 3D Spiral Galaxy Component
-function SpiralGalaxy({ scrollProgress }) {
+function SpiralGalaxy({ scrollProgress, isGalaxyView = false }) {
   const galaxyRef = useRef();
   const coreRef = useRef();
 
@@ -90,17 +92,25 @@ function SpiralGalaxy({ scrollProgress }) {
       galaxyRef.current.rotation.y += delta * 0.04;
       galaxyRef.current.rotation.z += delta * 0.005;
 
-      // Smooth 3D Cursor tilt & scroll-linked perspective tilt (Front -> Bottom View on Scroll)
-      const mouseX = windowMouse.x * 0.6;
-      const mouseY = windowMouse.y * 0.5;
-      const targetTiltX = 0.22 - scrollProgress * 1.15 - mouseY * 0.25;
-      galaxyRef.current.rotation.x = THREE.MathUtils.lerp(galaxyRef.current.rotation.x, targetTiltX, 0.08);
-      galaxyRef.current.rotation.z = THREE.MathUtils.lerp(galaxyRef.current.rotation.z, mouseX * 0.35, 0.08);
-      galaxyRef.current.position.x = THREE.MathUtils.lerp(galaxyRef.current.position.x, mouseX * 0.4, 0.08);
+      if (isGalaxyView) {
+        // Center smoothly at origin for unconstrained orbit view
+        galaxyRef.current.position.x = THREE.MathUtils.lerp(galaxyRef.current.position.x, 0, 0.08);
+        galaxyRef.current.position.y = THREE.MathUtils.lerp(galaxyRef.current.position.y, 0, 0.08);
+        galaxyRef.current.position.z = THREE.MathUtils.lerp(galaxyRef.current.position.z, 0, 0.08);
+        galaxyRef.current.rotation.x = THREE.MathUtils.lerp(galaxyRef.current.rotation.x, 0.2, 0.08);
+      } else {
+        // Smooth 3D Cursor tilt & scroll-linked perspective tilt (Front -> Bottom View on Scroll)
+        const mouseX = windowMouse.x * 0.6;
+        const mouseY = windowMouse.y * 0.5;
+        const targetTiltX = 0.22 - scrollProgress * 1.15 - mouseY * 0.25;
+        galaxyRef.current.rotation.x = THREE.MathUtils.lerp(galaxyRef.current.rotation.x, targetTiltX, 0.08);
+        galaxyRef.current.rotation.z = THREE.MathUtils.lerp(galaxyRef.current.rotation.z, mouseX * 0.35, 0.08);
+        galaxyRef.current.position.x = THREE.MathUtils.lerp(galaxyRef.current.position.x, mouseX * 0.4, 0.08);
 
-      // Scroll effect - journey through galaxy depth & move upward on scroll
-      galaxyRef.current.position.z = THREE.MathUtils.lerp(galaxyRef.current.position.z, -1 - scrollProgress * 3.5, 0.08);
-      galaxyRef.current.position.y = THREE.MathUtils.lerp(galaxyRef.current.position.y, (isMobile ? -0.8 : -1.0) + scrollProgress * 3.5, 0.08);
+        // Scroll effect - journey through galaxy depth & move upward on scroll
+        galaxyRef.current.position.z = THREE.MathUtils.lerp(galaxyRef.current.position.z, -1 - scrollProgress * 3.5, 0.08);
+        galaxyRef.current.position.y = THREE.MathUtils.lerp(galaxyRef.current.position.y, (isMobile ? -0.8 : -1.0) + scrollProgress * 3.5, 0.08);
+      }
     }
 
     if (coreRef.current) {
@@ -220,7 +230,7 @@ function CameraRig({ scrollProgress = 0 }) {
 }
 
 // 3D Solar System with Compact Circular Orbital Paths & Revolving Planets
-function SolarSystemPlanets({ scrollProgress }) {
+function SolarSystemPlanets({ scrollProgress, isGalaxyView = false }) {
   const groupRef = useRef();
 
   // Individual planet group refs for circular orbital movement
@@ -277,20 +287,27 @@ function SolarSystemPlanets({ scrollProgress }) {
       p5Ref.current.rotation.y += delta * 0.2;
     }
 
-    // Scroll parallax, cursor tilt & multi-axis spatial tracking (Front -> Bottom View on Scroll)
+    // Scroll parallax, cursor tilt & multi-axis spatial tracking
     if (groupRef.current) {
       const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
       const responsiveScale = isMobile ? Math.min(1.0, Math.max(0.5, window.innerWidth / 700)) : 1.0;
       groupRef.current.scale.set(responsiveScale, responsiveScale, responsiveScale);
 
-      const mouseX = windowMouse.x * 0.6;
-      const mouseY = windowMouse.y * 0.5;
-      const targetTiltX = 0.22 - scrollProgress * 1.15 - mouseY * 0.25;
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetTiltX, 0.08);
-      groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, mouseX * 0.4, 0.08);
-      groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, mouseX * 0.5, 0.08);
-      groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, -1 - scrollProgress * 3.5, 0.08);
-      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, (isMobile ? -0.8 : -1.0) + scrollProgress * 3.5, 0.08);
+      if (isGalaxyView) {
+        groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, 0, 0.08);
+        groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, 0, 0.08);
+        groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, 0, 0.08);
+        groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, 0.2, 0.08);
+      } else {
+        const mouseX = windowMouse.x * 0.6;
+        const mouseY = windowMouse.y * 0.5;
+        const targetTiltX = 0.22 - scrollProgress * 1.15 - mouseY * 0.25;
+        groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetTiltX, 0.08);
+        groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, mouseX * 0.4, 0.08);
+        groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, mouseX * 0.5, 0.08);
+        groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, -1 - scrollProgress * 3.5, 0.08);
+        groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, (isMobile ? -0.8 : -1.0) + scrollProgress * 3.5, 0.08);
+      }
     }
   });
 
@@ -403,32 +420,105 @@ function SolarSystemPlanets({ scrollProgress }) {
   );
 }
 
-export default function Scene3D({ scrollProgress = 0 }) {
+export default function Scene3D({ scrollProgress = 0, isGalaxyView = false, onCloseGalaxyView }) {
   return (
-    <div className="fixed inset-0 pointer-events-none z-0">
+    <div
+      className={`fixed inset-0 transition-all duration-700 ${
+        isGalaxyView
+          ? 'z-40 pointer-events-auto cursor-grab active:cursor-grabbing bg-[#02040a]'
+          : 'pointer-events-none z-0'
+      }`}
+    >
       <Canvas
         camera={{ position: [0, 1.0, 9], fov: 60 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
         <color attach="background" args={['#02040a']} />
-        <fog attach="fog" args={['#02040a', 8, 24]} />
+        <fog attach="fog" args={['#02040a', isGalaxyView ? 16 : 8, isGalaxyView ? 40 : 24]} />
 
         {/* Ambient & Cosmic Point Lights */}
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 10, 5]} intensity={1.2} color="#00f0ff" />
-        <pointLight position={[-10, -10, -5]} intensity={1.5} color="#8a2be2" />
+        <ambientLight intensity={isGalaxyView ? 1.0 : 0.5} />
+        <directionalLight position={[10, 10, 5]} intensity={isGalaxyView ? 2.2 : 1.2} color="#00f0ff" />
+        <pointLight position={[-10, -10, -5]} intensity={isGalaxyView ? 2.5 : 1.5} color="#8a2be2" />
+        {isGalaxyView && (
+          <pointLight position={[0, 0, 0]} intensity={3.0} color="#ffd700" distance={15} />
+        )}
 
-        <CameraRig scrollProgress={scrollProgress} />
+        {isGalaxyView ? (
+          <OrbitControls
+            makeDefault
+            enableDamping
+            dampingFactor={0.06}
+            autoRotate
+            autoRotateSpeed={0.5}
+            minDistance={2.5}
+            maxDistance={32}
+          />
+        ) : (
+          <CameraRig scrollProgress={scrollProgress} />
+        )}
 
         {/* 3D Solar System Planets */}
-        <SolarSystemPlanets scrollProgress={scrollProgress} />
+        <SolarSystemPlanets scrollProgress={isGalaxyView ? 0 : scrollProgress} isGalaxyView={isGalaxyView} />
 
-        {/* 3D Spiral Galaxy Scene (Circles Removed) */}
-        <SpiralGalaxy scrollProgress={scrollProgress} />
+        {/* 3D Spiral Galaxy Scene */}
+        <SpiralGalaxy scrollProgress={isGalaxyView ? 0 : scrollProgress} isGalaxyView={isGalaxyView} />
 
         {/* Deep Space Background Starfield */}
-        <DistantStarfield count={3000} />
+        <DistantStarfield count={isGalaxyView ? 4500 : 3000} />
       </Canvas>
+
+      {/* Immersive VR Galaxy View Overlay HUD */}
+      {isGalaxyView && (
+        <div className="absolute inset-0 pointer-events-none flex flex-col justify-between p-4 sm:p-8 select-none z-50">
+          {/* Top Bar: Telemetry Badge + Exit Button */}
+          <div className="flex items-center justify-between w-full">
+            {/* Left: Galaxy Telemetry */}
+            <div className="pointer-events-auto flex items-center gap-3 px-3.5 sm:px-4 py-2 rounded-2xl bg-slate-950/85 border border-purple-500/40 backdrop-blur-xl shadow-[0_0_25px_rgba(168,85,247,0.3)]">
+              <span className="w-2.5 h-2.5 rounded-full bg-purple-400 animate-ping" />
+              <div>
+                <div className="font-orbitron font-bold text-xs sm:text-sm text-purple-200 tracking-wider sm:tracking-widest uppercase">
+                  VR GALAXY MODE // 360° ORBIT
+                </div>
+                <div className="font-mono text-[9px] sm:text-[10px] text-cyan-400 tracking-wider">
+                  SPIRAL GALAXY CORE • 6-DOF UNCONSTRAINED
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Exit VR Mode Button */}
+            <button
+              onClick={onCloseGalaxyView}
+              className="pointer-events-auto group px-4 sm:px-5 py-2.5 rounded-xl bg-purple-950/80 hover:bg-purple-900/90 border border-purple-400/60 hover:border-purple-300 text-white font-orbitron font-bold text-xs tracking-widest uppercase backdrop-blur-xl shadow-[0_0_30px_rgba(168,85,247,0.35)] hover:shadow-[0_0_40px_rgba(168,85,247,0.7)] flex items-center gap-2.5 transition-all duration-300 cursor-pointer"
+            >
+              <span>EXIT VR MODE</span>
+              <span className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-purple-900/90 text-[10px] text-purple-300 border border-purple-500/40 font-mono">
+                ESC
+              </span>
+              <X size={16} className="text-purple-300 group-hover:rotate-90 transition-transform" />
+            </button>
+          </div>
+
+          {/* Bottom Bar: Interactive Controls Navigation Guide */}
+          <div className="flex justify-center w-full pb-2">
+            <div className="pointer-events-auto px-5 py-2 rounded-full bg-slate-950/85 border border-cyan-500/35 backdrop-blur-xl text-center shadow-[0_0_25px_rgba(0,240,255,0.2)] flex items-center gap-3 sm:gap-4 text-slate-300 font-mono text-[10px] sm:text-[11px]">
+              <span className="flex items-center gap-1.5 text-cyan-300">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                DRAG TO ORBIT 360°
+              </span>
+              <span className="text-slate-600">|</span>
+              <span className="flex items-center gap-1.5 text-purple-300">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                SCROLL WHEEL TO ZOOM
+              </span>
+              <span className="text-slate-600 hidden sm:inline">|</span>
+              <span className="text-slate-400 hidden sm:inline">
+                PRESS [ESC] TO RETURN
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
