@@ -62,7 +62,7 @@ function ExperienceCanvas({
     <Canvas
       shadows
       dpr={[1, 1.5]}
-      camera={{ position: [0, 1.25, 7.8], fov: 54 }}
+      camera={{ position: [0, 1.35, 10.0], fov: 55 }}
       gl={{
         antialias: true,
         toneMapping: THREE.ACESFilmicToneMapping,
@@ -149,7 +149,7 @@ export default function GanapatiExperience() {
     const newOffering = {
       id: Date.now() + Math.random(),
       startTime: performance.now() / 1000,
-      startPos: [(Math.random() - 0.5) * 1.4, -0.2, 7.0],
+      startPos: [(Math.random() - 0.5) * 1.6, -0.2, 9.2],
       targetPos: [
         (Math.random() - 0.5) * 1.5,
         -2.75,
@@ -177,7 +177,7 @@ export default function GanapatiExperience() {
     const newModak = {
       id: Date.now() + Math.random(),
       startTime: performance.now() / 1000,
-      startPos: [(Math.random() - 0.5) * 1.0, -0.2, 6.8],
+      startPos: [(Math.random() - 0.5) * 1.2, -0.2, 8.8],
       targetPos: [
         (Math.random() - 0.5) * 0.6,
         -2.75,

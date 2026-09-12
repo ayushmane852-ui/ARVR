@@ -11,14 +11,14 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
 
   // Initial cinematic camera dolly push on load: smoothly settles into the royal sanctum hero frame
   useEffect(() => {
-    camera.position.set(0, 1.6, 11.5);
+    camera.position.set(0, 1.8, 14.0);
     camera.lookAt(0, 1.45, 0.3);
 
     gsap.to(camera.position, {
       x: 0,
-      y: 1.25,
-      z: 7.8,
-      duration: 2.5,
+      y: 1.35,
+      z: 10.0,
+      duration: 2.6,
       ease: 'power2.out',
       onUpdate: () => {
         if (controlsRef.current) {
@@ -43,7 +43,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
     tl.to(camera.position, {
       x: 0,
       y: 1.45,
-      z: 5.8,
+      z: 6.2,
       duration: 2.4,
       ease: 'power2.inOut',
       onUpdate: () => {
@@ -58,8 +58,8 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
     // Smoothly return to hero frame
     tl.to(camera.position, {
       x: 0,
-      y: 1.25,
-      z: 7.8,
+      y: 1.35,
+      z: 10.0,
       duration: 2.5,
       ease: 'power2.out',
       onUpdate: () => {
@@ -92,7 +92,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
     );
     camera.position.y = THREE.MathUtils.lerp(
       camera.position.y,
-      1.25 + mouseParallaxRef.current.y,
+      1.35 + mouseParallaxRef.current.y,
       0.03
     );
     controlsRef.current.update();
@@ -105,7 +105,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
       dampingFactor={0.06}
       enablePan={false}
       minDistance={3.5}
-      maxDistance={14.0}
+      maxDistance={20.0}
       minPolarAngle={Math.PI / 3.2}
       maxPolarAngle={Math.PI / 2 + 0.05}
       minAzimuthAngle={-Math.PI / 3.2}
