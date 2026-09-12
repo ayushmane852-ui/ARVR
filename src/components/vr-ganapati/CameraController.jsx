@@ -11,14 +11,14 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
 
   // Initial cinematic camera dolly push on load: smoothly settles into the royal sanctum hero frame
   useEffect(() => {
-    camera.position.set(0, 1.8, 15.0);
+    camera.position.set(0, 1.6, 12.0);
     camera.lookAt(0, 1.45, 0.3);
 
     gsap.to(camera.position, {
       x: 0,
       y: 1.35,
-      z: 11.0,
-      duration: 2.8,
+      z: 8.5,
+      duration: 2.5,
       ease: 'power2.out',
       onUpdate: () => {
         if (controlsRef.current) {
@@ -59,7 +59,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
     tl.to(camera.position, {
       x: 0,
       y: 1.35,
-      z: 11.0,
+      z: 8.5,
       duration: 2.5,
       ease: 'power2.out',
       onUpdate: () => {
