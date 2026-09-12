@@ -60,7 +60,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
     tl.to(camera.position, {
       x: 0,
       y: 1.45,
-      z: 6.2,
+      z: 12.0,
       duration: 2.4,
       ease: 'power2.inOut',
       onUpdate: () => {
