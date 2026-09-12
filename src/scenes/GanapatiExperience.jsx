@@ -62,7 +62,7 @@ function ExperienceCanvas({
     <Canvas
       shadows
       dpr={[1, 1.5]}
-      camera={{ position: [0, 0.85, 10.6], fov: 50 }}
+      camera={{ position: [0, 1.25, 7.8], fov: 54 }}
       gl={{
         antialias: true,
         toneMapping: THREE.ACESFilmicToneMapping,
@@ -81,7 +81,7 @@ function ExperienceCanvas({
 
       <Suspense fallback={null}>
         <GanapatiTemple blessingActive={blessingActive} />
-        <Rangoli position={[0, -2.86, 4.4]} />
+        <Rangoli position={[0, -2.99, 3.8]} />
         <Diya isLit={isDiyaLit} />
         <Bell ringTriggerTime={ringTriggerTime} />
         <FlowerOffering offerings={flowerOfferings} />
@@ -149,7 +149,7 @@ export default function GanapatiExperience() {
     const newOffering = {
       id: Date.now() + Math.random(),
       startTime: performance.now() / 1000,
-      startPos: [(Math.random() - 0.5) * 1.6, -0.4, 8.8],
+      startPos: [(Math.random() - 0.5) * 1.4, -0.2, 7.0],
       targetPos: [
         (Math.random() - 0.5) * 1.5,
         -2.75,
@@ -177,7 +177,7 @@ export default function GanapatiExperience() {
     const newModak = {
       id: Date.now() + Math.random(),
       startTime: performance.now() / 1000,
-      startPos: [(Math.random() - 0.5) * 1.2, -0.4, 8.4],
+      startPos: [(Math.random() - 0.5) * 1.0, -0.2, 6.8],
       targetPos: [
         (Math.random() - 0.5) * 0.6,
         -2.75,

@@ -56,11 +56,11 @@ function MarigoldGarland({ position, height = 7.2, count = 28 }) {
 }
 
 // Royal Brass Chhatra (Sacred Golden Umbrella suspended above Lord Ganesha's Crown)
-function GoldenChhatra({ position = [0, 5.35, 0.3] }) {
+function GoldenChhatra({ position = [0, 6.45, 0.3] }) {
   const fringeBeads = useMemo(() => {
     const beads = [];
-    const numBeads = 28;
-    const r = 1.7;
+    const numBeads = 32;
+    const r = 1.85;
     for (let i = 0; i < numBeads; i++) {
       const angle = (i / numBeads) * Math.PI * 2;
       beads.push([Math.cos(angle) * r, -0.16, Math.sin(angle) * r]);
@@ -92,7 +92,7 @@ function GoldenChhatra({ position = [0, 5.35, 0.3] }) {
 
       {/* Main Fluted Chhatra Dome */}
       <mesh position={[0, 0.02, 0]} receiveShadow>
-        <cylinderGeometry args={[0.28, 1.7, 0.38, 36, 1, true]} />
+        <cylinderGeometry args={[0.3, 1.85, 0.4, 36, 1, true]} />
         <meshStandardMaterial
           color="#d4af37"
           metalness={0.92}
@@ -103,7 +103,7 @@ function GoldenChhatra({ position = [0, 5.35, 0.3] }) {
 
       {/* Outer Golden Rim Band (rotated flat in XZ plane) */}
       <mesh position={[0, -0.17, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[1.7, 0.045, 16, 48]} />
+        <torusGeometry args={[1.85, 0.045, 16, 48]} />
         <meshStandardMaterial
           color="#f59e0b"
           metalness={0.95}
@@ -126,6 +126,64 @@ function GoldenChhatra({ position = [0, 5.35, 0.3] }) {
   );
 }
 
+// Ornate Sacred Temple Prabhavali Arch behind Lord Ganesha
+function SacredPrabhavali() {
+  const rays = useMemo(() => {
+    const list = [];
+    const numRays = 26;
+    for (let i = 0; i <= numRays; i++) {
+      const angle = (i / numRays) * Math.PI;
+      list.push({
+        x: Math.cos(angle) * 3.75,
+        y: 2.4 + Math.sin(angle) * 3.75,
+        rot: [0, 0, angle - Math.PI / 2],
+      });
+    }
+    return list;
+  }, []);
+
+  return (
+    <group position={[0, 0, -0.6]}>
+      {/* Left Pillar of the Arch */}
+      <mesh position={[-3.75, 0.2, 0]}>
+        <cylinderGeometry args={[0.16, 0.2, 4.8, 24]} />
+        <meshStandardMaterial color="#c59b27" metalness={0.88} roughness={0.25} />
+      </mesh>
+      {/* Right Pillar of the Arch */}
+      <mesh position={[3.75, 0.2, 0]}>
+        <cylinderGeometry args={[0.16, 0.2, 4.8, 24]} />
+        <meshStandardMaterial color="#c59b27" metalness={0.88} roughness={0.25} />
+      </mesh>
+
+      {/* Main Semi-circular Golden Arch */}
+      <mesh position={[0, 2.4, 0]}>
+        <torusGeometry args={[3.75, 0.16, 16, 48, Math.PI]} />
+        <meshStandardMaterial color="#d4af37" metalness={0.92} roughness={0.2} />
+      </mesh>
+
+      {/* Inner Decorative Arch */}
+      <mesh position={[0, 2.4, 0.02]}>
+        <torusGeometry args={[3.4, 0.08, 16, 48, Math.PI]} />
+        <meshStandardMaterial color="#f59e0b" metalness={0.95} roughness={0.16} />
+      </mesh>
+
+      {/* Radiant Aura Rays along the Arch */}
+      {rays.map((r, i) => (
+        <mesh key={i} position={[r.x, r.y + 0.8, 0]} rotation={r.rot}>
+          <coneGeometry args={[0.08, 0.38, 12]} />
+          <meshStandardMaterial color="#fbbf24" metalness={0.92} roughness={0.2} />
+        </mesh>
+      ))}
+
+      {/* Kirtimukha Crown Apex */}
+      <mesh position={[0, 6.25, 0.05]}>
+        <cylinderGeometry args={[0.14, 0.34, 0.52, 24]} />
+        <meshStandardMaterial color="#fbbf24" metalness={0.96} roughness={0.15} />
+      </mesh>
+    </group>
+  );
+}
+
 // Multi-Tiered Carved Stone Temple Throne Steps
 function TempleThroneSteps() {
   const petalPositions = useMemo(() => {
@@ -134,8 +192,8 @@ function TempleThroneSteps() {
     for (let i = 0; i < count; i++) {
       const stepIdx = Math.floor(Math.random() * 3);
       const y = -2.78 - stepIdx * 0.07;
-      const z = 1.8 + stepIdx * 0.7 + (Math.random() - 0.5) * 0.4;
-      const x = (Math.random() - 0.5) * (3.8 + stepIdx * 1.2);
+      const z = 0.8 + stepIdx * 0.8 + (Math.random() - 0.5) * 0.3;
+      const x = (Math.random() - 0.5) * (3.8 + stepIdx * 1.0);
       const rot = [Math.random() * 0.2, Math.random() * Math.PI * 2, Math.random() * 0.2];
       const isRed = Math.random() > 0.35;
       petals.push({ pos: [x, y, z], rot, color: isRed ? '#e11d48' : '#f59e0b' });
@@ -146,20 +204,20 @@ function TempleThroneSteps() {
   return (
     <group>
       {/* Tier 1 (Upper Step) */}
-      <mesh position={[0, -2.85, 1.8]} receiveShadow>
-        <boxGeometry args={[4.8, 0.12, 2.6]} />
+      <mesh position={[0, -2.85, 0.8]} receiveShadow>
+        <boxGeometry args={[4.8, 0.12, 1.8]} />
         <meshStandardMaterial color="#2d1d13" roughness={0.7} metalness={0.2} />
       </mesh>
 
       {/* Tier 2 (Middle Step) */}
-      <mesh position={[0, -2.91, 2.6]} receiveShadow>
-        <boxGeometry args={[5.8, 0.12, 2.0]} />
+      <mesh position={[0, -2.91, 1.6]} receiveShadow>
+        <boxGeometry args={[5.8, 0.12, 1.6]} />
         <meshStandardMaterial color="#281910" roughness={0.72} metalness={0.2} />
       </mesh>
 
       {/* Tier 3 (Bottom Step) */}
-      <mesh position={[0, -2.96, 3.4]} receiveShadow>
-        <boxGeometry args={[6.8, 0.12, 1.6]} />
+      <mesh position={[0, -2.96, 2.4]} receiveShadow>
+        <boxGeometry args={[6.8, 0.12, 1.4]} />
         <meshStandardMaterial color="#22150d" roughness={0.75} metalness={0.2} />
       </mesh>
 
@@ -188,6 +246,12 @@ export default function GanapatiTemple({ blessingActive }) {
     const clone = scene.clone(true);
     clone.traverse((child) => {
       if (child.isMesh) {
+        // Hide raw photogrammetry floor scan with chopped geometry in favor of our custom carved temple steps and floor
+        if (child.name === 'Cube003') {
+          child.visible = false;
+          return;
+        }
+
         // Only Lord Ganesha idol needs to cast shadows into shadow map; temple walls/floor only receive shadows
         const isIdol = child.name === 'Mesh_0' || child.material?.name === 'Material.006';
         child.castShadow = isIdol;
@@ -196,17 +260,17 @@ export default function GanapatiTemple({ blessingActive }) {
         if (child.material) {
           child.material = child.material.clone();
 
-          // Lord Ganesha idol mesh
+          // Consecrated Lord Ganesha idol with warm golden luster
           if (isIdol) {
-            child.material.color = new THREE.Color('#fff8ee');
-            child.material.roughness = 0.32;
-            child.material.metalness = 0.12;
-            child.material.envMapIntensity = 1.6;
+            child.material.color = new THREE.Color('#ffe8c8');
+            child.material.roughness = 0.26;
+            child.material.metalness = 0.15;
+            child.material.envMapIntensity = 2.2;
           } else {
-            // Temple architecture: Deep carved ancient temple granite/sandstone
-            child.material.color = new THREE.Color('#54351e');
-            child.material.roughness = 0.72;
-            child.material.metalness = 0.16;
+            // Ancient carved Indian temple granite/sandstone
+            child.material.color = new THREE.Color('#5c3a22');
+            child.material.roughness = 0.68;
+            child.material.metalness = 0.18;
           }
         }
       }
@@ -223,22 +287,25 @@ export default function GanapatiTemple({ blessingActive }) {
         scale={[1, 1, 1]} 
       />
 
-      {/* 2. Multi-Tiered Carved Stone Throne Steps with Flower Petals */}
+      {/* 2. Sacred Carved Temple Prabhavali Arch behind Lord Ganesha */}
+      <SacredPrabhavali />
+
+      {/* 3. Multi-Tiered Carved Stone Throne Steps with Flower Petals */}
       <TempleThroneSteps />
 
-      {/* 3. Royal Brass Chhatra (Canopy) suspended above Lord Ganesha's Crown */}
-      <GoldenChhatra position={[0, 5.35, 0.3]} />
+      {/* 4. Royal Brass Chhatra (Canopy) suspended high above Lord Ganesha's Crown */}
+      <GoldenChhatra position={[0, 6.45, 0.3]} />
 
-      {/* 4. Vertical Marigold Flower Garlands (Gendaphool Malas) framing the inner sanctum */}
-      <MarigoldGarland position={[-3.3, 5.4, 1.2]} height={7.2} count={28} />
-      <MarigoldGarland position={[3.3, 5.4, 1.2]} height={7.2} count={28} />
+      {/* 5. Vertical Marigold Flower Garlands framing the sanctum pillars */}
+      <MarigoldGarland position={[-3.8, 6.4, 1.6]} height={7.8} count={30} />
+      <MarigoldGarland position={[3.8, 6.4, 1.6]} height={7.8} count={30} />
 
-      {/* Secondary outer garlands */}
-      <MarigoldGarland position={[-5.0, 5.6, 1.8]} height={7.4} count={28} />
-      <MarigoldGarland position={[5.0, 5.6, 1.8]} height={7.4} count={28} />
+      {/* Outer pillar garlands */}
+      <MarigoldGarland position={[-5.4, 6.4, 1.0]} height={7.8} count={30} />
+      <MarigoldGarland position={[5.4, 6.4, 1.0]} height={7.8} count={30} />
 
-      {/* 5. Ornate Brass Offering Thali Platform in front of Lotus Feet */}
-      <group position={[0, -2.78, 2.0]}>
+      {/* 6. Ornate Brass Offering Thali Platform in front of Lotus Feet */}
+      <group position={[0, -2.86, 2.6]}>
         <mesh position={[0, 0.04, 0]} receiveShadow>
           <cylinderGeometry args={[1.5, 1.3, 0.08, 48]} />
           <meshStandardMaterial 

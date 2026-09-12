@@ -11,18 +11,18 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
 
   // Initial cinematic camera dolly push on load: smoothly settles into the royal sanctum hero frame
   useEffect(() => {
-    camera.position.set(0, 1.8, 14.5);
-    camera.lookAt(0, 1.4, 0.3);
+    camera.position.set(0, 1.6, 11.5);
+    camera.lookAt(0, 1.45, 0.3);
 
     gsap.to(camera.position, {
       x: 0,
-      y: 0.85,
-      z: 10.6,
-      duration: 2.6,
+      y: 1.25,
+      z: 7.8,
+      duration: 2.5,
       ease: 'power2.out',
       onUpdate: () => {
         if (controlsRef.current) {
-          controlsRef.current.target.set(0, 1.4, 0.3);
+          controlsRef.current.target.set(0, 1.45, 0.3);
           controlsRef.current.update();
         }
       },
@@ -39,15 +39,15 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
       },
     });
 
-    // Gentle zoom into divine darshan portrait shot
+    // Intimate zoom into divine darshan portrait shot
     tl.to(camera.position, {
       x: 0,
-      y: 1.35,
-      z: 7.8,
+      y: 1.45,
+      z: 5.8,
       duration: 2.4,
       ease: 'power2.inOut',
       onUpdate: () => {
-        controlsRef.current.target.set(0, 1.45, 0.3);
+        controlsRef.current.target.set(0, 1.5, 0.3);
         controlsRef.current.update();
       },
     });
@@ -58,12 +58,12 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
     // Smoothly return to hero frame
     tl.to(camera.position, {
       x: 0,
-      y: 0.85,
-      z: 10.6,
+      y: 1.25,
+      z: 7.8,
       duration: 2.5,
       ease: 'power2.out',
       onUpdate: () => {
-        controlsRef.current.target.set(0, 1.4, 0.3);
+        controlsRef.current.target.set(0, 1.45, 0.3);
         controlsRef.current.update();
       },
     });
@@ -76,7 +76,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
     const handleMouseMove = (e) => {
       const nx = (e.clientX / window.innerWidth) * 2 - 1;
       const ny = -(e.clientY / window.innerHeight) * 2 + 1;
-      mouseParallaxRef.current = { x: nx * 0.32, y: ny * 0.18 };
+      mouseParallaxRef.current = { x: nx * 0.28, y: ny * 0.15 };
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
@@ -92,7 +92,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
     );
     camera.position.y = THREE.MathUtils.lerp(
       camera.position.y,
-      0.85 + mouseParallaxRef.current.y,
+      1.25 + mouseParallaxRef.current.y,
       0.03
     );
     controlsRef.current.update();
@@ -104,8 +104,8 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
       enableDamping
       dampingFactor={0.06}
       enablePan={false}
-      minDistance={4.5}
-      maxDistance={24.0}
+      minDistance={3.5}
+      maxDistance={14.0}
       minPolarAngle={Math.PI / 3.2}
       maxPolarAngle={Math.PI / 2 + 0.05}
       minAzimuthAngle={-Math.PI / 3.2}

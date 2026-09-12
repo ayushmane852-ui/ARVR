@@ -95,33 +95,33 @@ export default function Bell({ ringTriggerTime }) {
       {/* Front Inner Bells flanking Lord Ganesha */}
       <SingleHangingBell
         bellScene={bellL1}
-        position={[-3.6, 3.6, 2.2]}
+        position={[-3.6, 5.0, 2.0]}
         ringTriggerTime={ringTriggerTime}
         side="left"
-        chainHeight={5.2}
+        chainHeight={4.2}
       />
       <SingleHangingBell
         bellScene={bellR1}
-        position={[3.6, 3.6, 2.2]}
+        position={[3.6, 5.0, 2.0]}
         ringTriggerTime={ringTriggerTime}
         side="right"
-        chainHeight={5.2}
+        chainHeight={4.2}
       />
 
       {/* Outer Side Archway Bells */}
       <SingleHangingBell
         bellScene={bellL2}
-        position={[-5.4, 4.2, 1.4]}
+        position={[-5.2, 5.4, 1.4]}
         ringTriggerTime={ringTriggerTime}
         side="left"
-        chainHeight={4.6}
+        chainHeight={3.8}
       />
       <SingleHangingBell
         bellScene={bellR2}
-        position={[5.4, 4.2, 1.4]}
+        position={[5.2, 5.4, 1.4]}
         ringTriggerTime={ringTriggerTime}
         side="right"
-        chainHeight={4.6}
+        chainHeight={3.8}
       />
     </group>
   );
