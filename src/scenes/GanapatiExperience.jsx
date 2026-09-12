@@ -28,14 +28,11 @@ function SceneLighting({ blessingActive, isDiyaLit }) {
         intensity={blessingActive ? 0.7 : 1.2} 
       />
 
-      {/* Main Royal Sanctum Sunbeam / Key Light */}
+      {/* Main Royal Sanctum Sunbeam / Ambient Key Light */}
       <directionalLight
         position={[2.5, 12.0, 7.5]}
         intensity={blessingActive ? 1.4 : 2.2}
         color="#fff1d6"
-        castShadow
-        shadow-mapSize={[2048, 2048]}
-        shadow-bias={-0.0001}
       />
 
       {/* Warm Golden Candle Bounce Light when Diyas are lit */}
@@ -64,6 +61,7 @@ function ExperienceCanvas({
   return (
     <Canvas
       shadows
+      dpr={[1, 1.5]}
       camera={{ position: [0, 0.95, 8.8], fov: 48 }}
       gl={{
         antialias: true,

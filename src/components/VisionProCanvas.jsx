@@ -48,6 +48,7 @@ export default function VisionProCanvas() {
     >
       {/* 3D WebGL Canvas */}
       <Canvas
+        dpr={[1, 1.5]}
         camera={{ position: [0, 0, 3.65], fov: 40 }}
         gl={{ 
           antialias: true, 

@@ -110,5 +110,3 @@ export default function Bell({ ringTriggerTime }) {
     </group>
   );
 }
-
-useGLTF.preload('/models/bell.glb');

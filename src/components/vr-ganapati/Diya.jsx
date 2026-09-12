@@ -72,14 +72,13 @@ function DiyaFlame({ isLit, position, scale = 1.0 }) {
         />
       </mesh>
 
-      {/* Dynamic Flickering Diya Light */}
+      {/* Dynamic Flickering Diya Light (Point lights do not cast expensive cube-map shadows) */}
       <pointLight
         ref={lightRef}
         color="#ffaa33"
         intensity={3.2 * scale}
         distance={10.0}
         decay={1.2}
-        castShadow
       />
     </group>
   );
@@ -93,7 +92,7 @@ export default function Diya({ isLit }) {
       const clone = scene.clone(true);
       clone.traverse((child) => {
         if (child.isMesh) {
-          child.castShadow = true;
+          child.castShadow = false;
           child.receiveShadow = true;
           if (child.material) {
             child.material = child.material.clone();
@@ -144,5 +143,3 @@ export default function Diya({ isLit }) {
     </group>
   );
 }
-
-useGLTF.preload('/models/diya.glb');

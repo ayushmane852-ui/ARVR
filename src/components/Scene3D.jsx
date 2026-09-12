@@ -430,6 +430,7 @@ export default function Scene3D({ scrollProgress = 0, isGalaxyView = false, onCl
       }`}
     >
       <Canvas
+        dpr={[1, 1.5]}
         camera={{ position: [0, 1.0, 9], fov: 60 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >

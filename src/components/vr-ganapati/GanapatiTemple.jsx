@@ -33,14 +33,16 @@ export default function GanapatiTemple({ blessingActive }) {
     const clone = scene.clone(true);
     clone.traverse((child) => {
       if (child.isMesh) {
-        child.castShadow = true;
+        // Only Lord Ganesha idol needs to cast shadows into shadow map; temple walls/floor only receive shadows
+        const isIdol = child.name === 'Mesh_0' || child.material?.name === 'Material.006';
+        child.castShadow = isIdol;
         child.receiveShadow = true;
 
         if (child.material) {
           child.material = child.material.clone();
 
           // Lord Ganesha idol mesh
-          if (child.name === 'Mesh_0' || child.material.name === 'Material.006') {
+          if (isIdol) {
             child.material.color = new THREE.Color('#ffffff');
             child.material.roughness = 0.38;
             child.material.metalness = 0.15;
@@ -121,8 +123,8 @@ export default function GanapatiTemple({ blessingActive }) {
         intensity={blessingActive ? 5.5 : 3.8}
         color="#fff1d6"
         castShadow
-        shadow-mapSize={[2048, 2048]}
-        shadow-bias={-0.0001}
+        shadow-mapSize={[1024, 1024]}
+        shadow-bias={-0.0002}
       />
 
       {/* 2. Warm Front Fill Light (Chest level) */}
@@ -163,5 +165,3 @@ export default function GanapatiTemple({ blessingActive }) {
     </group>
   );
 }
-
-useGLTF.preload('/models/temple.glb');

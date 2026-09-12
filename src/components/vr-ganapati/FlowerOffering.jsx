@@ -91,5 +91,3 @@ export default function FlowerOffering({ offerings }) {
     </group>
   );
 }
-
-useGLTF.preload('/models/flower.glb');

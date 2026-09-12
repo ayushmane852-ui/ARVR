@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -14,7 +14,8 @@ import Team from './components/Team';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import SocialSidebar from './components/SocialSidebar';
-import GanapatiExperience from './scenes/GanapatiExperience';
+
+const GanapatiExperience = lazy(() => import('./scenes/GanapatiExperience'));
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -110,9 +111,11 @@ export default function App() {
       {/* 4. Multi-Page Interface Overlay */}
       {isVrGanapati ? (
         <main className="w-full h-screen h-[100dvh] overflow-hidden">
-          <Routes location={location} key={location.pathname}>
-            <Route path="/vr-ganapati" element={<GanapatiExperience />} />
-          </Routes>
+          <Suspense fallback={<div className="w-full h-screen bg-[#070503] flex items-center justify-center text-amber-200/60 font-serif text-sm">Loading Sacred Sanctum...</div>}>
+            <Routes location={location} key={location.pathname}>
+              <Route path="/vr-ganapati" element={<GanapatiExperience />} />
+            </Routes>
+          </Suspense>
         </main>
       ) : (
         <div
