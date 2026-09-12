@@ -14,6 +14,7 @@ import Team from './components/Team';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import SocialSidebar from './components/SocialSidebar';
+import GanapatiExperience from './scenes/GanapatiExperience';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -75,43 +76,56 @@ export default function App() {
   const routeProgress = getRouteScrollProgress(location.pathname);
   const scrollProgress = Math.min(1.0, routeProgress + windowScrollProgress * 0.85);
 
+  const isVrGanapati = location.pathname === '/vr-ganapati';
+
   return (
     <div className="relative min-h-screen bg-[#030712] text-slate-100 selection:bg-cyan-500/30 selection:text-cyan-200">
       
       {/* Scroll to top automatically on route changes */}
       <ScrollToTop />
 
-      {/* 1. Loading Screen */}
+      {/* 1. Loading Screen (only for main site) */}
       <AnimatePresence>
-        {isLoading && (
+        {!isVrGanapati && isLoading && (
           <LoadingScreen onComplete={() => setIsLoading(false)} />
         )}
       </AnimatePresence>
 
-      {/* 2. Interactive 3D Background Canvas */}
-      <Scene3D
-        scrollProgress={scrollProgress}
-        isGalaxyView={isGalaxyView}
-        onCloseGalaxyView={() => setIsGalaxyView(false)}
-      />
+      {/* 2. Interactive 3D Background Canvas (only for main site) */}
+      {!isVrGanapati && (
+        <Scene3D
+          scrollProgress={scrollProgress}
+          isGalaxyView={isGalaxyView}
+          onCloseGalaxyView={() => setIsGalaxyView(false)}
+        />
+      )}
 
-      {/* 3. Floating Social Sidebar Dock */}
-      <div className={isGalaxyView ? 'opacity-0 pointer-events-none transition-opacity duration-300' : 'opacity-100 transition-opacity duration-300'}>
-        <SocialSidebar />
-      </div>
+      {/* 3. Floating Social Sidebar Dock (only for main site) */}
+      {!isVrGanapati && (
+        <div className={isGalaxyView ? 'opacity-0 pointer-events-none transition-opacity duration-300' : 'opacity-100 transition-opacity duration-300'}>
+          <SocialSidebar />
+        </div>
+      )}
 
-      {/* 4. Main Multi-Page Interface Overlay */}
-      <div
-        className={`relative z-10 flex flex-col ${
-          location.pathname === '/' ? 'h-screen h-[100dvh] overflow-hidden' : 'min-h-screen justify-between'
-        } transition-opacity duration-500 ${
-          isGalaxyView ? 'opacity-0 pointer-events-none' : 'opacity-100'
-        }`}
-      >
-        <Navbar />
-        
-        <main className={`flex-grow ${location.pathname === '/' ? 'h-full overflow-hidden flex flex-col' : 'pt-16'}`}>
-          <AnimatePresence mode="wait">
+      {/* 4. Multi-Page Interface Overlay */}
+      {isVrGanapati ? (
+        <main className="w-full h-screen h-[100dvh] overflow-hidden">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/vr-ganapati" element={<GanapatiExperience />} />
+          </Routes>
+        </main>
+      ) : (
+        <div
+          className={`relative z-10 flex flex-col ${
+            location.pathname === '/' ? 'h-screen h-[100dvh] overflow-hidden' : 'min-h-screen justify-between'
+          } transition-opacity duration-500 ${
+            isGalaxyView ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`}
+        >
+          <Navbar />
+          
+          <main className={`flex-grow ${location.pathname === '/' ? 'h-full overflow-hidden flex flex-col' : 'pt-16'}`}>
+            <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route 
                 path="/" 
@@ -192,13 +206,15 @@ export default function App() {
                   </motion.div>
                 } 
               />
-              <Route path="*" element={<Navigate to="/" replace />} />
+                <Route path="/vr-ganapati" element={<GanapatiExperience />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </AnimatePresence>
         </main>
 
         {location.pathname !== '/' && <Footer />}
       </div>
+      )}
     </div>
   );
 }

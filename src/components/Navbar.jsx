@@ -14,6 +14,7 @@ export default function Navbar() {
     { id: 'workshops', label: 'Workshops', path: '/workshops' },
     { id: 'team', label: 'Team', path: '/team' },
     { id: 'contact', label: 'Contact', path: '/contact' },
+    { id: 'vr-ganapati', label: 'VR Ganapati', path: '/vr-ganapati', isSpecial: true },
   ];
 
   const handleNavClick = (path) => {
@@ -47,9 +48,26 @@ export default function Navbar() {
         </div>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+        <nav className="hidden md:flex items-center gap-5 lg:gap-7">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
+            if (item.isSpecial) {
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavClick(item.path)}
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-space text-xs tracking-wider transition-all duration-300 cursor-pointer ${
+                    isActive
+                      ? 'bg-amber-500/25 border border-amber-400 text-amber-200 shadow-[0_0_15px_rgba(245,158,11,0.5)]'
+                      : 'bg-gradient-to-r from-amber-500/15 to-yellow-500/15 border border-amber-500/40 text-amber-300 hover:text-amber-100 hover:border-amber-400 hover:shadow-[0_0_15px_rgba(245,158,11,0.4)]'
+                  }`}
+                >
+                  <span className="text-[11px]">🕉️</span>
+                  <span>{item.label}</span>
+                </button>
+              );
+            }
+
             return (
               <button
                 key={item.id}
@@ -91,12 +109,17 @@ export default function Navbar() {
                 key={item.id}
                 onClick={() => handleNavClick(item.path)}
                 className={`w-full text-left px-4 py-2.5 rounded-xl font-space text-sm tracking-wider flex items-center justify-between cursor-pointer ${
-                  isActive
+                  item.isSpecial
+                    ? 'text-amber-300 font-semibold bg-amber-500/15 border border-amber-500/40'
+                    : isActive
                     ? 'text-cyan-300 font-semibold bg-cyan-500/15 border border-cyan-500/30'
                     : 'text-slate-300 hover:bg-white/5'
                 }`}
               >
-                <span>{item.label}</span>
+                <div className="flex items-center gap-2">
+                  {item.isSpecial && <span>🕉️</span>}
+                  <span>{item.label}</span>
+                </div>
                 {isActive && <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#00f0ff]" />}
               </button>
             );
