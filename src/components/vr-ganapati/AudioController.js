@@ -141,27 +141,36 @@ class SoundEngine {
 
   // Play warm soft flame chime when Diya is lit
   playDiyaSound() {
+    this.playDiyaSequentialChime(0);
+  }
+
+  // Play ascending harmonic chime as each consecutive lamp ignites
+  playDiyaSequentialChime(step = 0) {
     if (this.isMuted) return;
     this.init();
     if (!this.ctx) return;
 
     const now = this.ctx.currentTime;
+    // Ascending melodic frequencies: D5, F#5, A5, C#6, E6 (divine sacred pentatonic raga)
+    const pitches = [587.33, 739.99, 880.0, 1108.73, 1318.51];
+    const fundamental = pitches[Math.min(step, pitches.length - 1)];
+
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(440, now);
-    osc.frequency.exponentialRampToValueAtTime(880, now + 0.2);
+    osc.frequency.setValueAtTime(fundamental, now);
+    osc.frequency.exponentialRampToValueAtTime(fundamental * 1.35, now + 0.15);
 
     gain.gain.setValueAtTime(0.001, now);
-    gain.gain.linearRampToValueAtTime(0.2, now + 0.05);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
+    gain.gain.linearRampToValueAtTime(0.18, now + 0.025);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.85);
 
     osc.connect(gain);
     gain.connect(this.ctx.destination);
 
     osc.start(now);
-    osc.stop(now + 0.8);
+    osc.stop(now + 0.85);
   }
 
   // Play flower offering subtle chime

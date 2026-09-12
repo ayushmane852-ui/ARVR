@@ -1,5 +1,6 @@
 import React, { useMemo, useRef } from 'react';
 import { useGLTF } from '@react-three/drei';
+import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 // Procedural soft divine radial halo aura texture
@@ -241,6 +242,52 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false }) {
   const haloRef = useRef();
   const haloTexture = useMemo(() => createHaloTexture(), []);
 
+  const keyLightRef = useRef();
+  const fillLightRef = useRef();
+  const pillarLeftRef = useRef();
+  const pillarRightRef = useRef();
+  const backLight1Ref = useRef();
+  const backLight2Ref = useRef();
+  const lightProgress = useRef(isDiyaLit ? 1.0 : 0.0);
+
+  // Smooth lighting swell tracking the sequential ignition of lamps
+  useFrame(() => {
+    lightProgress.current = THREE.MathUtils.lerp(
+      lightProgress.current,
+      isDiyaLit ? 1.0 : 0.0,
+      0.038
+    );
+    const p = lightProgress.current;
+
+    if (keyLightRef.current) {
+      keyLightRef.current.intensity = THREE.MathUtils.lerp(0.08, blessingActive ? 5.8 : 4.0, p);
+    }
+    if (fillLightRef.current) {
+      fillLightRef.current.intensity = THREE.MathUtils.lerp(0.05, blessingActive ? 3.8 : 2.8, p);
+    }
+    if (pillarLeftRef.current) {
+      const pLeft = Math.max(0, (p - 0.15) / 0.85);
+      pillarLeftRef.current.intensity = THREE.MathUtils.lerp(0.0, 2.6, pLeft);
+    }
+    if (pillarRightRef.current) {
+      const pRight = Math.max(0, (p - 0.35) / 0.65);
+      pillarRightRef.current.intensity = THREE.MathUtils.lerp(0.0, 2.6, pRight);
+    }
+    if (backLight1Ref.current) {
+      backLight1Ref.current.intensity = THREE.MathUtils.lerp(8.5, blessingActive ? 5.8 : 3.2, p);
+    }
+    if (backLight2Ref.current) {
+      backLight2Ref.current.intensity = THREE.MathUtils.lerp(5.5, blessingActive ? 2.4 : 1.6, p);
+    }
+    if (haloRef.current && haloRef.current.material) {
+      haloRef.current.material.opacity = THREE.MathUtils.lerp(
+        0.88,
+        blessingActive ? 0.95 : 0.45,
+        p
+      );
+    }
+  });
+
   // Clone scene and apply rich sacred temple stone & idol materials
   const clonedScene = useMemo(() => {
     const clone = scene.clone(true);
@@ -348,7 +395,7 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false }) {
         <meshBasicMaterial
           map={haloTexture}
           transparent
-          opacity={blessingActive ? 0.95 : (isDiyaLit ? 0.45 : 0.88)}
+          opacity={0.88}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
           side={THREE.DoubleSide}
@@ -359,13 +406,14 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false }) {
       {/* SACRED TEMPLE ILLUMINATION                                   */}
       {/* Lights off initially: Dim atmospheric sanctum with radiant    */}
       {/* golden rim light and halo BEHIND the idol.                   */}
-      {/* When Diya is lit: Full warm royal sanctum illumination.      */}
+      {/* When Diya is lit: Progressive golden illumination swell.     */}
       {/* ============================================================ */}
 
       {/* 1. Main Front Key Light */}
       <directionalLight
+        ref={keyLightRef}
         position={[0, 4.2, 9.5]}
-        intensity={isDiyaLit ? (blessingActive ? 5.8 : 4.0) : 0.08}
+        intensity={0.08}
         color="#fff4e0"
         castShadow
         shadow-mapSize={[1024, 1024]}
@@ -374,8 +422,9 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false }) {
 
       {/* 2. Warm Front Fill Light (Chest level) */}
       <pointLight
+        ref={fillLightRef}
         position={[0, 1.8, 4.2]}
-        intensity={isDiyaLit ? (blessingActive ? 3.8 : 2.8) : 0.05}
+        intensity={0.05}
         color="#ffa834"
         distance={14}
         decay={1}
@@ -383,8 +432,9 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false }) {
 
       {/* 3. Left Side Warm Pillar Fill */}
       <pointLight
+        ref={pillarLeftRef}
         position={[-3.6, 2.2, 3.2]}
-        intensity={isDiyaLit ? 2.6 : 0.0}
+        intensity={0.0}
         color="#ff9922"
         distance={12}
         decay={1}
@@ -392,8 +442,9 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false }) {
 
       {/* 4. Right Side Warm Pillar Fill */}
       <pointLight
+        ref={pillarRightRef}
         position={[3.6, 2.2, 3.2]}
-        intensity={isDiyaLit ? 2.6 : 0.0}
+        intensity={0.0}
         color="#ff9922"
         distance={12}
         decay={1}
@@ -401,8 +452,9 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false }) {
 
       {/* 5. Golden Rim / Mukut Halo Light BEHIND Ganesha's crown (Active even when lights are off) */}
       <pointLight
+        ref={backLight1Ref}
         position={[0, 4.4, -2.2]}
-        intensity={isDiyaLit ? (blessingActive ? 5.8 : 3.2) : 8.5}
+        intensity={8.5}
         color="#fbbf24"
         distance={18}
         decay={1}
@@ -410,8 +462,9 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false }) {
 
       {/* 6. Divine Torso & Throne Backlight BEHIND Ganesha (creates royal silhouette rim in the dark) */}
       <pointLight
+        ref={backLight2Ref}
         position={[0, 1.6, -1.8]}
-        intensity={isDiyaLit ? (blessingActive ? 2.4 : 1.6) : 5.5}
+        intensity={5.5}
         color="#f59e0b"
         distance={15}
         decay={1}
