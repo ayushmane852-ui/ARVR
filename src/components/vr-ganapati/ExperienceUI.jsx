@@ -216,7 +216,7 @@ export default function ExperienceUI({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.8 }}
-            className="absolute inset-0 flex flex-col items-center justify-end pb-22 sm:pb-24 pointer-events-none text-center px-4"
+            className="absolute inset-0 flex flex-col items-center justify-end pb-32 sm:pb-36 pointer-events-none text-center px-4 z-40"
           >
             <div className="bg-[#120e0b]/85 backdrop-blur-2xl border border-amber-400/40 px-6 sm:px-8 py-3.5 sm:py-4 rounded-3xl shadow-[0_12px_40px_rgba(0,0,0,0.85),0_0_30px_rgba(245,158,11,0.25)] max-w-md">
               <span className="text-[11px] sm:text-xs font-serif tracking-[0.3em] text-amber-400/90 uppercase block mb-1">
