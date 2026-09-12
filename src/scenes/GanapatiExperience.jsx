@@ -62,7 +62,7 @@ function ExperienceCanvas({
     <Canvas
       shadows
       dpr={[1, 1.5]}
-      camera={{ position: [0, 1.35, 25.0], fov: 55 }}
+      camera={{ position: [0, 1.35, 20.0], fov: 55 }}
       gl={{
         antialias: true,
         toneMapping: THREE.ACESFilmicToneMapping,
