@@ -77,6 +77,7 @@ function ExperienceCanvas({
         blessingActive={blessingActive}
         onBlessingComplete={onBlessingComplete}
         vrActive={vrSessionActive}
+        isDiyaLit={isDiyaLit}
       />
 
       <Suspense fallback={null}>

@@ -4,7 +4,7 @@ import { OrbitControls } from '@react-three/drei';
 import gsap from 'gsap';
 import * as THREE from 'three';
 
-export default function CameraController({ blessingActive, onBlessingComplete, vrActive }) {
+export default function CameraController({ blessingActive, onBlessingComplete, vrActive, isDiyaLit }) {
   const { camera } = useThree();
   const controlsRef = useRef();
   const mouseParallaxRef = useRef({ x: 0, y: 0 });
@@ -28,6 +28,23 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
       },
     });
   }, [camera]);
+
+  // Dolly closer when diyas are lit (-3 units)
+  useEffect(() => {
+    if (!controlsRef.current) return;
+    const targetZ = isDiyaLit ? 17.0 : 20.0;
+    const anim = gsap.to(camera.position, {
+      z: targetZ,
+      duration: 1.8,
+      ease: 'power2.inOut',
+      onUpdate: () => {
+        if (controlsRef.current) {
+          controlsRef.current.update();
+        }
+      },
+    });
+    return () => anim.kill();
+  }, [isDiyaLit, camera]);
 
   // Blessing camera sequence
   useEffect(() => {
@@ -59,7 +76,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
     tl.to(camera.position, {
       x: 0,
       y: 1.35,
-      z: 20.0,
+      z: 17.0,
       duration: 2.5,
       ease: 'power2.out',
       onUpdate: () => {
