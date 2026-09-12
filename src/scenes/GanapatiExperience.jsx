@@ -20,18 +20,18 @@ function SceneLighting({ blessingActive, isDiyaLit }) {
     <>
       {/* Deep Temple Atmospheric Fog */}
       <color attach="background" args={['#0e0906']} />
-      <fog attach="fog" args={['#0e0906', 7.0, 32.0]} />
+      <fog attach="fog" args={['#0e0906', isDiyaLit ? 7.0 : 4.5, 32.0]} />
 
-      {/* Warm Ambient Fill for Deep Sanctum Atmosphere (Warm temple stone reflections) */}
+      {/* Dim Sanctum Fill: Very dim deep brown when lights off, warm temple stone reflections when diyas lit */}
       <ambientLight 
-        color="#543318" 
-        intensity={blessingActive ? 1.0 : 1.8} 
+        color={isDiyaLit ? "#543318" : "#221309"} 
+        intensity={isDiyaLit ? (blessingActive ? 1.0 : 1.8) : 0.25} 
       />
 
       {/* Main Royal Sanctum Sunbeam / Ambient Key Light */}
       <directionalLight
         position={[2.5, 12.0, 7.5]}
-        intensity={blessingActive ? 1.8 : 2.6}
+        intensity={isDiyaLit ? (blessingActive ? 1.8 : 2.6) : 0.08}
         color="#fff1d6"
       />
 
@@ -80,7 +80,7 @@ function ExperienceCanvas({
       />
 
       <Suspense fallback={null}>
-        <GanapatiTemple blessingActive={blessingActive} />
+        <GanapatiTemple blessingActive={blessingActive} isDiyaLit={isDiyaLit} />
         <Rangoli position={[0, -2.99, 3.8]} />
         <Diya isLit={isDiyaLit} />
         <Bell ringTriggerTime={ringTriggerTime} />
@@ -95,8 +95,8 @@ function ExperienceCanvas({
 export default function GanapatiExperience() {
   const { progress, active } = useProgress();
   const [isLoaded, setIsLoaded] = useState(false);
-  // Default to lit diyas for warm divine sanctum atmosphere matching reference mockup
-  const [isDiyaLit, setIsDiyaLit] = useState(true);
+  // Default to lights OFF with dim atmospheric sanctum and radiant backlight behind idol
+  const [isDiyaLit, setIsDiyaLit] = useState(false);
   const [ringTriggerTime, setRingTriggerTime] = useState(-10);
   const [flowerOfferings, setFlowerOfferings] = useState([]);
   const [modakOfferings, setModakOfferings] = useState([]);

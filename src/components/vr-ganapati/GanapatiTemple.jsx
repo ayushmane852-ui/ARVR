@@ -236,7 +236,7 @@ function TempleThroneSteps() {
   );
 }
 
-export default function GanapatiTemple({ blessingActive }) {
+export default function GanapatiTemple({ blessingActive, isDiyaLit = false }) {
   const { scene } = useGLTF('/models/temple.glb');
   const haloRef = useRef();
   const haloTexture = useMemo(() => createHaloTexture(), []);
@@ -337,17 +337,18 @@ export default function GanapatiTemple({ blessingActive }) {
 
       {/* 
         7. Divine Radiant Halo Aura BEHIND Lord Ganesha's Head (z = -2.6)
-        Soft radial glow disc with Additive Blending
+        Soft radial glow disc with Additive Blending.
+        Glows majestically in the dark, and brightens upon blessing.
       */}
       <mesh
         ref={haloRef}
         position={[0, 3.8, -2.6]}
       >
-        <planeGeometry args={[6.8, 6.8]} />
+        <planeGeometry args={[7.2, 7.2]} />
         <meshBasicMaterial
           map={haloTexture}
           transparent
-          opacity={blessingActive ? 0.95 : 0.42}
+          opacity={blessingActive ? 0.95 : (isDiyaLit ? 0.45 : 0.88)}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
           side={THREE.DoubleSide}
@@ -355,13 +356,16 @@ export default function GanapatiTemple({ blessingActive }) {
       </mesh>
 
       {/* ============================================================ */}
-      {/* SACRED TEMPLE ILLUMINATION (Warm, Rich & Divine)             */}
+      {/* SACRED TEMPLE ILLUMINATION                                   */}
+      {/* Lights off initially: Dim atmospheric sanctum with radiant    */}
+      {/* golden rim light and halo BEHIND the idol.                   */}
+      {/* When Diya is lit: Full warm royal sanctum illumination.      */}
       {/* ============================================================ */}
 
       {/* 1. Main Front Key Light */}
       <directionalLight
         position={[0, 4.2, 9.5]}
-        intensity={blessingActive ? 5.8 : 4.0}
+        intensity={isDiyaLit ? (blessingActive ? 5.8 : 4.0) : 0.08}
         color="#fff4e0"
         castShadow
         shadow-mapSize={[1024, 1024]}
@@ -371,7 +375,7 @@ export default function GanapatiTemple({ blessingActive }) {
       {/* 2. Warm Front Fill Light (Chest level) */}
       <pointLight
         position={[0, 1.8, 4.2]}
-        intensity={blessingActive ? 3.8 : 2.8}
+        intensity={isDiyaLit ? (blessingActive ? 3.8 : 2.8) : 0.05}
         color="#ffa834"
         distance={14}
         decay={1}
@@ -380,7 +384,7 @@ export default function GanapatiTemple({ blessingActive }) {
       {/* 3. Left Side Warm Pillar Fill */}
       <pointLight
         position={[-3.6, 2.2, 3.2]}
-        intensity={2.6}
+        intensity={isDiyaLit ? 2.6 : 0.0}
         color="#ff9922"
         distance={12}
         decay={1}
@@ -389,18 +393,27 @@ export default function GanapatiTemple({ blessingActive }) {
       {/* 4. Right Side Warm Pillar Fill */}
       <pointLight
         position={[3.6, 2.2, 3.2]}
-        intensity={2.6}
+        intensity={isDiyaLit ? 2.6 : 0.0}
         color="#ff9922"
         distance={12}
         decay={1}
       />
 
-      {/* 5. Golden Rim / Mukut Halo Light (behind Ganesha's crown) */}
+      {/* 5. Golden Rim / Mukut Halo Light BEHIND Ganesha's crown (Active even when lights are off) */}
       <pointLight
-        position={[0, 4.4, -2.4]}
-        intensity={blessingActive ? 5.8 : 3.2}
+        position={[0, 4.4, -2.2]}
+        intensity={isDiyaLit ? (blessingActive ? 5.8 : 3.2) : 8.5}
         color="#fbbf24"
-        distance={12}
+        distance={18}
+        decay={1}
+      />
+
+      {/* 6. Divine Torso & Throne Backlight BEHIND Ganesha (creates royal silhouette rim in the dark) */}
+      <pointLight
+        position={[0, 1.6, -1.8]}
+        intensity={isDiyaLit ? (blessingActive ? 2.4 : 1.6) : 5.5}
+        color="#f59e0b"
+        distance={15}
         decay={1}
       />
     </group>

@@ -259,20 +259,20 @@ export default function ExperienceUI({
           <button
             onClick={onToggleDiya}
             className={`flex flex-col items-center gap-1 sm:gap-1.5 transition-all group cursor-pointer ${
-              isDiyaLit ? 'text-amber-300' : 'text-neutral-400 hover:text-amber-200'
+              isDiyaLit ? 'text-amber-300' : 'text-amber-200/90 hover:text-amber-100'
             }`}
           >
             <div
               className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all ${
                 isDiyaLit
                   ? 'bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-400 text-black shadow-[0_0_20px_rgba(245,158,11,0.7)] scale-105'
-                  : 'bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50'
+                  : 'bg-amber-500/15 hover:bg-amber-500/30 border border-amber-400/50 text-amber-300 shadow-[0_0_16px_rgba(245,158,11,0.35)] animate-pulse'
               }`}
             >
-              <Flame className={`w-5 h-5 sm:w-6 sm:h-6 ${isDiyaLit ? 'fill-current animate-pulse' : ''}`} />
+              <Flame className={`w-5 h-5 sm:w-6 sm:h-6 ${isDiyaLit ? 'fill-current animate-pulse' : 'text-amber-300'}`} />
             </div>
             <span className="text-[10px] sm:text-xs font-medium tracking-wide whitespace-nowrap">
-              Light Diya
+              {isDiyaLit ? 'Diyas Lit' : 'Light Diya'}
             </span>
           </button>
 
