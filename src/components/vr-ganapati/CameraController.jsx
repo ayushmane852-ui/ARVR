@@ -9,15 +9,15 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
   const controlsRef = useRef();
   const mouseParallaxRef = useRef({ x: 0, y: 0 });
 
-  // Initial cinematic camera dolly push on load: smoothly settles into the grand wide temple vantage point
+  // Initial cinematic camera dolly push on load: smoothly settles into the majestic wide temple hall vantage point
   useEffect(() => {
-    camera.position.set(0, 2.2, 16.0);
+    camera.position.set(0, 3.0, 21.0);
     camera.lookAt(0, 1.4, 0.3);
 
     gsap.to(camera.position, {
       x: 0,
-      y: 1.25,
-      z: 12.0,
+      y: 1.6,
+      z: 15.8,
       duration: 2.8,
       ease: 'power2.out',
       onUpdate: () => {
@@ -43,7 +43,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
     tl.to(camera.position, {
       x: 0,
       y: 1.5,
-      z: 8.4,
+      z: 9.2,
       duration: 2.5,
       ease: 'power2.inOut',
       onUpdate: () => {
@@ -55,11 +55,11 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
     // Hold reverently for 3.8 seconds
     tl.to({}, { duration: 3.8 });
 
-    // Smoothly return to hero frame
+    // Smoothly return to wide hero frame
     tl.to(camera.position, {
       x: 0,
-      y: 1.25,
-      z: 12.0,
+      y: 1.6,
+      z: 15.8,
       duration: 2.5,
       ease: 'power2.out',
       onUpdate: () => {
@@ -76,7 +76,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
     const handleMouseMove = (e) => {
       const nx = (e.clientX / window.innerWidth) * 2 - 1;
       const ny = -(e.clientY / window.innerHeight) * 2 + 1;
-      mouseParallaxRef.current = { x: nx * 0.35, y: ny * 0.2 };
+      mouseParallaxRef.current = { x: nx * 0.4, y: ny * 0.22 };
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
@@ -92,7 +92,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
     );
     camera.position.y = THREE.MathUtils.lerp(
       camera.position.y,
-      1.25 + mouseParallaxRef.current.y,
+      1.6 + mouseParallaxRef.current.y,
       0.03
     );
     controlsRef.current.update();
@@ -104,12 +104,12 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
       enableDamping
       dampingFactor={0.06}
       enablePan={false}
-      minDistance={4.0}
-      maxDistance={22.0}
+      minDistance={4.5}
+      maxDistance={28.0}
       minPolarAngle={Math.PI / 3.2}
       maxPolarAngle={Math.PI / 2 + 0.05}
-      minAzimuthAngle={-Math.PI / 3.5}
-      maxAzimuthAngle={Math.PI / 3.5}
+      minAzimuthAngle={-Math.PI / 3.2}
+      maxAzimuthAngle={Math.PI / 3.2}
       rotateSpeed={0.65}
       zoomSpeed={0.6}
     />
