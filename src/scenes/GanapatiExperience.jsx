@@ -20,7 +20,7 @@ function SceneLighting({ blessingActive, isDiyaLit }) {
     <>
       {/* Deep Temple Atmospheric Fog */}
       <color attach="background" args={['#070503']} />
-      <fog attach="fog" args={['#070503', 10.0, 42.0]} />
+      <fog attach="fog" args={['#070503', 14.0, 52.0]} />
 
       {/* Warm Ambient Fill for Deep Sanctum Atmosphere */}
       <ambientLight 
@@ -62,7 +62,7 @@ function ExperienceCanvas({
     <Canvas
       shadows
       dpr={[1, 1.5]}
-      camera={{ position: [0, 1.6, 15.8], fov: 54 }}
+      camera={{ position: [0, 2.2, 20.5], fov: 56 }}
       gl={{
         antialias: true,
         toneMapping: THREE.ACESFilmicToneMapping,
@@ -149,7 +149,7 @@ export default function GanapatiExperience() {
     const newOffering = {
       id: Date.now() + Math.random(),
       startTime: performance.now() / 1000,
-      startPos: [(Math.random() - 0.5) * 2.2, -0.2, 13.5],
+      startPos: [(Math.random() - 0.5) * 2.8, 0.0, 17.5],
       targetPos: [
         (Math.random() - 0.5) * 1.5,
         -2.75,
@@ -177,7 +177,7 @@ export default function GanapatiExperience() {
     const newModak = {
       id: Date.now() + Math.random(),
       startTime: performance.now() / 1000,
-      startPos: [(Math.random() - 0.5) * 1.8, -0.2, 13.0],
+      startPos: [(Math.random() - 0.5) * 2.2, 0.0, 17.0],
       targetPos: [
         (Math.random() - 0.5) * 0.6,
         -2.75,
