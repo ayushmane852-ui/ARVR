@@ -85,27 +85,43 @@ export default function Bell({ ringTriggerTime }) {
     };
   }, [scene]);
 
-  const leftBell = useMemo(() => createClonedBell(), [createClonedBell]);
-  const rightBell = useMemo(() => createClonedBell(), [createClonedBell]);
+  const bellL1 = useMemo(() => createClonedBell(), [createClonedBell]);
+  const bellR1 = useMemo(() => createClonedBell(), [createClonedBell]);
+  const bellL2 = useMemo(() => createClonedBell(), [createClonedBell]);
+  const bellR2 = useMemo(() => createClonedBell(), [createClonedBell]);
 
   return (
     <group>
-      {/* Left Hanging Temple Bell (positioned wide in the upper corner) */}
+      {/* Front Inner Bells flanking Lord Ganesha */}
       <SingleHangingBell
-        bellScene={leftBell}
-        position={[-5.8, 5.6, 2.0]}
+        bellScene={bellL1}
+        position={[-3.6, 3.6, 2.2]}
         ringTriggerTime={ringTriggerTime}
         side="left"
-        chainHeight={4.8}
+        chainHeight={5.2}
       />
-
-      {/* Right Hanging Temple Bell */}
       <SingleHangingBell
-        bellScene={rightBell}
-        position={[5.8, 5.6, 2.0]}
+        bellScene={bellR1}
+        position={[3.6, 3.6, 2.2]}
         ringTriggerTime={ringTriggerTime}
         side="right"
-        chainHeight={4.8}
+        chainHeight={5.2}
+      />
+
+      {/* Outer Side Archway Bells */}
+      <SingleHangingBell
+        bellScene={bellL2}
+        position={[-5.4, 4.2, 1.4]}
+        ringTriggerTime={ringTriggerTime}
+        side="left"
+        chainHeight={4.6}
+      />
+      <SingleHangingBell
+        bellScene={bellR2}
+        position={[5.4, 4.2, 1.4]}
+        ringTriggerTime={ringTriggerTime}
+        side="right"
+        chainHeight={4.6}
       />
     </group>
   );

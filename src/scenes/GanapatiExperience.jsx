@@ -19,19 +19,19 @@ function SceneLighting({ blessingActive, isDiyaLit }) {
   return (
     <>
       {/* Deep Temple Atmospheric Fog */}
-      <color attach="background" args={['#070503']} />
-      <fog attach="fog" args={['#070503', 14.0, 52.0]} />
+      <color attach="background" args={['#0e0906']} />
+      <fog attach="fog" args={['#0e0906', 7.0, 32.0]} />
 
-      {/* Warm Ambient Fill for Deep Sanctum Atmosphere */}
+      {/* Warm Ambient Fill for Deep Sanctum Atmosphere (Warm temple stone reflections) */}
       <ambientLight 
-        color="#3a2216" 
-        intensity={blessingActive ? 0.7 : 1.2} 
+        color="#543318" 
+        intensity={blessingActive ? 1.0 : 1.8} 
       />
 
       {/* Main Royal Sanctum Sunbeam / Ambient Key Light */}
       <directionalLight
         position={[2.5, 12.0, 7.5]}
-        intensity={blessingActive ? 1.4 : 2.2}
+        intensity={blessingActive ? 1.8 : 2.6}
         color="#fff1d6"
       />
 
@@ -40,7 +40,7 @@ function SceneLighting({ blessingActive, isDiyaLit }) {
         <pointLight
           position={[0, -1.0, 3.0]}
           color="#ff8800"
-          intensity={3.2}
+          intensity={3.8}
           distance={14.0}
           decay={1}
         />
@@ -62,7 +62,7 @@ function ExperienceCanvas({
     <Canvas
       shadows
       dpr={[1, 1.5]}
-      camera={{ position: [0, 2.2, 20.5], fov: 56 }}
+      camera={{ position: [0, 0.85, 10.6], fov: 50 }}
       gl={{
         antialias: true,
         toneMapping: THREE.ACESFilmicToneMapping,
@@ -149,7 +149,7 @@ export default function GanapatiExperience() {
     const newOffering = {
       id: Date.now() + Math.random(),
       startTime: performance.now() / 1000,
-      startPos: [(Math.random() - 0.5) * 2.8, 0.0, 17.5],
+      startPos: [(Math.random() - 0.5) * 1.6, -0.4, 8.8],
       targetPos: [
         (Math.random() - 0.5) * 1.5,
         -2.75,
@@ -177,7 +177,7 @@ export default function GanapatiExperience() {
     const newModak = {
       id: Date.now() + Math.random(),
       startTime: performance.now() / 1000,
-      startPos: [(Math.random() - 0.5) * 2.2, 0.0, 17.0],
+      startPos: [(Math.random() - 0.5) * 1.2, -0.4, 8.4],
       targetPos: [
         (Math.random() - 0.5) * 0.6,
         -2.75,

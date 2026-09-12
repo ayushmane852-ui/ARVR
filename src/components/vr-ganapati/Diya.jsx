@@ -110,35 +110,51 @@ export default function Diya({ isLit }) {
   const diyaR1 = useMemo(() => createClonedDiya(), [createClonedDiya]);
   const diyaL2 = useMemo(() => createClonedDiya(), [createClonedDiya]);
   const diyaR2 = useMemo(() => createClonedDiya(), [createClonedDiya]);
+  const diyaL3 = useMemo(() => createClonedDiya(), [createClonedDiya]);
+  const diyaR3 = useMemo(() => createClonedDiya(), [createClonedDiya]);
 
-  const bigScale = 0.82;
+  const bigScale = 0.85;
   const bigFlameY = 4.04 * bigScale * 0.92;
 
-  const medScale = 0.48;
+  const medScale = 0.52;
   const medFlameY = 4.04 * medScale * 0.92;
+
+  const sideScale = 0.65;
+  const sideFlameY = 4.04 * sideScale * 0.92;
 
   return (
     <group>
-      {/* 1. Grand Brass Samai Lamps (standing on sanctum floor flanking Ganesha) */}
-      <group position={[-4.8, -2.88, 2.4]}>
+      {/* 1. Grand Brass Samai Standing Lamps (flanking Lord Ganesha's throne steps) */}
+      <group position={[-3.4, -2.88, 1.8]}>
         <primitive object={diyaL1} scale={[bigScale, bigScale, bigScale]} />
         <DiyaFlame isLit={isLit} position={[0, bigFlameY, 0]} scale={1.2} />
       </group>
 
-      <group position={[4.8, -2.88, 2.4]}>
+      <group position={[3.4, -2.88, 1.8]}>
         <primitive object={diyaR1} scale={[bigScale, bigScale, bigScale]} />
         <DiyaFlame isLit={isLit} position={[0, bigFlameY, 0]} scale={1.2} />
       </group>
 
-      {/* 2. Step Accent Diyas */}
-      <group position={[-2.2, -2.88, 3.8]}>
+      {/* 2. Step Accent Deepams (framing the front steps) */}
+      <group position={[-1.8, -2.88, 3.2]}>
         <primitive object={diyaL2} scale={[medScale, medScale, medScale]} />
         <DiyaFlame isLit={isLit} position={[0, medFlameY, 0]} scale={0.8} />
       </group>
 
-      <group position={[2.2, -2.88, 3.8]}>
+      <group position={[1.8, -2.88, 3.2]}>
         <primitive object={diyaR2} scale={[medScale, medScale, medScale]} />
         <DiyaFlame isLit={isLit} position={[0, medFlameY, 0]} scale={0.8} />
+      </group>
+
+      {/* 3. Outer Sanctuary Deepams (flanking the sides) */}
+      <group position={[-5.0, -2.88, 2.6]}>
+        <primitive object={diyaL3} scale={[sideScale, sideScale, sideScale]} />
+        <DiyaFlame isLit={isLit} position={[0, sideFlameY, 0]} scale={0.9} />
+      </group>
+
+      <group position={[5.0, -2.88, 2.6]}>
+        <primitive object={diyaR3} scale={[sideScale, sideScale, sideScale]} />
+        <DiyaFlame isLit={isLit} position={[0, sideFlameY, 0]} scale={0.9} />
       </group>
     </group>
   );

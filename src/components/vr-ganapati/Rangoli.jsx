@@ -105,7 +105,7 @@ function createRangoliTexture() {
   return texture;
 }
 
-export default function Rangoli({ position = [0, -2.86, 4.4] }) {
+export default function Rangoli({ position = [0, -2.99, 4.2] }) {
   const texture = useMemo(() => createRangoliTexture(), []);
 
   return (

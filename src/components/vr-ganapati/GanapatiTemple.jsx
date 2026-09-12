@@ -23,6 +23,161 @@ function createHaloTexture() {
   return texture;
 }
 
+// Single Vertical Marigold Flower Garland (Gendaphool Mala)
+function MarigoldGarland({ position, height = 7.2, count = 28 }) {
+  const [positions, colors] = useMemo(() => {
+    const pos = [];
+    const col = [];
+    const step = height / count;
+    for (let i = 0; i < count; i++) {
+      const y = -i * step;
+      const x = Math.sin(i * 0.45) * 0.03;
+      const z = Math.cos(i * 0.45) * 0.03;
+      pos.push([x, y, z]);
+      col.push(i % 2 === 0 ? '#ea580c' : '#f59e0b');
+    }
+    return [pos, col];
+  }, [count, height]);
+
+  return (
+    <group position={position}>
+      {positions.map((p, idx) => (
+        <mesh key={idx} position={p}>
+          <sphereGeometry args={[0.13, 10, 10]} />
+          <meshStandardMaterial
+            color={colors[idx]}
+            roughness={0.75}
+            metalness={0.05}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+// Royal Brass Chhatra (Sacred Golden Umbrella suspended above Lord Ganesha's Crown)
+function GoldenChhatra({ position = [0, 5.35, 0.3] }) {
+  const fringeBeads = useMemo(() => {
+    const beads = [];
+    const numBeads = 28;
+    const r = 1.7;
+    for (let i = 0; i < numBeads; i++) {
+      const angle = (i / numBeads) * Math.PI * 2;
+      beads.push([Math.cos(angle) * r, -0.16, Math.sin(angle) * r]);
+    }
+    return beads;
+  }, []);
+
+  return (
+    <group position={position}>
+      {/* Brass Suspension Chain from Ceiling */}
+      <mesh position={[0, 2.5, 0]}>
+        <cylinderGeometry args={[0.02, 0.02, 5.0, 12]} />
+        <meshStandardMaterial
+          color="#d4af37"
+          metalness={0.92}
+          roughness={0.22}
+        />
+      </mesh>
+
+      {/* Golden Kalash Finial Top */}
+      <mesh position={[0, 0.4, 0]}>
+        <cylinderGeometry args={[0.08, 0.22, 0.42, 24]} />
+        <meshStandardMaterial
+          color="#fbbf24"
+          metalness={0.95}
+          roughness={0.15}
+        />
+      </mesh>
+
+      {/* Main Fluted Chhatra Dome */}
+      <mesh position={[0, 0.02, 0]} receiveShadow>
+        <cylinderGeometry args={[0.28, 1.7, 0.38, 36, 1, true]} />
+        <meshStandardMaterial
+          color="#d4af37"
+          metalness={0.92}
+          roughness={0.2}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      {/* Outer Golden Rim Band (rotated flat in XZ plane) */}
+      <mesh position={[0, -0.17, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[1.7, 0.045, 16, 48]} />
+        <meshStandardMaterial
+          color="#f59e0b"
+          metalness={0.95}
+          roughness={0.16}
+        />
+      </mesh>
+
+      {/* Hanging Golden Bead Fringe */}
+      {fringeBeads.map((p, idx) => (
+        <mesh key={idx} position={p}>
+          <sphereGeometry args={[0.038, 8, 8]} />
+          <meshStandardMaterial
+            color="#fbbf24"
+            metalness={0.95}
+            roughness={0.15}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+// Multi-Tiered Carved Stone Temple Throne Steps
+function TempleThroneSteps() {
+  const petalPositions = useMemo(() => {
+    const petals = [];
+    const count = 38;
+    for (let i = 0; i < count; i++) {
+      const stepIdx = Math.floor(Math.random() * 3);
+      const y = -2.78 - stepIdx * 0.07;
+      const z = 1.8 + stepIdx * 0.7 + (Math.random() - 0.5) * 0.4;
+      const x = (Math.random() - 0.5) * (3.8 + stepIdx * 1.2);
+      const rot = [Math.random() * 0.2, Math.random() * Math.PI * 2, Math.random() * 0.2];
+      const isRed = Math.random() > 0.35;
+      petals.push({ pos: [x, y, z], rot, color: isRed ? '#e11d48' : '#f59e0b' });
+    }
+    return petals;
+  }, []);
+
+  return (
+    <group>
+      {/* Tier 1 (Upper Step) */}
+      <mesh position={[0, -2.85, 1.8]} receiveShadow>
+        <boxGeometry args={[4.8, 0.12, 2.6]} />
+        <meshStandardMaterial color="#2d1d13" roughness={0.7} metalness={0.2} />
+      </mesh>
+
+      {/* Tier 2 (Middle Step) */}
+      <mesh position={[0, -2.91, 2.6]} receiveShadow>
+        <boxGeometry args={[5.8, 0.12, 2.0]} />
+        <meshStandardMaterial color="#281910" roughness={0.72} metalness={0.2} />
+      </mesh>
+
+      {/* Tier 3 (Bottom Step) */}
+      <mesh position={[0, -2.96, 3.4]} receiveShadow>
+        <boxGeometry args={[6.8, 0.12, 1.6]} />
+        <meshStandardMaterial color="#22150d" roughness={0.75} metalness={0.2} />
+      </mesh>
+
+      {/* Scattered Sacred Flower Petals on the Steps */}
+      {petalPositions.map((p, idx) => (
+        <mesh key={idx} position={p.pos} rotation={p.rot}>
+          <circleGeometry args={[0.07, 8]} />
+          <meshStandardMaterial
+            color={p.color}
+            roughness={0.6}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 export default function GanapatiTemple({ blessingActive }) {
   const { scene } = useGLTF('/models/temple.glb');
   const haloRef = useRef();
@@ -43,15 +198,15 @@ export default function GanapatiTemple({ blessingActive }) {
 
           // Lord Ganesha idol mesh
           if (isIdol) {
-            child.material.color = new THREE.Color('#ffffff');
-            child.material.roughness = 0.38;
-            child.material.metalness = 0.15;
-            child.material.envMapIntensity = 1.4;
+            child.material.color = new THREE.Color('#fff8ee');
+            child.material.roughness = 0.32;
+            child.material.metalness = 0.12;
+            child.material.envMapIntensity = 1.6;
           } else {
             // Temple architecture: Deep carved ancient temple granite/sandstone
-            child.material.color = new THREE.Color('#1c140e');
-            child.material.roughness = 0.85;
-            child.material.metalness = 0.12;
+            child.material.color = new THREE.Color('#54351e');
+            child.material.roughness = 0.72;
+            child.material.metalness = 0.16;
           }
         }
       }
@@ -61,20 +216,30 @@ export default function GanapatiTemple({ blessingActive }) {
 
   return (
     <group>
-      {/* 
-        Temple mandap and Ganesha idol.
-        Shifted by x = -5.0, y = -4.5, z = 5.0 to center Lord Ganesha (Mesh_0) 
-        at the origin (0, 1.48, 0.31) with height ~8.7 units.
-      */}
+      {/* 1. Temple Mandap & Lord Ganesha Idol */}
       <primitive 
         object={clonedScene} 
         position={[-5.0, -4.5, 5.0]} 
         scale={[1, 1, 1]} 
       />
 
-      {/* Ornate Brass Offering Thali Platform in front of Lord Ganesha's Lotus Feet */}
-      <group position={[0, -2.85, 2.2]}>
-        <mesh position={[0, 0.04, 0]} receiveShadow castShadow>
+      {/* 2. Multi-Tiered Carved Stone Throne Steps with Flower Petals */}
+      <TempleThroneSteps />
+
+      {/* 3. Royal Brass Chhatra (Canopy) suspended above Lord Ganesha's Crown */}
+      <GoldenChhatra position={[0, 5.35, 0.3]} />
+
+      {/* 4. Vertical Marigold Flower Garlands (Gendaphool Malas) framing the inner sanctum */}
+      <MarigoldGarland position={[-3.3, 5.4, 1.2]} height={7.2} count={28} />
+      <MarigoldGarland position={[3.3, 5.4, 1.2]} height={7.2} count={28} />
+
+      {/* Secondary outer garlands */}
+      <MarigoldGarland position={[-5.0, 5.6, 1.8]} height={7.4} count={28} />
+      <MarigoldGarland position={[5.0, 5.6, 1.8]} height={7.4} count={28} />
+
+      {/* 5. Ornate Brass Offering Thali Platform in front of Lotus Feet */}
+      <group position={[0, -2.78, 2.0]}>
+        <mesh position={[0, 0.04, 0]} receiveShadow>
           <cylinderGeometry args={[1.5, 1.3, 0.08, 48]} />
           <meshStandardMaterial 
             color="#d4af37" 
@@ -82,7 +247,7 @@ export default function GanapatiTemple({ blessingActive }) {
             roughness={0.2} 
           />
         </mesh>
-        {/* Flat brass thali lip rim (rotated flat on X axis) */}
+        {/* Flat brass thali rim */}
         <mesh position={[0, 0.08, 0]} rotation={[Math.PI / 2, 0, 0]}>
           <torusGeometry args={[1.45, 0.04, 16, 48]} />
           <meshStandardMaterial 
@@ -93,20 +258,29 @@ export default function GanapatiTemple({ blessingActive }) {
         </mesh>
       </group>
 
+      {/* 6. Polished Temple Floor (Reflective Dark Granite catching warm diya reflections) */}
+      <mesh position={[0, -3.01, 3.0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[26, 26]} />
+        <meshStandardMaterial
+          color="#160e0a"
+          roughness={0.18}
+          metalness={0.35}
+        />
+      </mesh>
+
       {/* 
-        Divine Radiant Halo Aura BEHIND Lord Ganesha's Head (z = -2.6)
+        7. Divine Radiant Halo Aura BEHIND Lord Ganesha's Head (z = -2.6)
         Soft radial glow disc with Additive Blending
       */}
       <mesh
         ref={haloRef}
         position={[0, 3.8, -2.6]}
-        rotation={[0, 0, 0]}
       >
-        <planeGeometry args={[6.5, 6.5]} />
+        <planeGeometry args={[6.8, 6.8]} />
         <meshBasicMaterial
           map={haloTexture}
           transparent
-          opacity={blessingActive ? 0.95 : 0.35}
+          opacity={blessingActive ? 0.95 : 0.42}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
           side={THREE.DoubleSide}
@@ -114,14 +288,14 @@ export default function GanapatiTemple({ blessingActive }) {
       </mesh>
 
       {/* ============================================================ */}
-      {/* DIRECT ILLUMINATION ON LORD GANESHA (Warm, Rich & Sacred)    */}
+      {/* SACRED TEMPLE ILLUMINATION (Warm, Rich & Divine)             */}
       {/* ============================================================ */}
 
       {/* 1. Main Front Key Light */}
       <directionalLight
-        position={[0, 4.0, 9.0]}
-        intensity={blessingActive ? 5.5 : 3.8}
-        color="#fff1d6"
+        position={[0, 4.2, 9.5]}
+        intensity={blessingActive ? 5.8 : 4.0}
+        color="#fff4e0"
         castShadow
         shadow-mapSize={[1024, 1024]}
         shadow-bias={-0.0002}
@@ -129,35 +303,35 @@ export default function GanapatiTemple({ blessingActive }) {
 
       {/* 2. Warm Front Fill Light (Chest level) */}
       <pointLight
-        position={[0, 1.8, 3.8]}
-        intensity={blessingActive ? 3.5 : 2.4}
+        position={[0, 1.8, 4.2]}
+        intensity={blessingActive ? 3.8 : 2.8}
         color="#ffa834"
         distance={14}
         decay={1}
       />
 
-      {/* 3. Left Side Fill Light */}
+      {/* 3. Left Side Warm Pillar Fill */}
       <pointLight
-        position={[-3.5, 2.2, 3.0]}
-        intensity={2.0}
+        position={[-3.6, 2.2, 3.2]}
+        intensity={2.6}
         color="#ff9922"
         distance={12}
         decay={1}
       />
 
-      {/* 4. Right Side Fill Light */}
+      {/* 4. Right Side Warm Pillar Fill */}
       <pointLight
-        position={[3.5, 2.2, 3.0]}
-        intensity={2.0}
+        position={[3.6, 2.2, 3.2]}
+        intensity={2.6}
         color="#ff9922"
         distance={12}
         decay={1}
       />
 
-      {/* 5. Golden Rim / Halo Light (behind Ganesha's head) */}
+      {/* 5. Golden Rim / Mukut Halo Light (behind Ganesha's crown) */}
       <pointLight
-        position={[0, 4.2, -2.5]}
-        intensity={blessingActive ? 5.5 : 2.8}
+        position={[0, 4.4, -2.4]}
+        intensity={blessingActive ? 5.8 : 3.2}
         color="#fbbf24"
         distance={12}
         decay={1}
