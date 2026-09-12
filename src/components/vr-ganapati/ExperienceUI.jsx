@@ -119,7 +119,7 @@ export default function ExperienceUI({
   };
 
   return (
-    <div className="absolute inset-0 pointer-events-none z-30 flex flex-col justify-between p-4 sm:p-7 select-none">
+    <div className="absolute inset-0 pointer-events-none z-30 flex flex-col justify-between p-3 sm:px-6 sm:pt-5 sm:pb-2.5 select-none">
       
       {/* ============================================================ */}
       {/* 1. TOP BAR */}
@@ -216,7 +216,7 @@ export default function ExperienceUI({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.8 }}
-            className="absolute inset-0 flex flex-col items-center justify-end pb-28 sm:pb-32 pointer-events-none text-center px-4"
+            className="absolute inset-0 flex flex-col items-center justify-end pb-22 sm:pb-24 pointer-events-none text-center px-4"
           >
             <div className="bg-[#120e0b]/85 backdrop-blur-2xl border border-amber-400/40 px-6 sm:px-8 py-3.5 sm:py-4 rounded-3xl shadow-[0_12px_40px_rgba(0,0,0,0.85),0_0_30px_rgba(245,158,11,0.25)] max-w-md">
               <span className="text-[11px] sm:text-xs font-serif tracking-[0.3em] text-amber-400/90 uppercase block mb-1">
@@ -250,28 +250,28 @@ export default function ExperienceUI({
       {/* ============================================================ */}
       {/* 4. BOTTOM BAR: FOOTER LABELS & GLASSMORPHIC INTERACTION DOCK */}
       {/* ============================================================ */}
-      <footer className="w-full flex flex-col items-center gap-3 sm:gap-4 pointer-events-auto">
+      <footer className="w-full flex flex-col items-center gap-1.5 sm:gap-2 pointer-events-auto">
         
-        {/* Floating Glassmorphic Pill Toolbar (matching mockup reference) */}
-        <div className="flex items-center justify-center gap-3 sm:gap-6 lg:gap-8 px-4 sm:px-8 py-2.5 sm:py-3 rounded-full bg-[#120e0b]/75 border border-amber-500/25 backdrop-blur-2xl shadow-[0_12px_45px_rgba(0,0,0,0.85),inset_0_0_20px_rgba(245,158,11,0.08)] transition-all max-w-full overflow-x-auto">
+        {/* Floating Glassmorphic Pill Toolbar (compact height, positioned lower) */}
+        <div className="flex items-center justify-center gap-2.5 sm:gap-5 lg:gap-6 px-3.5 sm:px-6 py-1.5 sm:py-2 rounded-full bg-[#120e0b]/80 border border-amber-500/25 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.85),inset_0_0_15px_rgba(245,158,11,0.08)] transition-all max-w-full overflow-x-auto">
           
           {/* Action 1: Light Diya */}
           <button
             onClick={onToggleDiya}
-            className={`flex flex-col items-center gap-1 sm:gap-1.5 transition-all group cursor-pointer ${
+            className={`flex flex-col items-center gap-0.5 sm:gap-1 transition-all group cursor-pointer ${
               isDiyaLit ? 'text-amber-300' : 'text-amber-200/90 hover:text-amber-100'
             }`}
           >
             <div
-              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all ${
+              className={`w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center transition-all ${
                 isDiyaLit
-                  ? 'bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-400 text-black shadow-[0_0_20px_rgba(245,158,11,0.7)] scale-105'
-                  : 'bg-amber-500/15 hover:bg-amber-500/30 border border-amber-400/50 text-amber-300 shadow-[0_0_16px_rgba(245,158,11,0.35)] animate-pulse'
+                  ? 'bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-400 text-black shadow-[0_0_15px_rgba(245,158,11,0.7)] scale-105'
+                  : 'bg-amber-500/15 hover:bg-amber-500/30 border border-amber-400/50 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.3)] animate-pulse'
               }`}
             >
-              <Flame className={`w-5 h-5 sm:w-6 sm:h-6 ${isDiyaLit ? 'fill-current animate-pulse' : 'text-amber-300'}`} />
+              <Flame className={`w-4 h-4 sm:w-4.5 sm:h-4.5 ${isDiyaLit ? 'fill-current animate-pulse' : 'text-amber-300'}`} />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium tracking-wide whitespace-nowrap">
+            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
               {isDiyaLit ? 'Diyas Lit' : 'Light Diya'}
             </span>
           </button>
@@ -279,12 +279,12 @@ export default function ExperienceUI({
           {/* Action 2: Ring Bell */}
           <button
             onClick={onRingBell}
-            className="flex flex-col items-center gap-1 sm:gap-1.5 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer"
+            className="flex flex-col items-center gap-0.5 sm:gap-1 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer"
           >
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95 transition-all">
-              <BellIcon className="w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform text-amber-400/90" />
+            <div className="w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95 transition-all">
+              <BellIcon className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover:rotate-12 transition-transform text-amber-400/90" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium tracking-wide whitespace-nowrap">
+            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
               Ring Bell
             </span>
           </button>
@@ -292,12 +292,12 @@ export default function ExperienceUI({
           {/* Action 3: Offer Flowers */}
           <button
             onClick={onOfferFlowers}
-            className="flex flex-col items-center gap-1 sm:gap-1.5 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer"
+            className="flex flex-col items-center gap-0.5 sm:gap-1 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer"
           >
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95 transition-all">
-              <Flower2 className="w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-45 transition-transform text-rose-400/90" />
+            <div className="w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95 transition-all">
+              <Flower2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover:rotate-45 transition-transform text-rose-400/90" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium tracking-wide whitespace-nowrap">
+            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
               Offer Flowers
             </span>
           </button>
@@ -305,12 +305,12 @@ export default function ExperienceUI({
           {/* Action 4: Offer Modak */}
           <button
             onClick={onOfferModak}
-            className="flex flex-col items-center gap-1 sm:gap-1.5 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer"
+            className="flex flex-col items-center gap-0.5 sm:gap-1 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer"
           >
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95 transition-all">
-              <ModakIcon className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform text-yellow-400/90" />
+            <div className="w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95 transition-all">
+              <ModakIcon className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover:scale-110 transition-transform text-yellow-400/90" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium tracking-wide whitespace-nowrap">
+            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
               Offer Modak
             </span>
           </button>
@@ -319,28 +319,28 @@ export default function ExperienceUI({
           <button
             onClick={onTakeBlessings}
             disabled={blessingActive}
-            className={`flex flex-col items-center gap-1 sm:gap-1.5 transition-all group cursor-pointer ${
+            className={`flex flex-col items-center gap-0.5 sm:gap-1 transition-all group cursor-pointer ${
               blessingActive ? 'opacity-60 cursor-not-allowed' : 'text-neutral-400 hover:text-amber-200'
             }`}
           >
-            <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center border transition-all ${
+            <div className={`w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center border transition-all ${
               blessingActive
-                ? 'bg-amber-500/20 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.5)]'
+                ? 'bg-amber-500/20 border-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.5)]'
                 : 'bg-white/5 hover:bg-white/10 border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95'
             }`}>
-              <NamasteIcon className="w-5 h-5 sm:w-6 sm:h-6 text-amber-300" />
+              <NamasteIcon className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-amber-300" />
             </div>
-            <span className="text-[10px] sm:text-xs font-medium tracking-wide whitespace-nowrap">
+            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
               Take Blessings
             </span>
           </button>
         </div>
 
         {/* Bottom Outer Subtitles: Left peace message + Right swipe helper */}
-        <div className="w-full flex items-center justify-between text-[11px] text-amber-300/60 font-light px-2">
+        <div className="w-full flex items-center justify-between text-[10px] sm:text-[11px] text-amber-300/60 font-light px-2 pb-0.5">
           {/* Bottom Left: Lotus Emblem */}
           <div className="flex items-center gap-2">
-            <span className="w-6 h-6 rounded-full border border-amber-500/30 flex items-center justify-center text-xs text-amber-400">
+            <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-amber-500/30 flex items-center justify-center text-[10px] sm:text-xs text-amber-400">
               🪷
             </span>
             <span className="hidden sm:inline">Feel the peace in every moment</span>
