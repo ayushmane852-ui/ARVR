@@ -135,15 +135,15 @@ export default function Diya({ isLit }) {
         <DiyaFlame isLit={isLit} position={[0, bigFlameY, 0]} scale={1.2} />
       </group>
 
-      {/* 2. Step Accent Deepams (framing the front steps) */}
+      {/* 2. Step Accent Mini Deepams (Eternal Akhand Deepams framing the front steps - lit initially) */}
       <group position={[-1.8, -2.88, 3.2]}>
         <primitive object={diyaL2} scale={[medScale, medScale, medScale]} />
-        <DiyaFlame isLit={isLit} position={[0, medFlameY, 0]} scale={0.8} />
+        <DiyaFlame isLit={true} position={[0, medFlameY, 0]} scale={isLit ? 1.0 : 0.85} />
       </group>
 
       <group position={[1.8, -2.88, 3.2]}>
         <primitive object={diyaR2} scale={[medScale, medScale, medScale]} />
-        <DiyaFlame isLit={isLit} position={[0, medFlameY, 0]} scale={0.8} />
+        <DiyaFlame isLit={true} position={[0, medFlameY, 0]} scale={isLit ? 1.0 : 0.85} />
       </group>
 
       {/* 3. Outer Sanctuary Deepams (flanking the sides) */}
