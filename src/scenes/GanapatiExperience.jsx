@@ -119,10 +119,11 @@ function SceneLighting({ blessingActive, isDiyaLit, arModeActive = false }) {
 }
 
 // Meditative 360° Devotional Auto-Spin in AR Mode
-function ARAutoRotator({ active, placed, autoRotate, onRotateDelta }) {
+// Directly mutates Three.js group rotation to prevent 60-120Hz React state thrashing
+function ARAutoRotator({ active, placed, autoRotate, arGroupRef }) {
   useFrame((state, delta) => {
-    if (!active || !placed || !autoRotate || !onRotateDelta) return;
-    onRotateDelta(delta * 0.32); // Smooth calm 360° rotation (1 full turn in ~20s)
+    if (!active || !placed || !autoRotate || !arGroupRef?.current) return;
+    arGroupRef.current.rotation.y += delta * 0.32; // Smooth calm 360° rotation (1 full turn in ~20s)
   });
   return null;
 }
@@ -177,15 +178,14 @@ function ExperienceCanvas({
   arPlaced = false,
   arScale = 0.35,
   arPosition = [0, -1.2, 5.0],
-  arRotation = [0, 0, 0],
   onPlaceAR,
   onAnchorUpdate,
   surfaceDetected = false,
   onSurfaceStatusChange,
   onTrackingStateChange,
   autoRotate360 = false,
-  onRotateDelta,
   reticleRef,
+  arGroupRef,
 }) {
   return (
     <Canvas
@@ -221,34 +221,40 @@ function ExperienceCanvas({
       />
 
       <Suspense fallback={null}>
-        <WebXRHitTestManager
-          active={arModeActive && isWebXRAR}
-          placed={arPlaced}
-          onPlace={onPlaceAR}
-          onAnchorUpdate={onAnchorUpdate}
-          onSurfaceStatusChange={onSurfaceStatusChange}
-          onTrackingStateChange={onTrackingStateChange}
-          reticleRef={reticleRef}
-        />
-        <ARPlacementReticle
-          ref={reticleRef}
-          visible={arModeActive && !arPlaced}
-          isWebXR={isWebXRAR}
-          surfaceDetected={surfaceDetected}
-          onPlace={() => onPlaceAR()}
-        />
-        <ARAutoRotator
-          active={arModeActive}
-          placed={arPlaced}
-          autoRotate={autoRotate360}
-          onRotateDelta={onRotateDelta}
-        />
-        <ARLightEstimator active={arModeActive && isWebXRAR} />
+        {arModeActive && isWebXRAR && (
+          <WebXRHitTestManager
+            active={arModeActive && isWebXRAR}
+            placed={arPlaced}
+            onPlace={onPlaceAR}
+            onAnchorUpdate={onAnchorUpdate}
+            onSurfaceStatusChange={onSurfaceStatusChange}
+            onTrackingStateChange={onTrackingStateChange}
+            reticleRef={reticleRef}
+          />
+        )}
+        {arModeActive && !arPlaced && (
+          <ARPlacementReticle
+            ref={reticleRef}
+            visible={true}
+            isWebXR={isWebXRAR}
+            surfaceDetected={surfaceDetected}
+            onPlace={() => onPlaceAR()}
+          />
+        )}
+        {arModeActive && (
+          <ARAutoRotator
+            active={arModeActive}
+            placed={arPlaced}
+            autoRotate={autoRotate360}
+            arGroupRef={arGroupRef}
+          />
+        )}
+        {arModeActive && isWebXRAR && <ARLightEstimator active={true} />}
 
         <group
+          ref={arGroupRef}
           position={arModeActive ? arPosition : [0, 0, 0]}
           scale={arModeActive ? (arPlaced ? arScale : 0) : 1}
-          rotation={arModeActive ? arRotation : [0, 0, 0]}
         >
           {/* Ground Contact Shadow (casts real soft shadows onto physical floor/table) */}
           {arModeActive && (
@@ -300,11 +306,14 @@ export default function GanapatiExperience() {
   // AR Mode state
   const glRef = useRef(null);
   const reticleRef = useRef(null);
+  const arGroupRef = useRef(null);
   const videoRef = useRef(null);
   const pointerStartX = useRef(0);
   const isPointerDragging = useRef(false);
   const pinchStartDist = useRef(null);
   const pinchStartScale = useRef(0.35);
+  const currentScaleRef = useRef(0.35);
+  const lastScaleUpdateRef = useRef(0);
 
   const [arStream, setArStream] = useState(null);
   const [arModeActive, setArModeActive] = useState(false);
@@ -315,7 +324,6 @@ export default function GanapatiExperience() {
   const [autoRotate360, setAutoRotate360] = useState(false);
   const [arScale, setArScale] = useState(0.35);
   const [arPosition, setArPosition] = useState([0, -1.2, 5.0]);
-  const [arRotation, setArRotation] = useState([0, 0, 0]);
 
   const handleSceneReady = useCallback(() => {
     setSceneReady(true);
@@ -520,6 +528,11 @@ export default function GanapatiExperience() {
       if (videoRef.current) {
         videoRef.current.srcObject = null;
       }
+      if (arGroupRef.current) {
+        arGroupRef.current.position.set(0, 0, 0);
+        arGroupRef.current.rotation.set(0, 0, 0);
+        arGroupRef.current.scale.setScalar(1);
+      }
       setArModeActive(false);
       setArPlaced(false);
       setIsWebXRAR(false);
@@ -550,6 +563,10 @@ export default function GanapatiExperience() {
         glRef.current.xr.enabled = true;
         await glRef.current.xr.setSession(session);
 
+        if (arGroupRef.current) {
+          arGroupRef.current.rotation.set(0, 0, 0);
+        }
+
         setIsWebXRAR(true);
         setArModeActive(true);
         setArPlaced(false);
@@ -559,6 +576,11 @@ export default function GanapatiExperience() {
         soundEngine.playBell();
 
         session.addEventListener('end', () => {
+          if (arGroupRef.current) {
+            arGroupRef.current.position.set(0, 0, 0);
+            arGroupRef.current.rotation.set(0, 0, 0);
+            arGroupRef.current.scale.setScalar(1);
+          }
           setArModeActive(false);
           setIsWebXRAR(false);
           setArPlaced(false);
@@ -576,13 +598,16 @@ export default function GanapatiExperience() {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: 'environment',
-          width: { ideal: 1920 },
-          height: { ideal: 1080 },
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
         },
       });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         videoRef.current.play().catch(() => {});
+      }
+      if (arGroupRef.current) {
+        arGroupRef.current.rotation.set(0, 0, 0);
       }
       setArStream(stream);
       setIsWebXRAR(false);
@@ -600,15 +625,22 @@ export default function GanapatiExperience() {
 
   const handlePlaceAR = useCallback((customPos = null) => {
     if (customPos) {
+      if (arGroupRef.current) {
+        arGroupRef.current.position.set(customPos[0], customPos[1], customPos[2]);
+      }
       setArPosition(customPos);
+    }
+    if (arGroupRef.current) {
+      arGroupRef.current.scale.setScalar(currentScaleRef.current);
     }
     setArPlaced(true);
     soundEngine.playFlowerSound();
   }, []);
 
+  // Update physical surface anchor position directly in Three.js without React reconciliation
   const handleAnchorUpdate = useCallback((pos) => {
-    if (pos) {
-      setArPosition(pos);
+    if (pos && arGroupRef.current) {
+      arGroupRef.current.position.set(pos[0], pos[1], pos[2]);
     }
   }, []);
 
@@ -618,16 +650,21 @@ export default function GanapatiExperience() {
   }, []);
 
   const handleScaleUp = useCallback(() => {
-    setArScale((s) => Math.min(1.2, +(s + 0.05).toFixed(2)));
+    setArScale((s) => {
+      const next = Math.min(1.2, +(s + 0.05).toFixed(2));
+      currentScaleRef.current = next;
+      if (arGroupRef.current) arGroupRef.current.scale.setScalar(next);
+      return next;
+    });
   }, []);
 
   const handleScaleDown = useCallback(() => {
-    setArScale((s) => Math.max(0.15, +(s - 0.05).toFixed(2)));
-  }, []);
-
-  // 360° Content Rotation Handlers (used in both native WebXR & fallback AR)
-  const handleRotateDelta = useCallback((delta) => {
-    setArRotation((prev) => [0, prev[1] + delta, 0]);
+    setArScale((s) => {
+      const next = Math.max(0.15, +(s - 0.05).toFixed(2));
+      currentScaleRef.current = next;
+      if (arGroupRef.current) arGroupRef.current.scale.setScalar(next);
+      return next;
+    });
   }, []);
 
   const handleToggleAutoRotate360 = useCallback(() => {
@@ -636,10 +673,13 @@ export default function GanapatiExperience() {
 
   const handleSetPresetAngle = useCallback((radians) => {
     setAutoRotate360(false);
-    setArRotation([0, radians, 0]);
+    if (arGroupRef.current) {
+      arGroupRef.current.rotation.y = radians;
+    }
   }, []);
 
   // Mobile Touch Gestures: 1-finger 360° swipe rotate & 2-finger pinch-to-scale in AR
+  // Transforms are applied imperatively to arGroupRef to eliminate 60-120Hz React state thrashing
   const handleTouchStart = useCallback((e) => {
     if (!arModeActive || !arPlaced) return;
     if (e.target.closest && (e.target.closest('button') || e.target.closest('header') || e.target.closest('footer'))) return;
@@ -649,13 +689,13 @@ export default function GanapatiExperience() {
       const dx = e.touches[0].clientX - e.touches[1].clientX;
       const dy = e.touches[0].clientY - e.touches[1].clientY;
       pinchStartDist.current = Math.hypot(dx, dy);
-      pinchStartScale.current = arScale;
+      pinchStartScale.current = currentScaleRef.current;
     } else if (e.touches && e.touches.length === 1) {
       pinchStartDist.current = null;
       pointerStartX.current = e.touches[0].clientX;
       isPointerDragging.current = true;
     }
-  }, [arModeActive, arPlaced, arScale]);
+  }, [arModeActive, arPlaced]);
 
   const handleTouchMove = useCallback((e) => {
     if (!arModeActive || !arPlaced) return;
@@ -667,14 +707,23 @@ export default function GanapatiExperience() {
       if (pinchStartDist.current > 0) {
         const factor = currentDist / pinchStartDist.current;
         const newScale = Math.min(1.25, Math.max(0.12, pinchStartScale.current * factor));
-        setArScale(Number(newScale.toFixed(3)));
+        currentScaleRef.current = newScale;
+        if (arGroupRef.current) {
+          arGroupRef.current.scale.setScalar(newScale);
+        }
+        // Throttled UI state sync (every 120ms) so toolbar indicator stays updated without lag
+        const now = performance.now();
+        if (now - lastScaleUpdateRef.current > 120) {
+          lastScaleUpdateRef.current = now;
+          setArScale(Number(newScale.toFixed(2)));
+        }
       }
     } else if (e.touches && e.touches.length === 1 && isPointerDragging.current) {
       const clientX = e.touches[0].clientX;
       const deltaX = clientX - pointerStartX.current;
       pointerStartX.current = clientX;
-      if (Math.abs(deltaX) > 0.3) {
-        setArRotation((prev) => [0, prev[1] + deltaX * 0.012, 0]);
+      if (Math.abs(deltaX) > 0.3 && arGroupRef.current) {
+        arGroupRef.current.rotation.y += deltaX * 0.012;
       }
     }
   }, [arModeActive, arPlaced]);
@@ -683,6 +732,7 @@ export default function GanapatiExperience() {
     if (!e.touches || e.touches.length === 0) {
       isPointerDragging.current = false;
       pinchStartDist.current = null;
+      setArScale(Number(currentScaleRef.current.toFixed(2)));
     } else if (e.touches.length === 1) {
       pinchStartDist.current = null;
       pointerStartX.current = e.touches[0].clientX;
@@ -702,8 +752,8 @@ export default function GanapatiExperience() {
     if (!isPointerDragging.current) return;
     const deltaX = e.clientX - pointerStartX.current;
     pointerStartX.current = e.clientX;
-    if (Math.abs(deltaX) > 0.4) {
-      setArRotation((prev) => [0, prev[1] + deltaX * 0.012, 0]);
+    if (Math.abs(deltaX) > 0.4 && arGroupRef.current) {
+      arGroupRef.current.rotation.y += deltaX * 0.012;
     }
   }, []);
 
@@ -781,15 +831,14 @@ export default function GanapatiExperience() {
           arPlaced={arPlaced}
           arScale={arScale}
           arPosition={arPosition}
-          arRotation={arRotation}
           onPlaceAR={handlePlaceAR}
           onAnchorUpdate={handleAnchorUpdate}
           surfaceDetected={surfaceDetected}
           onSurfaceStatusChange={setSurfaceDetected}
           onTrackingStateChange={setTrackingState}
           autoRotate360={autoRotate360}
-          onRotateDelta={handleRotateDelta}
           reticleRef={reticleRef}
+          arGroupRef={arGroupRef}
         />
       </div>
 

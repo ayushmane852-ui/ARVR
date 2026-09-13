@@ -296,12 +296,20 @@ function BlessingVortex({ active, count = 240 }) {
   );
 }
 
+const isMobileDevice = typeof window !== 'undefined' && (
+  window.innerWidth < 768 || (navigator.maxTouchPoints > 0 && window.innerWidth < 1024)
+);
+
 export default function Particles({ blessingActive, isDiyaLit = false, arModeActive = false }) {
+  const embersCount = arModeActive ? 40 : (isMobileDevice ? 64 : 160);
+  const petalsCount = arModeActive ? 24 : (isMobileDevice ? 32 : 80);
+  const vortexCount = arModeActive ? 80 : (isMobileDevice ? 120 : 240);
+
   return (
     <group>
-      <GoldenEmbers count={arModeActive ? 48 : 160} />
-      <FloatingPetals count={arModeActive ? 28 : 80} isDiyaLit={isDiyaLit} />
-      <BlessingVortex active={blessingActive} count={arModeActive ? 100 : 240} />
+      <GoldenEmbers count={embersCount} />
+      <FloatingPetals count={petalsCount} isDiyaLit={isDiyaLit} />
+      <BlessingVortex active={blessingActive} count={vortexCount} />
     </group>
   );
 }

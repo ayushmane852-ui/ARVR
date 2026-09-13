@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
@@ -24,50 +24,59 @@ function createHaloTexture() {
   return texture;
 }
 
-// Single Vertical Marigold Flower Garland (Gendaphool Mala)
+// Single Vertical Marigold Flower Garland (Gendaphool Mala) - Collapsed into 1 Instanced Draw Call
 function MarigoldGarland({ position, height = 7.2, count = 28 }) {
-  const [positions, colors] = useMemo(() => {
-    const pos = [];
-    const col = [];
+  const meshRef = useRef();
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const beads = useMemo(() => {
     const step = height / count;
-    for (let i = 0; i < count; i++) {
-      const y = -i * step;
-      const x = Math.sin(i * 0.45) * 0.03;
-      const z = Math.cos(i * 0.45) * 0.03;
-      pos.push([x, y, z]);
-      col.push(i % 2 === 0 ? '#ea580c' : '#f59e0b');
-    }
-    return [pos, col];
+    return Array.from({ length: count }, (_, i) => ({
+      x: Math.sin(i * 0.45) * 0.03,
+      y: -i * step,
+      z: Math.cos(i * 0.45) * 0.03,
+      color: i % 2 === 0 ? '#ea580c' : '#f59e0b',
+    }));
   }, [count, height]);
 
+  useEffect(() => {
+    if (!meshRef.current) return;
+    const c = new THREE.Color();
+    beads.forEach((b, i) => {
+      dummy.position.set(b.x, b.y, b.z);
+      dummy.updateMatrix();
+      meshRef.current.setMatrixAt(i, dummy.matrix);
+      c.set(b.color);
+      meshRef.current.setColorAt(i, c);
+    });
+    meshRef.current.instanceMatrix.needsUpdate = true;
+    if (meshRef.current.instanceColor) meshRef.current.instanceColor.needsUpdate = true;
+  }, [beads, dummy]);
+
   return (
-    <group position={position}>
-      {positions.map((p, idx) => (
-        <mesh key={idx} position={p}>
-          <sphereGeometry args={[0.13, 10, 10]} />
-          <meshStandardMaterial
-            color={colors[idx]}
-            roughness={0.75}
-            metalness={0.05}
-          />
-        </mesh>
-      ))}
-    </group>
+    <instancedMesh ref={meshRef} args={[null, null, count]} position={position}>
+      <sphereGeometry args={[0.13, 10, 10]} />
+      <meshStandardMaterial roughness={0.75} metalness={0.05} />
+    </instancedMesh>
   );
 }
 
 // Royal Brass Chhatra (Sacred Golden Umbrella suspended above Lord Ganesha's Crown)
 function GoldenChhatra({ position = [0, 6.45, 0.3] }) {
-  const fringeBeads = useMemo(() => {
-    const beads = [];
-    const numBeads = 32;
+  const fringeRef = useRef();
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const numBeads = 32;
+
+  useEffect(() => {
+    if (!fringeRef.current) return;
     const r = 1.85;
     for (let i = 0; i < numBeads; i++) {
       const angle = (i / numBeads) * Math.PI * 2;
-      beads.push([Math.cos(angle) * r, -0.16, Math.sin(angle) * r]);
+      dummy.position.set(Math.cos(angle) * r, -0.16, Math.sin(angle) * r);
+      dummy.updateMatrix();
+      fringeRef.current.setMatrixAt(i, dummy.matrix);
     }
-    return beads;
-  }, []);
+    fringeRef.current.instanceMatrix.needsUpdate = true;
+  }, [dummy]);
 
   return (
     <group position={position}>
@@ -112,36 +121,38 @@ function GoldenChhatra({ position = [0, 6.45, 0.3] }) {
         />
       </mesh>
 
-      {/* Hanging Golden Bead Fringe */}
-      {fringeBeads.map((p, idx) => (
-        <mesh key={idx} position={p}>
-          <sphereGeometry args={[0.038, 8, 8]} />
-          <meshStandardMaterial
-            color="#fbbf24"
-            metalness={0.95}
-            roughness={0.15}
-          />
-        </mesh>
-      ))}
+      {/* Hanging Golden Bead Fringe as a Single Instanced Draw Call */}
+      <instancedMesh ref={fringeRef} args={[null, null, numBeads]}>
+        <sphereGeometry args={[0.038, 8, 8]} />
+        <meshStandardMaterial
+          color="#fbbf24"
+          metalness={0.95}
+          roughness={0.15}
+        />
+      </instancedMesh>
     </group>
   );
 }
 
 // Ornate Sacred Temple Prabhavali Arch behind Lord Ganesha
 function SacredPrabhavali() {
-  const rays = useMemo(() => {
-    const list = [];
-    const numRays = 26;
+  const raysRef = useRef();
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const numRays = 26;
+
+  useEffect(() => {
+    if (!raysRef.current) return;
     for (let i = 0; i <= numRays; i++) {
       const angle = (i / numRays) * Math.PI;
-      list.push({
-        x: Math.cos(angle) * 3.75,
-        y: 2.4 + Math.sin(angle) * 3.75,
-        rot: [0, 0, angle - Math.PI / 2],
-      });
+      const x = Math.cos(angle) * 3.75;
+      const y = 2.4 + Math.sin(angle) * 3.75 + 0.8;
+      dummy.position.set(x, y, 0);
+      dummy.rotation.set(0, 0, angle - Math.PI / 2);
+      dummy.updateMatrix();
+      raysRef.current.setMatrixAt(i, dummy.matrix);
     }
-    return list;
-  }, []);
+    raysRef.current.instanceMatrix.needsUpdate = true;
+  }, [dummy]);
 
   return (
     <group position={[0, 0, -0.6]}>
@@ -168,13 +179,11 @@ function SacredPrabhavali() {
         <meshStandardMaterial color="#f59e0b" metalness={0.95} roughness={0.16} />
       </mesh>
 
-      {/* Radiant Aura Rays along the Arch */}
-      {rays.map((r, i) => (
-        <mesh key={i} position={[r.x, r.y + 0.8, 0]} rotation={r.rot}>
-          <coneGeometry args={[0.08, 0.38, 12]} />
-          <meshStandardMaterial color="#fbbf24" metalness={0.92} roughness={0.2} />
-        </mesh>
-      ))}
+      {/* Radiant Aura Rays along Arch as a Single Instanced Draw Call */}
+      <instancedMesh ref={raysRef} args={[null, null, numRays + 1]}>
+        <coneGeometry args={[0.08, 0.38, 12]} />
+        <meshStandardMaterial color="#fbbf24" metalness={0.92} roughness={0.2} />
+      </instancedMesh>
 
       {/* Kirtimukha Crown Apex */}
       <mesh position={[0, 6.25, 0.05]}>
@@ -187,20 +196,38 @@ function SacredPrabhavali() {
 
 // Multi-Tiered Carved Stone Temple Throne Steps
 function TempleThroneSteps() {
-  const petalPositions = useMemo(() => {
-    const petals = [];
-    const count = 38;
+  const petalsRef = useRef();
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const count = 38;
+
+  const petalData = useMemo(() => {
+    const list = [];
     for (let i = 0; i < count; i++) {
-      const stepIdx = Math.floor(Math.random() * 3);
+      const stepIdx = Math.floor((i / count) * 3);
       const y = -2.78 - stepIdx * 0.07;
-      const z = 0.8 + stepIdx * 0.8 + (Math.random() - 0.5) * 0.3;
-      const x = (Math.random() - 0.5) * (3.8 + stepIdx * 1.0);
-      const rot = [Math.random() * 0.2, Math.random() * Math.PI * 2, Math.random() * 0.2];
-      const isRed = Math.random() > 0.35;
-      petals.push({ pos: [x, y, z], rot, color: isRed ? '#e11d48' : '#f59e0b' });
+      const z = 0.8 + stepIdx * 0.8 + ((i * 13) % 7 - 3) * 0.07;
+      const x = (((i * 17) % 19) / 9.5 - 1) * (1.9 + stepIdx * 0.5);
+      const rot = [((i * 3) % 5) * 0.04, (i * 1.3) % (Math.PI * 2), ((i * 7) % 5) * 0.04];
+      const color = i % 3 === 0 ? '#f59e0b' : '#e11d48';
+      list.push({ pos: [x, y, z], rot, color });
     }
-    return petals;
-  }, []);
+    return list;
+  }, [count]);
+
+  useEffect(() => {
+    if (!petalsRef.current) return;
+    const color = new THREE.Color();
+    petalData.forEach((p, i) => {
+      dummy.position.set(p.pos[0], p.pos[1], p.pos[2]);
+      dummy.rotation.set(p.rot[0], p.rot[1], p.rot[2]);
+      dummy.updateMatrix();
+      petalsRef.current.setMatrixAt(i, dummy.matrix);
+      color.set(p.color);
+      petalsRef.current.setColorAt(i, color);
+    });
+    petalsRef.current.instanceMatrix.needsUpdate = true;
+    if (petalsRef.current.instanceColor) petalsRef.current.instanceColor.needsUpdate = true;
+  }, [petalData, dummy]);
 
   return (
     <group>
@@ -222,17 +249,11 @@ function TempleThroneSteps() {
         <meshStandardMaterial color="#22150d" roughness={0.75} metalness={0.2} />
       </mesh>
 
-      {/* Scattered Sacred Flower Petals on the Steps */}
-      {petalPositions.map((p, idx) => (
-        <mesh key={idx} position={p.pos} rotation={p.rot}>
-          <circleGeometry args={[0.07, 8]} />
-          <meshStandardMaterial
-            color={p.color}
-            roughness={0.6}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-      ))}
+      {/* Scattered Sacred Flower Petals on Steps as a Single Instanced Draw Call */}
+      <instancedMesh ref={petalsRef} args={[null, null, count]}>
+        <circleGeometry args={[0.07, 8]} />
+        <meshStandardMaterial roughness={0.6} side={THREE.DoubleSide} />
+      </instancedMesh>
     </group>
   );
 }
@@ -288,24 +309,20 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false, arMo
     }
   });
 
-  // Clone scene and apply rich sacred temple stone & idol materials
+  // Clone scene and apply rich sacred temple stone & idol materials ONCE (keyed only on scene)
   const clonedScene = useMemo(() => {
     const clone = scene.clone(true);
     clone.traverse((child) => {
       if (child.isMesh) {
         // Hide raw photogrammetry floor scan with chopped geometry in favor of our custom carved temple steps and floor
         if (child.name === 'Cube003') {
+          child.userData.isFloorScan = true;
           child.visible = false;
           return;
         }
 
         const isIdol = child.name === 'Mesh_0' || child.material?.name === 'Material.006';
-
-        // In AR mode: hide outer temple walls and roof so Lord Ganesha is fully visible in 360° against real room
-        if (arModeActive && !isIdol) {
-          child.visible = false;
-          return;
-        }
+        child.userData.isIdol = isIdol;
 
         // Only Lord Ganesha idol needs to cast shadows into shadow map; temple walls/floor only receive shadows
         child.castShadow = isIdol;
@@ -330,7 +347,19 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false, arMo
       }
     });
     return clone;
-  }, [scene, arModeActive]);
+  }, [scene]);
+
+  // Cheap, separate effect just for showing/hiding outer temple walls in AR without re-cloning
+  useEffect(() => {
+    clonedScene.traverse((child) => {
+      if (!child.isMesh) return;
+      if (child.userData.isFloorScan) {
+        child.visible = false;
+        return;
+      }
+      child.visible = !(arModeActive && !child.userData.isIdol);
+    });
+  }, [clonedScene, arModeActive]);
 
   return (
     <group>

@@ -2,6 +2,17 @@ import { useEffect, useRef } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
+// Reusable scratch math objects to guarantee zero GC allocations during 60-120Hz XR frame loops
+const _rawMat = new THREE.Matrix4();
+const _rawPos = new THREE.Vector3();
+const _rawQuat = new THREE.Quaternion();
+const _rawScale = new THREE.Vector3();
+const _anchorQuat = new THREE.Quaternion();
+const _unitScale = new THREE.Vector3(1, 1, 1);
+const _selectPos = new THREE.Vector3();
+const _selectQuat = new THREE.Quaternion();
+const _selectScale = new THREE.Vector3();
+
 export default function WebXRHitTestManager({
   active,
   placed,
@@ -62,11 +73,7 @@ export default function WebXRHitTestManager({
     // 3. Listen for screen tap to anchor Lord Ganesha onto the detected surface
     const handleSelect = () => {
       if (reticleRef.current && reticleRef.current.visible) {
-        const mat = reticleRef.current.matrix;
-        const pos = new THREE.Vector3();
-        const quat = new THREE.Quaternion();
-        const scale = new THREE.Vector3();
-        mat.decompose(pos, quat, scale);
+        reticleRef.current.matrix.decompose(_selectPos, _selectQuat, _selectScale);
 
         // Attempt WebXR Anchor creation for millimeter-precision drift-free anchoring
         if (lastHitRef.current && typeof lastHitRef.current.createAnchor === 'function') {
@@ -78,7 +85,7 @@ export default function WebXRHitTestManager({
         }
 
         if (onPlace) {
-          onPlace([pos.x, pos.y, pos.z], quat);
+          onPlace([_selectPos.x, _selectPos.y, _selectPos.z], _selectQuat.clone());
         }
       }
     };
@@ -116,10 +123,10 @@ export default function WebXRHitTestManager({
       if (anchorPose) {
         const aPos = anchorPose.transform.position;
         const aOri = anchorPose.transform.orientation;
-        const anchorQuat = new THREE.Quaternion(aOri.x, aOri.y, aOri.z, aOri.w);
+        _anchorQuat.set(aOri.x, aOri.y, aOri.z, aOri.w);
 
         if (onAnchorUpdate) {
-          onAnchorUpdate([aPos.x, aPos.y, aPos.z], anchorQuat);
+          onAnchorUpdate([aPos.x, aPos.y, aPos.z], _anchorQuat);
         }
         if (onTrackingStateChange) {
           const trackingState = anchorRef.current.trackingState || 'tracking';
@@ -140,19 +147,16 @@ export default function WebXRHitTestManager({
         if (pose) {
           reticleRef.current.visible = true;
 
-          // Decompose pose matrix into position and orientation
-          const rawMat = new THREE.Matrix4().fromArray(pose.transform.matrix);
-          const rawPos = new THREE.Vector3();
-          const rawQuat = new THREE.Quaternion();
-          const rawScale = new THREE.Vector3();
-          rawMat.decompose(rawPos, rawQuat, rawScale);
+          // Decompose pose matrix into position and orientation using reusable objects
+          _rawMat.fromArray(pose.transform.matrix);
+          _rawMat.decompose(_rawPos, _rawQuat, _rawScale);
 
-          targetPos.current.copy(rawPos);
-          targetQuat.current.copy(rawQuat);
+          targetPos.current.copy(_rawPos);
+          targetQuat.current.copy(_rawQuat);
 
           if (!hasFirstPose.current) {
-            currentPos.current.copy(rawPos);
-            currentQuat.current.copy(rawQuat);
+            currentPos.current.copy(_rawPos);
+            currentQuat.current.copy(_rawQuat);
             hasFirstPose.current = true;
           } else {
             // Smooth damping to eliminate jitter on reflective tiles or low-texture floors
@@ -163,7 +167,7 @@ export default function WebXRHitTestManager({
           reticleRef.current.matrix.compose(
             currentPos.current,
             currentQuat.current,
-            new THREE.Vector3(1, 1, 1)
+            _unitScale
           );
 
           if (!prevSurfaceDetected.current) {
