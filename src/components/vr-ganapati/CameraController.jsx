@@ -28,7 +28,7 @@ export default function CameraController({
   const aspect = size.width / Math.max(1, size.height);
   const distMultiplier = isPortrait ? Math.min(1.36, Math.max(1.15, 0.72 / Math.max(0.38, aspect))) : 1.0;
   const defaultY = isPortrait ? 1.55 : 1.35;
-  const baseZ = isDiyaLit ? 17.0 : 20.0;
+  const baseZ = 18.5;
   const targetZ = baseZ * distMultiplier;
 
   // Update OrbitControls target and camera framing when switching to or moving in fallback AR mode
@@ -114,22 +114,6 @@ export default function CameraController({
     return () => anim.kill();
   }, [isLoaded, camera, defaultY, targetZ, distMultiplier]);
 
-  // Dolly closer when diyas are lit / dolly back when unlit
-  useEffect(() => {
-    if (!controlsRef.current || !isLoaded || !hasAnimatedEntrance.current || arActive) return;
-    const anim = gsap.to(camera.position, {
-      y: defaultY,
-      z: targetZ,
-      duration: 1.8,
-      ease: 'power2.inOut',
-      onUpdate: () => {
-        if (controlsRef.current) {
-          controlsRef.current.update();
-        }
-      },
-    });
-    return () => anim.kill();
-  }, [targetZ, defaultY, isLoaded, arActive, camera]);
 
   // Responsive camera adaptation on window resize / orientation flip (portrait <-> landscape)
   useEffect(() => {

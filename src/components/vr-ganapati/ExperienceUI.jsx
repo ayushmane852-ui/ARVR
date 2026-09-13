@@ -638,18 +638,18 @@ export default function ExperienceUI({
               onToggleDiya();
             }}
             className={`flex flex-col items-center justify-center min-w-[42px] sm:min-w-[56px] min-h-[44px] px-1 sm:px-2 gap-0.5 transition-all group cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none ${
-              isDiyaLit ? 'text-amber-300' : 'text-amber-200/90 hover:text-amber-100'
+              isDiyaLit ? 'text-amber-300 font-medium' : 'text-neutral-400 hover:text-amber-200'
             }`}
             title="Light Diyas (Key: D)"
           >
             <div
-              className={`w-7.5 h-7.5 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center transition-all ${
+              className={`w-7.5 h-7.5 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center group-active:scale-95 transition-all ${
                 isDiyaLit
-                  ? 'bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-400 text-black shadow-[0_0_15px_rgba(245,158,11,0.7)] scale-105'
-                  : 'bg-amber-500/15 hover:bg-amber-500/30 border border-amber-400/50 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.3)] animate-pulse'
+                  ? 'bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-400 text-black shadow-[0_0_14px_rgba(245,158,11,0.6)] scale-105'
+                  : 'bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 text-amber-400/90'
               }`}
             >
-              <Flame className={`w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 ${isDiyaLit ? 'fill-current animate-pulse' : 'text-amber-300'}`} />
+              <Flame className={`w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 ${isDiyaLit ? 'fill-current text-black' : 'text-amber-400/90'}`} />
             </div>
             <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap text-center">
               <span className="hidden sm:inline">{isDiyaLit ? 'Diyas Lit' : 'Light Diya'}</span>
