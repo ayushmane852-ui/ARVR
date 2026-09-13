@@ -120,51 +120,130 @@ function GoldenEmbers({ count = 160 }) {
   );
 }
 
-// Falling Sacred Flower Petals
-function FallingPetals({ count = 100 }) {
-  const pointsRef = useRef();
-  const [positions, speeds, rotations] = useMemo(() => generatePetalData(count), [count]);
-  const petalTexture = useMemo(() => createPointTexture('251, 113, 133'), []);
+// Create an organically curved 3D petal geometry with cupped edges
+function createPetalGeometry() {
+  const geom = new THREE.PlaneGeometry(0.18, 0.28, 4, 4);
+  const pos = geom.attributes.position;
+  
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i);
+    const y = pos.getY(i);
+    // Curl edges inward along Z to create natural petal cup shape
+    const curl = (1.0 - (x * x) / (0.09 * 0.09)) * 0.035;
+    // Longitudinal curvature from stem to tip
+    const arch = -Math.sin((y + 0.14) / 0.28 * Math.PI) * 0.025;
+    pos.setZ(i, curl + arch);
+  }
+  geom.computeVertexNormals();
+  return geom;
+}
 
-  useFrame((state) => {
-    if (!pointsRef.current) return;
-    const posArr = pointsRef.current.geometry.attributes.position.array;
+// Sacred flower petal color palette: Crimson rose, soft pink, saffron, marigold orange, and jasmine cream
+const PETAL_PALETTE = [
+  '#e11d48', // Crimson Rose
+  '#fb7185', // Soft Pink
+  '#f59e0b', // Saffron Marigold
+  '#ea580c', // Deep Orange
+  '#fef08a', // Champa Yellow
+  '#fff1f2', // Sacred Jasmine
+];
+
+function generateInstancedPetals(count) {
+  const petals = [];
+  for (let i = 0; i < count; i++) {
+    petals.push({
+      x: (Math.random() - 0.5) * 14.0,
+      y: 8.5 + Math.random() * 6.0,
+      z: (Math.random() - 0.5) * 12.0 + 3.0,
+      speedY: 0.35 + Math.random() * 0.5,
+      swayFreq: 0.7 + Math.random() * 0.8,
+      swayAmp: 0.25 + Math.random() * 0.35,
+      spinSpeed: (Math.random() - 0.5) * 1.8,
+      flutterFreq: 1.4 + Math.random() * 1.6,
+      phase: Math.random() * Math.PI * 2,
+      scale: 0.75 + Math.random() * 0.5,
+      rotY: Math.random() * Math.PI * 2,
+      color: PETAL_PALETTE[Math.floor(Math.random() * PETAL_PALETTE.length)],
+    });
+  }
+  return petals;
+}
+
+// High-Performance 3D Instanced Flower Petals with realistic fluttering and tumbling
+function FloatingPetals({ count = 80, isDiyaLit = false }) {
+  const meshRef = useRef();
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const petalGeom = useMemo(() => createPetalGeometry(), []);
+  const petals = useMemo(() => generateInstancedPetals(count), [count]);
+
+  // Initialize petal colors & initial positions
+  React.useEffect(() => {
+    if (!meshRef.current) return;
+    const tempColor = new THREE.Color();
+    for (let i = 0; i < count; i++) {
+      tempColor.set(petals[i].color);
+      meshRef.current.setColorAt(i, tempColor);
+
+      dummy.position.set(petals[i].x, petals[i].y, petals[i].z);
+      dummy.rotation.set(0, petals[i].rotY, 0);
+      dummy.scale.setScalar(petals[i].scale);
+      dummy.updateMatrix();
+      meshRef.current.setMatrixAt(i, dummy.matrix);
+    }
+    if (meshRef.current.instanceColor) meshRef.current.instanceColor.needsUpdate = true;
+    meshRef.current.instanceMatrix.needsUpdate = true;
+  }, [count, petals, dummy]);
+
+  useFrame((state, delta) => {
+    if (!meshRef.current) return;
+    const dt = Math.min(delta, 0.1);
     const t = state.clock.getElapsedTime();
 
     for (let i = 0; i < count; i++) {
-      const idx = i * 3;
-      posArr[idx + 1] -= speeds[i] * 0.02;
+      const p = petals[i];
+      p.y -= p.speedY * dt;
 
-      posArr[idx] += Math.sin(t * 1.5 + rotations[i]) * 0.008;
-      posArr[idx + 2] += Math.cos(t * 1.2 + rotations[i]) * 0.006;
-
-      if (posArr[idx + 1] < -2.8) {
-        posArr[idx + 1] = 8.5 + Math.random() * 3.0;
-        posArr[idx] = (Math.random() - 0.5) * 14.0;
-        posArr[idx + 2] = (Math.random() - 0.5) * 12.0 + 3.0;
+      // Wrap around to top when falling below sanctum floor
+      if (p.y < -2.8) {
+        p.y = 8.5 + Math.random() * 3.5;
+        p.x = (Math.random() - 0.5) * 14.0;
+        p.z = (Math.random() - 0.5) * 12.0 + 3.0;
       }
+
+      // Realistic aerodynamics: gentle sine sway + rotational tumble
+      const curX = p.x + Math.sin(t * p.swayFreq + p.phase) * p.swayAmp;
+      const curZ = p.z + Math.cos(t * (p.swayFreq * 0.75) + p.phase) * (p.swayAmp * 0.8);
+
+      p.rotY += p.spinSpeed * dt;
+      const rotX = Math.sin(t * p.flutterFreq + p.phase) * 0.65 + 0.35;
+      const rotZ = Math.cos(t * (p.flutterFreq * 0.85) + p.phase) * 0.45;
+
+      dummy.position.set(curX, p.y, curZ);
+      dummy.rotation.set(rotX, p.rotY, rotZ);
+      dummy.scale.setScalar(p.scale);
+      dummy.updateMatrix();
+
+      meshRef.current.setMatrixAt(i, dummy.matrix);
     }
-    pointsRef.current.geometry.attributes.position.needsUpdate = true;
+    meshRef.current.instanceMatrix.needsUpdate = true;
   });
 
   return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-        />
-      </bufferGeometry>
-      <pointsMaterial
-        map={petalTexture}
-        size={0.18}
-        color="#fb7185"
+    <instancedMesh
+      ref={meshRef}
+      args={[petalGeom, null, count]}
+      frustumCulled={false}
+    >
+      <meshStandardMaterial
+        side={THREE.DoubleSide}
+        roughness={0.4}
+        metalness={0.08}
         transparent
-        opacity={0.9}
-        blending={THREE.NormalBlending}
-        depthWrite={false}
+        opacity={0.92}
+        emissive={isDiyaLit ? '#521d0a' : '#000000'}
+        emissiveIntensity={isDiyaLit ? 0.35 : 0}
       />
-    </points>
+    </instancedMesh>
   );
 }
 
@@ -217,11 +296,11 @@ function BlessingVortex({ active, count = 240 }) {
   );
 }
 
-export default function Particles({ blessingActive }) {
+export default function Particles({ blessingActive, isDiyaLit = false }) {
   return (
     <group>
       <GoldenEmbers count={160} />
-      <FallingPetals count={100} />
+      <FloatingPetals count={80} isDiyaLit={isDiyaLit} />
       <BlessingVortex active={blessingActive} count={240} />
     </group>
   );

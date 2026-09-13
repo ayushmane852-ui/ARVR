@@ -132,7 +132,7 @@ function ExperienceCanvas({
         <Bell ringTriggerTime={ringTriggerTime} />
         <FlowerOffering offerings={flowerOfferings} />
         <ModakOffering modakOfferings={modakOfferings} />
-        <Particles blessingActive={blessingActive} />
+        <Particles blessingActive={blessingActive} isDiyaLit={isDiyaLit} />
         <SceneWarmup onReady={onSceneReady} />
       </Suspense>
     </Canvas>
