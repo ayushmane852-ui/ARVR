@@ -15,6 +15,7 @@ import CameraController from '../components/vr-ganapati/CameraController';
 import ExperienceUI from '../components/vr-ganapati/ExperienceUI';
 import LoadingOverlay from '../components/vr-ganapati/LoadingOverlay';
 import { soundEngine } from '../components/vr-ganapati/AudioController';
+import CaptureModal, { generateDevotionalFrame } from '../components/vr-ganapati/CaptureModal';
 
 // Preload heavy 3D assets immediately so the browser downloads and decodes them in parallel
 useGLTF.preload('/models/temple.glb');
@@ -109,6 +110,7 @@ function ExperienceCanvas({
       camera={{ position: [0, 1.35, 20.0], fov: 55 }}
       gl={{
         antialias: true,
+        preserveDrawingBuffer: true,
         toneMapping: THREE.ACESFilmicToneMapping,
         toneMappingExposure: 1.25,
         powerPreference: 'high-performance',
@@ -151,6 +153,9 @@ export default function GanapatiExperience() {
   const [blessingActive, setBlessingActive] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [vrSessionActive, setVrSessionActive] = useState(false);
+  const [captureModalOpen, setCaptureModalOpen] = useState(false);
+  const [capturedImageUrl, setCapturedImageUrl] = useState(null);
+  const [isFlashActive, setIsFlashActive] = useState(false);
 
   const handleSceneReady = useCallback(() => {
     setSceneReady(true);
@@ -312,6 +317,24 @@ export default function GanapatiExperience() {
     return false;
   }, []);
 
+  // Action: Capture Darshan Snapshot
+  const handleCaptureDarshan = useCallback(async () => {
+    soundEngine.init();
+    soundEngine.playCameraShutter();
+    setIsFlashActive(true);
+    setTimeout(() => setIsFlashActive(false), 220);
+
+    try {
+      const canvas = document.querySelector('canvas');
+      if (!canvas) return;
+      const framedUrl = await generateDevotionalFrame(canvas);
+      setCapturedImageUrl(framedUrl);
+      setCaptureModalOpen(true);
+    } catch (err) {
+      console.error('Error capturing darshan:', err);
+    }
+  }, []);
+
   return (
     <div className="relative w-full h-screen h-[100dvh] overflow-hidden bg-[#070503]">
       {/* 1. Loading Overlay with smooth fade-out exit */}
@@ -351,6 +374,21 @@ export default function GanapatiExperience() {
         isMuted={isMuted}
         onToggleMute={handleToggleMute}
         onEnterVR={handleEnterVR}
+        onCaptureDarshan={handleCaptureDarshan}
+      />
+
+      {/* 4. Camera Shutter Flash Effect */}
+      <div
+        className={`fixed inset-0 z-50 bg-white pointer-events-none transition-opacity duration-200 ${
+          isFlashActive ? 'opacity-80' : 'opacity-0'
+        }`}
+      />
+
+      {/* 5. Sacred Darshan Capture & Share Modal */}
+      <CaptureModal
+        isOpen={captureModalOpen}
+        onClose={() => setCaptureModalOpen(false)}
+        imageDataUrl={capturedImageUrl}
       />
     </div>
   );

@@ -585,6 +585,44 @@ class SoundEngine {
       osc.stop(now + 6.0);
     });
   }
+
+  // Play crisp camera shutter click with soft golden chime
+  playCameraShutter() {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    // Fast mechanical shutter snap
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(1400, now);
+    osc.frequency.exponentialRampToValueAtTime(240, now + 0.08);
+
+    gain.gain.setValueAtTime(0.3, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.1);
+
+    // Subtle golden chime resonance
+    const bellOsc = this.ctx.createOscillator();
+    const bellGain = this.ctx.createGain();
+    bellOsc.type = 'sine';
+    bellOsc.frequency.setValueAtTime(1046.5, now + 0.04); // C6 bell tone
+    bellGain.gain.setValueAtTime(0.08, now + 0.04);
+    bellGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+
+    bellOsc.connect(bellGain);
+    bellGain.connect(this.ctx.destination);
+
+    bellOsc.start(now + 0.04);
+    bellOsc.stop(now + 0.5);
+  }
 }
 
 export const soundEngine = new SoundEngine();

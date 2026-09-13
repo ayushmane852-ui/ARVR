@@ -9,7 +9,8 @@ import {
   VolumeX, 
   Glasses, 
   ArrowLeft,
-  Maximize2
+  Maximize2,
+  Camera
 } from 'lucide-react';
 
 // Custom Modak SVG Icon
@@ -97,6 +98,7 @@ export default function ExperienceUI({
   isMuted,
   onToggleMute,
   onEnterVR,
+  onCaptureDarshan,
 }) {
   const navigate = useNavigate();
   const [vrNotice, setVrNotice] = useState(null);
@@ -173,6 +175,19 @@ export default function ExperienceUI({
             ) : (
               <Volume2 className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
             )}
+          </button>
+
+          {/* Capture Darshan Snapshot Button */}
+          <button
+            onClick={onCaptureDarshan}
+            className="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-black/40 hover:bg-black/70 border border-amber-500/20 hover:border-amber-400/50 text-amber-200/90 hover:text-amber-100 transition-all backdrop-blur-md shadow-lg cursor-pointer group"
+            title="Capture & Share Darshan"
+            aria-label="Capture Darshan"
+          >
+            <Camera className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
+            <span className="hidden sm:inline text-xs font-space font-medium tracking-wide">
+              Capture
+            </span>
           </button>
 
           {/* Fullscreen Toggle */}
