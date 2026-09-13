@@ -5,14 +5,23 @@ import * as THREE from 'three';
 
 function SingleHangingBell({ bellScene, position, ringTriggerTime, side = 'left', chainHeight = 4.5 }) {
   const pivotRef = useRef();
+  const ringStartTimeRef = useRef(-999);
+  const prevTriggerRef = useRef(ringTriggerTime);
 
   useFrame((state) => {
     if (!pivotRef.current) return;
     const now = state.clock.getElapsedTime();
-    const dt = now - ringTriggerTime;
 
-    if (dt > 0 && dt < 4.5) {
-      const amplitude = 0.42;
+    // Instantly detect ring trigger change and synchronize to current clock
+    if (ringTriggerTime > 0 && ringTriggerTime !== prevTriggerRef.current) {
+      ringStartTimeRef.current = now;
+      prevTriggerRef.current = ringTriggerTime;
+    }
+
+    const dt = now - ringStartTimeRef.current;
+
+    if (dt >= 0 && dt < 4.5) {
+      const amplitude = 0.45;
       const decay = Math.exp(-dt * 1.3);
       const frequency = 9.0;
       const swingSign = side === 'left' ? 1 : -1;
@@ -66,29 +75,29 @@ function SingleHangingBell({ bellScene, position, ringTriggerTime, side = 'left'
 export default function Bell({ ringTriggerTime }) {
   const { scene } = useGLTF('/models/bell.glb');
 
-  const createClonedBell = useMemo(() => {
-    return () => {
-      const clone = scene.clone(true);
-      clone.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
-          if (child.material) {
-            child.material = child.material.clone();
-            child.material.metalness = 0.94;
-            child.material.roughness = 0.18;
-            child.material.color = new THREE.Color('#d4af37'); // Classic sanctum brass
-          }
+  // Prepare master bell template with consecrated brass material ONCE
+  const masterBell = useMemo(() => {
+    const clone = scene.clone(true);
+    clone.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+        if (child.material) {
+          child.material = child.material.clone();
+          child.material.metalness = 0.94;
+          child.material.roughness = 0.18;
+          child.material.color = new THREE.Color('#d4af37'); // Classic sanctum brass
         }
-      });
-      return clone;
-    };
+      }
+    });
+    return clone;
   }, [scene]);
 
-  const bellL1 = useMemo(() => createClonedBell(), [createClonedBell]);
-  const bellR1 = useMemo(() => createClonedBell(), [createClonedBell]);
-  const bellL2 = useMemo(() => createClonedBell(), [createClonedBell]);
-  const bellR2 = useMemo(() => createClonedBell(), [createClonedBell]);
+  // Clone lightweight instances sharing the precompiled master material
+  const bellL1 = useMemo(() => masterBell.clone(true), [masterBell]);
+  const bellR1 = useMemo(() => masterBell.clone(true), [masterBell]);
+  const bellL2 = useMemo(() => masterBell.clone(true), [masterBell]);
+  const bellR2 = useMemo(() => masterBell.clone(true), [masterBell]);
 
   return (
     <group>

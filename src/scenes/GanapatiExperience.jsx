@@ -200,7 +200,7 @@ export default function GanapatiExperience() {
     soundEngine.init();
     soundEngine.startAmbience();
     soundEngine.playBell();
-    setRingTriggerTime(performance.now() / 1000);
+    setRingTriggerTime(Date.now());
   }, []);
 
   // Action 3: Offer Flowers

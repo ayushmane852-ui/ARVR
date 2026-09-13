@@ -25,13 +25,44 @@ function createModakGeometry() {
   return new THREE.LatheGeometry(points, 24);
 }
 
+// Shared materials and geometries created ONCE to eliminate runtime shader compilation and GC
+const sharedModakMaterial = new THREE.MeshStandardMaterial({
+  color: '#f59e0b',
+  metalness: 0.78,
+  roughness: 0.26,
+  emissive: '#b45309',
+  emissiveIntensity: 0.2,
+});
+
+const sharedPlateMaterial = new THREE.MeshStandardMaterial({
+  color: '#fbbf24',
+  metalness: 0.82,
+  roughness: 0.22,
+});
+
+const sharedVarkMaterial = new THREE.MeshStandardMaterial({
+  color: '#ffffff',
+  metalness: 0.96,
+  roughness: 0.08,
+});
+
+const sharedVarkGeometry = new THREE.SphereGeometry(0.012, 12, 12);
+
 function SingleAnimatedModak({ offering, modakGeom }) {
   const modakRef = useRef();
+  const startTimeRef = useRef(-1);
 
   useFrame((state) => {
     if (!modakRef.current) return;
-    const now = state.clock.getElapsedTime();
-    const progress = Math.min(1, Math.max(0, (now - offering.startTime) / 1.8));
+    const clock = state.clock.getElapsedTime();
+
+    // Synchronize start time on the very first frame of mounting
+    if (startTimeRef.current < 0) {
+      startTimeRef.current = clock;
+    }
+
+    const elapsed = clock - startTimeRef.current;
+    const progress = Math.min(1, Math.max(0, elapsed / 1.5));
 
     if (progress < 1) {
       const ease = 1 - Math.pow(1 - progress, 3);
@@ -51,24 +82,9 @@ function SingleAnimatedModak({ offering, modakGeom }) {
 
   return (
     <group ref={modakRef} scale={[MODAK_SCALE, MODAK_SCALE, MODAK_SCALE]}>
-      <mesh geometry={modakGeom} castShadow receiveShadow>
-        <meshStandardMaterial
-          color="#f59e0b" // Rich Golden Kesar
-          metalness={0.78}
-          roughness={0.26}
-          emissive="#b45309"
-          emissiveIntensity={0.2}
-        />
-      </mesh>
+      <mesh geometry={modakGeom} material={sharedModakMaterial} castShadow receiveShadow />
       {/* Silver Vark Foil Tip */}
-      <mesh position={[0, 0.21, 0]}>
-        <sphereGeometry args={[0.012, 12, 12]} />
-        <meshStandardMaterial
-          color="#ffffff"
-          metalness={0.96}
-          roughness={0.08}
-        />
-      </mesh>
+      <mesh position={[0, 0.21, 0]} geometry={sharedVarkGeometry} material={sharedVarkMaterial} />
     </group>
   );
 }
@@ -90,13 +106,7 @@ export default function ModakOffering({ modakOfferings }) {
       {/* Plate of Modaks placed on the brass thali in front of Lord Ganesha */}
       <group position={[0, -2.76, 2.4]} scale={[MODAK_SCALE, MODAK_SCALE, MODAK_SCALE]}>
         {/* Central main Modak */}
-        <mesh geometry={modakGeom} position={[0, 0.02, 0]} castShadow>
-          <meshStandardMaterial
-            color="#fbbf24"
-            metalness={0.82}
-            roughness={0.22}
-          />
-        </mesh>
+        <mesh geometry={modakGeom} material={sharedPlateMaterial} position={[0, 0.02, 0]} castShadow />
         {/* Surrounding smaller modaks */}
         {[0, 1, 2, 3, 4].map((i) => {
           const angle = (i / 5) * Math.PI * 2;
@@ -105,17 +115,12 @@ export default function ModakOffering({ modakOfferings }) {
             <mesh
               key={i}
               geometry={modakGeom}
+              material={sharedModakMaterial}
               position={[Math.cos(angle) * r, 0.02, Math.sin(angle) * r]}
               scale={[0.72, 0.72, 0.72]}
               rotation={[0, angle, 0]}
               castShadow
-            >
-              <meshStandardMaterial
-                color="#f59e0b"
-                metalness={0.82}
-                roughness={0.22}
-              />
-            </mesh>
+            />
           );
         })}
       </group>
