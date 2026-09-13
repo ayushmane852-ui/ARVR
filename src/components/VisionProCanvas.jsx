@@ -4,7 +4,7 @@ import { Float, useGLTF, Center, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 
 function VisionProModel() {
-  const { scene } = useGLTF('/models/apple-vision-pro.glb');
+  const { scene } = useGLTF('/models/apple-vision-pro.glb', '/draco/');
   const { size } = useThree();
 
   // Enhance front curved glass visor with realistic gloss & reflections
@@ -78,7 +78,8 @@ function ResponsiveCameraRig() {
   return null;
 }
 
-useGLTF.preload('/models/apple-vision-pro.glb');
+useGLTF.setDecoderPath('/draco/');
+useGLTF.preload('/models/apple-vision-pro.glb', '/draco/');
 
 export default function VisionProCanvas() {
   const [hasInteracted, setHasInteracted] = useState(false);

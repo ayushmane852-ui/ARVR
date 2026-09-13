@@ -256,7 +256,7 @@ function TravelingIgnitionSpark({ isLit, litTimeRef }) {
 }
 
 export default function Diya({ isLit, arModeActive = false }) {
-  const { scene } = useGLTF('/models/diya.glb');
+  const { scene } = useGLTF('/models/diya.glb', '/draco/');
   const litTimeRef = useRef(isLit ? 0 : -999);
   const prevIsLit = useRef(isLit);
 

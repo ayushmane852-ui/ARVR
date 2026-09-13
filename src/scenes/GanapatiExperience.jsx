@@ -20,11 +20,12 @@ import AartiAnimation from '../components/vr-ganapati/AartiAnimation';
 import ARPlacementReticle from '../components/vr-ganapati/ARPlacementReticle';
 import WebXRHitTestManager from '../components/vr-ganapati/WebXRHitTestManager';
 
-// Preload heavy 3D assets immediately so the browser downloads and decodes them in parallel
-useGLTF.preload('/models/temple.glb');
-useGLTF.preload('/models/diya.glb');
-useGLTF.preload('/models/bell.glb');
-useGLTF.preload('/models/flower.glb');
+// Set local WebAssembly Draco decoder path and preload compressed 3D assets in parallel
+useGLTF.setDecoderPath('/draco/');
+useGLTF.preload('/models/temple.glb', '/draco/');
+useGLTF.preload('/models/diya.glb', '/draco/');
+useGLTF.preload('/models/bell.glb', '/draco/');
+useGLTF.preload('/models/flower.glb', '/draco/');
 
 // WebGL Pre-compilation & Warm-up component:
 // Forces the GPU to compile all shader programs, bind textures, and render warmup frames

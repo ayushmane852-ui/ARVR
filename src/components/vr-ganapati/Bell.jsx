@@ -123,7 +123,7 @@ function SingleHangingBell({
 }
 
 export default function Bell({ ringTriggerTime }) {
-  const { scene } = useGLTF('/models/bell.glb');
+  const { scene } = useGLTF('/models/bell.glb', '/draco/');
 
   // Prepare master bell template with consecrated brass material ONCE
   const masterBell = useMemo(() => {

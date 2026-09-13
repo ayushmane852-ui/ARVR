@@ -259,7 +259,7 @@ function TempleThroneSteps() {
 }
 
 export default function GanapatiTemple({ blessingActive, isDiyaLit = false, arModeActive = false }) {
-  const { scene } = useGLTF('/models/temple.glb');
+  const { scene } = useGLTF('/models/temple.glb', '/draco/');
   const haloRef = useRef();
   const haloTexture = useMemo(() => createHaloTexture(), []);
 

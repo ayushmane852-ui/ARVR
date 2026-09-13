@@ -52,7 +52,7 @@ function AnimatedFlower({ flowerScene, offering }) {
 }
 
 export default function FlowerOffering({ offerings }) {
-  const { scene } = useGLTF('/models/flower.glb');
+  const { scene } = useGLTF('/models/flower.glb', '/draco/');
 
   // Prepare master flower template with sacred hibiscus red luster ONCE
   const masterFlower = useMemo(() => {
