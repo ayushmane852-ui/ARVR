@@ -86,6 +86,7 @@ function GaneshaEmblem({ className = "w-9 h-9" }) {
 }
 
 export default function ExperienceUI({
+  isLoaded = false,
   isDiyaLit,
   onToggleDiya,
   onRingBell,
@@ -119,7 +120,11 @@ export default function ExperienceUI({
   };
 
   return (
-    <div className="absolute inset-0 pointer-events-none z-30 flex flex-col justify-between p-3 sm:px-6 sm:pt-5 sm:pb-2.5 select-none">
+    <div
+      className={`absolute inset-0 pointer-events-none z-30 flex flex-col justify-between p-3 sm:px-6 sm:pt-5 sm:pb-2.5 select-none transition-opacity duration-1000 ${
+        isLoaded ? 'opacity-100' : 'opacity-0'
+      }`}
+    >
       
       {/* ============================================================ */}
       {/* 1. TOP BAR */}

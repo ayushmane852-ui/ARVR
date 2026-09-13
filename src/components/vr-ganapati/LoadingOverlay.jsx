@@ -2,11 +2,14 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 export default function LoadingOverlay({ progress }) {
+  const displayProgress = Math.min(100, Math.round(progress));
+  const isFinalizing = displayProgress >= 100;
+
   return (
     <motion.div
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.8 }}
+      transition={{ duration: 0.9, ease: 'easeInOut' }}
       className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#070503] text-amber-100"
     >
       {/* Background Soft Amber Glow */}
@@ -28,7 +31,9 @@ export default function LoadingOverlay({ progress }) {
           VR GANAPATI
         </h2>
         <p className="text-xs sm:text-sm tracking-wider text-amber-400/80 mb-6 font-light">
-          Preparing the sacred darshan experience...
+          {isFinalizing
+            ? 'Consecrating the sacred sanctum...'
+            : 'Preparing the sacred darshan experience...'}
         </p>
 
         {/* Progress Bar */}
@@ -36,13 +41,13 @@ export default function LoadingOverlay({ progress }) {
           <motion.div
             className="h-full bg-gradient-to-r from-amber-600 via-yellow-400 to-amber-500 rounded-full shadow-[0_0_12px_rgba(251,191,36,0.8)]"
             initial={{ width: '5%' }}
-            animate={{ width: `${Math.max(5, progress)}%` }}
+            animate={{ width: `${Math.max(5, displayProgress)}%` }}
             transition={{ duration: 0.3 }}
           />
         </div>
 
         <span className="text-[11px] font-mono tracking-widest text-amber-500/70 mt-3">
-          {Math.round(progress)}%
+          {displayProgress}%
         </span>
       </div>
     </motion.div>

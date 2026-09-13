@@ -4,20 +4,47 @@ import { OrbitControls } from '@react-three/drei';
 import gsap from 'gsap';
 import * as THREE from 'three';
 
-export default function CameraController({ blessingActive, onBlessingComplete, vrActive, isDiyaLit }) {
+export default function CameraController({
+  isLoaded = false,
+  blessingActive,
+  onBlessingComplete,
+  vrActive,
+  isDiyaLit,
+}) {
   const { camera } = useThree();
   const controlsRef = useRef();
   const mouseParallaxRef = useRef({ x: 0, y: 0 });
+  const hasAnimatedEntrance = useRef(false);
 
-  // Initial cinematic camera dolly push on load: smoothly settles into the royal sanctum hero frame
+  // Keep camera locked at initial distance until scene is completely loaded and warmed up
   useEffect(() => {
+    if (!isLoaded) {
+      camera.position.set(0, 2.0, 25.0);
+      camera.lookAt(0, 1.45, 0.3);
+      if (controlsRef.current) {
+        controlsRef.current.target.set(0, 1.45, 0.3);
+        controlsRef.current.update();
+      }
+    }
+  }, [camera, isLoaded]);
+
+  // Initial cinematic camera dolly push: triggers in one smooth shot ONLY when isLoaded becomes true!
+  useEffect(() => {
+    if (!isLoaded || hasAnimatedEntrance.current) return;
+    hasAnimatedEntrance.current = true;
+
     camera.position.set(0, 2.0, 25.0);
     camera.lookAt(0, 1.45, 0.3);
+    if (controlsRef.current) {
+      controlsRef.current.target.set(0, 1.45, 0.3);
+      controlsRef.current.update();
+    }
 
-    gsap.to(camera.position, {
+    const targetZ = isDiyaLit ? 17.0 : 20.0;
+    const anim = gsap.to(camera.position, {
       x: 0,
       y: 1.35,
-      z: 20.0,
+      z: targetZ,
       duration: 3.0,
       ease: 'power2.out',
       onUpdate: () => {
@@ -27,11 +54,13 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
         }
       },
     });
-  }, [camera]);
+
+    return () => anim.kill();
+  }, [isLoaded, camera, isDiyaLit]);
 
   // Dolly closer when diyas are lit (-3 units)
   useEffect(() => {
-    if (!controlsRef.current) return;
+    if (!controlsRef.current || !isLoaded || !hasAnimatedEntrance.current) return;
     const targetZ = isDiyaLit ? 17.0 : 20.0;
     const anim = gsap.to(camera.position, {
       z: targetZ,
@@ -44,7 +73,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
       },
     });
     return () => anim.kill();
-  }, [isDiyaLit, camera]);
+  }, [isDiyaLit, isLoaded, camera]);
 
   // Blessing camera sequence
   useEffect(() => {
@@ -76,7 +105,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
     tl.to(camera.position, {
       x: 0,
       y: 1.35,
-      z: 17.0,
+      z: isDiyaLit ? 17.0 : 20.0,
       duration: 2.5,
       ease: 'power2.out',
       onUpdate: () => {
@@ -86,7 +115,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
     });
 
     return () => tl.kill();
-  }, [blessingActive, camera, onBlessingComplete]);
+  }, [blessingActive, camera, onBlessingComplete, isDiyaLit]);
 
   // Mouse Parallax on Desktop
   useEffect(() => {
@@ -101,7 +130,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
   }, []);
 
   useFrame(() => {
-    if (blessingActive || vrActive || !controlsRef.current) return;
+    if (!isLoaded || blessingActive || vrActive || !controlsRef.current) return;
     camera.position.x = THREE.MathUtils.lerp(
       camera.position.x,
       mouseParallaxRef.current.x,
@@ -118,6 +147,7 @@ export default function CameraController({ blessingActive, onBlessingComplete, v
   return (
     <OrbitControls
       ref={controlsRef}
+      enabled={isLoaded}
       enableDamping
       dampingFactor={0.06}
       enablePan={false}

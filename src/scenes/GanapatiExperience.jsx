@@ -1,6 +1,7 @@
-import React, { useState, useEffect, Suspense, useCallback } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { useProgress } from '@react-three/drei';
+import React, { useState, useEffect, useRef, Suspense, useCallback } from 'react';
+import { Canvas, useThree } from '@react-three/fiber';
+import { useProgress, useGLTF } from '@react-three/drei';
+import { AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
 
 import GanapatiTemple from '../components/vr-ganapati/GanapatiTemple';
@@ -14,6 +15,47 @@ import CameraController from '../components/vr-ganapati/CameraController';
 import ExperienceUI from '../components/vr-ganapati/ExperienceUI';
 import LoadingOverlay from '../components/vr-ganapati/LoadingOverlay';
 import { soundEngine } from '../components/vr-ganapati/AudioController';
+
+// Preload heavy 3D assets immediately so the browser downloads and decodes them in parallel
+useGLTF.preload('/models/temple.glb');
+useGLTF.preload('/models/diya.glb');
+useGLTF.preload('/models/bell.glb');
+useGLTF.preload('/models/flower.glb');
+
+// WebGL Pre-compilation & Warm-up component:
+// Forces the GPU to compile all shader programs, bind textures, and render warmup frames
+// BEFORE the temple scene is shown to the user, eliminating initial frame drops and lag completely.
+function SceneWarmup({ onReady }) {
+  const { gl, scene, camera } = useThree();
+  const warmedRef = useRef(false);
+
+  useEffect(() => {
+    if (warmedRef.current) return;
+
+    try {
+      gl.compile(scene, camera);
+    } catch (e) {
+      // Shaders already compiled or partial compile
+    }
+
+    let frames = 0;
+    let animId;
+    const flushFrames = () => {
+      frames++;
+      if (frames >= 3) {
+        warmedRef.current = true;
+        if (onReady) onReady();
+      } else {
+        animId = requestAnimationFrame(flushFrames);
+      }
+    };
+    animId = requestAnimationFrame(flushFrames);
+
+    return () => cancelAnimationFrame(animId);
+  }, [gl, scene, camera, onReady]);
+
+  return null;
+}
 
 function SceneLighting({ blessingActive, isDiyaLit }) {
   return (
@@ -50,6 +92,8 @@ function SceneLighting({ blessingActive, isDiyaLit }) {
 }
 
 function ExperienceCanvas({
+  isLoaded,
+  onSceneReady,
   blessingActive,
   onBlessingComplete,
   isDiyaLit,
@@ -74,6 +118,7 @@ function ExperienceCanvas({
       <SceneLighting blessingActive={blessingActive} isDiyaLit={isDiyaLit} />
 
       <CameraController
+        isLoaded={isLoaded}
         blessingActive={blessingActive}
         onBlessingComplete={onBlessingComplete}
         vrActive={vrSessionActive}
@@ -88,6 +133,7 @@ function ExperienceCanvas({
         <FlowerOffering offerings={flowerOfferings} />
         <ModakOffering modakOfferings={modakOfferings} />
         <Particles blessingActive={blessingActive} />
+        <SceneWarmup onReady={onSceneReady} />
       </Suspense>
     </Canvas>
   );
@@ -95,6 +141,7 @@ function ExperienceCanvas({
 
 export default function GanapatiExperience() {
   const { progress, active } = useProgress();
+  const [sceneReady, setSceneReady] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   // Default to lights OFF with dim atmospheric sanctum and radiant backlight behind idol
   const [isDiyaLit, setIsDiyaLit] = useState(false);
@@ -105,13 +152,28 @@ export default function GanapatiExperience() {
   const [isMuted, setIsMuted] = useState(false);
   const [vrSessionActive, setVrSessionActive] = useState(false);
 
-  // Smooth loading transition
+  const handleSceneReady = useCallback(() => {
+    setSceneReady(true);
+  }, []);
+
+  // Seamless one-shot temple reveal:
+  // Triggers ONLY when all 3D models are downloaded AND WebGL shaders are compiled & warmed up
   useEffect(() => {
-    if (!active && progress >= 100) {
-      const timer = setTimeout(() => setIsLoaded(true), 600);
+    if (sceneReady && (!active || progress >= 100)) {
+      const timer = setTimeout(() => {
+        setIsLoaded(true);
+      }, 400);
       return () => clearTimeout(timer);
     }
-  }, [active, progress]);
+
+    // Safety fallback: if scene is compiled and progress >= 95%
+    const safetyTimer = setTimeout(() => {
+      if (sceneReady && progress >= 95) {
+        setIsLoaded(true);
+      }
+    }, 6000);
+    return () => clearTimeout(safetyTimer);
+  }, [sceneReady, active, progress]);
 
   // Clean up audio on unmount
   useEffect(() => {
@@ -235,22 +297,33 @@ export default function GanapatiExperience() {
 
   return (
     <div className="relative w-full h-screen h-[100dvh] overflow-hidden bg-[#070503]">
-      {/* 1. Loading Overlay */}
-      {!isLoaded && <LoadingOverlay progress={progress} />}
+      {/* 1. Loading Overlay with smooth fade-out exit */}
+      <AnimatePresence>
+        {!isLoaded && <LoadingOverlay progress={progress} />}
+      </AnimatePresence>
 
-      {/* 2. Interactive 3D Temple & Ganapati Canvas */}
-      <ExperienceCanvas
-        blessingActive={blessingActive}
-        onBlessingComplete={handleBlessingComplete}
-        isDiyaLit={isDiyaLit}
-        ringTriggerTime={ringTriggerTime}
-        flowerOfferings={flowerOfferings}
-        modakOfferings={modakOfferings}
-        vrSessionActive={vrSessionActive}
-      />
+      {/* 2. Interactive 3D Temple & Ganapati Canvas (smooth one-shot reveal once loaded & compiled) */}
+      <div
+        className={`w-full h-full transition-opacity duration-1000 ${
+          isLoaded ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <ExperienceCanvas
+          isLoaded={isLoaded}
+          onSceneReady={handleSceneReady}
+          blessingActive={blessingActive}
+          onBlessingComplete={handleBlessingComplete}
+          isDiyaLit={isDiyaLit}
+          ringTriggerTime={ringTriggerTime}
+          flowerOfferings={flowerOfferings}
+          modakOfferings={modakOfferings}
+          vrSessionActive={vrSessionActive}
+        />
+      </div>
 
       {/* 3. Glassmorphic UI Toolbar & Overlays */}
       <ExperienceUI
+        isLoaded={isLoaded}
         isDiyaLit={isDiyaLit}
         onToggleDiya={handleToggleDiya}
         onRingBell={handleRingBell}
