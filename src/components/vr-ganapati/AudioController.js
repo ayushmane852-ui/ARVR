@@ -1,12 +1,16 @@
-// Web Audio API Procedural Sound Engine & MP3 Player for VR Ganapati
+// Web Audio API Procedural Spiritual Music & Sound Engine for VR Ganapati
 
 class SoundEngine {
   constructor() {
     this.ctx = null;
     this.isMuted = false;
-    this.ambienceGain = null;
-    this.ambienceOscillators = [];
-    this.isAmbiencePlaying = false;
+    this.masterMusicGain = null;
+    this.isMusicPlaying = false;
+    this.tanpuraTimer = null;
+    this.fluteTimer = null;
+    this.bowlTimer = null;
+    this.fluteTimeouts = [];
+    this.reverbInput = null;
   }
 
   init() {
@@ -17,30 +21,392 @@ class SoundEngine {
       }
     }
     if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume();
+      this.ctx.resume().catch(() => {});
     }
   }
 
   toggleMute() {
     this.isMuted = !this.isMuted;
-    if (this.ambienceGain) {
-      this.ambienceGain.gain.setValueAtTime(
-        this.isMuted ? 0 : 0.15,
-        this.ctx ? this.ctx.currentTime : 0
-      );
-    }
+    this.applyMuteState();
     return this.isMuted;
   }
 
   setMuted(muted) {
     this.isMuted = muted;
-    if (this.ambienceGain && this.ctx) {
-      this.ambienceGain.gain.setValueAtTime(
-        this.isMuted ? 0 : 0.15,
-        this.ctx.currentTime
+    this.applyMuteState();
+  }
+
+  applyMuteState() {
+    if (this.masterMusicGain && this.ctx) {
+      const now = this.ctx.currentTime;
+      this.masterMusicGain.gain.cancelScheduledValues(now);
+      this.masterMusicGain.gain.setValueAtTime(this.masterMusicGain.gain.value, now);
+      this.masterMusicGain.gain.linearRampToValueAtTime(
+        this.isMuted ? 0.0001 : 0.26,
+        now + 0.6
       );
     }
   }
+
+  // Ancient Temple Stone Hall Reverb (Stereo feedback comb filter)
+  setupTempleReverb() {
+    if (this.reverbInput || !this.ctx) return;
+    try {
+      const delayL = this.ctx.createDelay();
+      delayL.delayTime.value = 0.38;
+      const delayR = this.ctx.createDelay();
+      delayR.delayTime.value = 0.48;
+
+      const feedback = this.ctx.createGain();
+      feedback.gain.value = 0.36;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 1600; // Warm acoustic stone absorption
+
+      delayL.connect(delayR);
+      delayR.connect(feedback);
+      feedback.connect(filter);
+      filter.connect(delayL);
+
+      const wetGain = this.ctx.createGain();
+      wetGain.gain.value = 0.5;
+      filter.connect(wetGain);
+      wetGain.connect(this.masterMusicGain);
+
+      this.reverbInput = delayL;
+    } catch {
+      // Audio node fallback
+    }
+  }
+
+  // -------------------------------------------------------------
+  // 1. SACRED TANPURA DRONE (4-string cyclical continuous acoustic loop)
+  // -------------------------------------------------------------
+  pluckTanpuraString(freq) {
+    if (!this.ctx || !this.isMusicPlaying || !this.masterMusicGain) return;
+    const now = this.ctx.currentTime;
+
+    // Harmonic overtones of the brass/bronze tanpura string with jawari buzzing
+    const harmonics = [
+      { mult: 1, gain: 0.55 },
+      { mult: 2, gain: 0.45 },
+      { mult: 3, gain: 0.32 },
+      { mult: 4, gain: 0.22 },
+      { mult: 5, gain: 0.15 },
+      { mult: 6, gain: 0.10 },
+    ];
+
+    const stringGain = this.ctx.createGain();
+    stringGain.gain.setValueAtTime(0.0001, now);
+    stringGain.gain.linearRampToValueAtTime(0.18, now + 0.04);
+    stringGain.gain.exponentialRampToValueAtTime(0.0001, now + 3.8);
+
+    stringGain.connect(this.masterMusicGain);
+    if (this.reverbInput) {
+      stringGain.connect(this.reverbInput);
+    }
+
+    harmonics.forEach(({ mult, gain: hGain }) => {
+      const osc = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(freq * mult, now);
+
+      // Subtle frequency modulation for authentic jawari silk thread buzz
+      const lfo = this.ctx.createOscillator();
+      const lfoG = this.ctx.createGain();
+      lfo.frequency.setValueAtTime(4.2 + mult * 0.3, now);
+      lfoG.gain.setValueAtTime(0.8, now);
+      lfo.connect(lfoG);
+      lfoG.connect(osc.frequency);
+      lfo.start(now);
+      lfo.stop(now + 3.8);
+
+      g.gain.setValueAtTime(hGain * 0.25, now);
+      osc.connect(g);
+      g.connect(stringGain);
+
+      osc.start(now);
+      osc.stop(now + 3.8);
+    });
+  }
+
+  startTanpuraCycle() {
+    // Standard Pa-Sa tuning in Key of D:
+    // String 1: Pancham 'Pa' (A2 = 110.0 Hz)
+    // String 2: Tar Sa (D3 = 146.83 Hz)
+    // String 3: Tar Sa (D3 = 146.83 Hz)
+    // String 4: Mandra Sa (D2 = 73.41 Hz)
+    const strings = [110.0, 146.83, 146.83, 73.41];
+    let index = 0;
+
+    const tick = () => {
+      if (!this.isMusicPlaying) return;
+      this.pluckTanpuraString(strings[index]);
+      index = (index + 1) % strings.length;
+      this.tanpuraTimer = setTimeout(tick, 1850);
+    };
+
+    tick();
+  }
+
+  // -------------------------------------------------------------
+  // 2. SACRED BANSURI FLUTE (Bamboo Flute in Raga Bhupali)
+  // -------------------------------------------------------------
+  playBansuriNote(frequency, duration, glideFrom = null) {
+    if (!this.ctx || !this.isMusicPlaying || !this.masterMusicGain) return;
+    const now = this.ctx.currentTime;
+
+    // Sweet sine fundamental + filtered triangle wave for bamboo resonance
+    const oscSine = this.ctx.createOscillator();
+    const oscTri = this.ctx.createOscillator();
+    const triFilter = this.ctx.createBiquadFilter();
+    triFilter.type = 'lowpass';
+    triFilter.frequency.setValueAtTime(1350, now);
+
+    const noteGain = this.ctx.createGain();
+
+    // Portamento / Meend (devotional Indian classical pitch glide)
+    if (glideFrom && glideFrom > 0) {
+      oscSine.frequency.setValueAtTime(glideFrom, now);
+      oscSine.frequency.exponentialRampToValueAtTime(frequency, now + 0.28);
+      oscTri.frequency.setValueAtTime(glideFrom, now);
+      oscTri.frequency.exponentialRampToValueAtTime(frequency, now + 0.28);
+    } else {
+      oscSine.frequency.setValueAtTime(frequency, now);
+      oscTri.frequency.setValueAtTime(frequency, now);
+    }
+
+    // Devotional Vibrato LFO (natural delayed onset)
+    const vibrato = this.ctx.createOscillator();
+    const vibratoGain = this.ctx.createGain();
+    vibrato.frequency.setValueAtTime(4.8, now); // ~4.8 Hz gentle vibrato
+    vibratoGain.gain.setValueAtTime(0.0001, now);
+    vibratoGain.gain.setValueAtTime(0.0001, now + 0.35);
+    vibratoGain.gain.linearRampToValueAtTime(2.2, now + 0.85); // Gentle 2.2 Hz depth
+    vibrato.connect(vibratoGain);
+    vibratoGain.connect(oscSine.frequency);
+    vibratoGain.connect(oscTri.frequency);
+    vibrato.start(now);
+    vibrato.stop(now + duration + 0.6);
+
+    // Natural flute breath envelope
+    const attack = 0.35;
+    const release = 0.6;
+    noteGain.gain.setValueAtTime(0.0001, now);
+    noteGain.gain.linearRampToValueAtTime(0.24, now + attack);
+    noteGain.gain.setValueAtTime(0.22, now + Math.max(attack, duration - release));
+    noteGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+    // Connect nodes
+    const triGain = this.ctx.createGain();
+    triGain.gain.setValueAtTime(0.35, now);
+    oscTri.connect(triFilter);
+    triFilter.connect(triGain);
+    triGain.connect(noteGain);
+
+    oscSine.connect(noteGain);
+    noteGain.connect(this.masterMusicGain);
+
+    if (this.reverbInput) {
+      const reverbSend = this.ctx.createGain();
+      reverbSend.gain.setValueAtTime(0.48, now);
+      noteGain.connect(reverbSend);
+      reverbSend.connect(this.reverbInput);
+    }
+
+    oscSine.start(now);
+    oscTri.start(now);
+    oscSine.stop(now + duration);
+    oscTri.stop(now + duration);
+  }
+
+  startBansuriMelody() {
+    const N = {
+      LowPa: 220.00,
+      LowDha: 246.94,
+      Sa: 293.66, // D4
+      Re: 329.63, // E4
+      Ga: 369.99, // F#4
+      Pa: 440.00, // A4
+      Dha: 493.88, // B4
+      HighSa: 587.33, // D5
+      HighRe: 659.25, // E5
+      HighGa: 739.99, // F#5
+    };
+
+    // Traditional devotional Raga Bhupali (Mohanam) phrases
+    const phrases = [
+      // Phrase 1: Peaceful Alap invocation
+      [
+        { freq: N.LowDha, dur: 2.2 },
+        { freq: N.Sa, dur: 3.4 },
+        { freq: N.Re, dur: 1.8 },
+        { freq: N.Ga, dur: 3.8 },
+        { freq: N.Re, dur: 1.6 },
+        { freq: N.Sa, dur: 4.5 },
+      ],
+      // Phrase 2: Ascending devotional prayer
+      [
+        { freq: N.Sa, dur: 1.5 },
+        { freq: N.Re, dur: 1.5 },
+        { freq: N.Ga, dur: 2.2 },
+        { freq: N.Pa, dur: 3.0 },
+        { freq: N.Dha, dur: 2.4 },
+        { freq: N.HighSa, dur: 4.2 },
+        { freq: N.Dha, dur: 2.0 },
+        { freq: N.Pa, dur: 3.8 },
+      ],
+      // Phrase 3: High sanctum darshan
+      [
+        { freq: N.HighSa, dur: 2.0 },
+        { freq: N.HighRe, dur: 2.4 },
+        { freq: N.HighSa, dur: 3.2 },
+        { freq: N.Dha, dur: 2.0 },
+        { freq: N.Pa, dur: 2.4 },
+        { freq: N.Ga, dur: 2.8 },
+        { freq: N.Re, dur: 2.0 },
+        { freq: N.Ga, dur: 2.0 },
+        { freq: N.Sa, dur: 5.0 },
+      ],
+      // Phrase 4: Soothing meditative conclusion
+      [
+        { freq: N.Ga, dur: 2.6 },
+        { freq: N.Pa, dur: 2.8 },
+        { freq: N.Ga, dur: 2.4 },
+        { freq: N.Re, dur: 2.2 },
+        { freq: N.LowDha, dur: 2.6 },
+        { freq: N.Sa, dur: 5.5 },
+      ],
+    ];
+
+    let phraseIndex = 0;
+
+    const playNextPhrase = () => {
+      if (!this.isMusicPlaying) return;
+      const phrase = phrases[phraseIndex];
+      phraseIndex = (phraseIndex + 1) % phrases.length;
+
+      let timeOffset = 0;
+      let prevFreq = null;
+
+      phrase.forEach((note) => {
+        const tid = setTimeout(() => {
+          if (!this.isMusicPlaying) return;
+          this.playBansuriNote(note.freq, note.dur, prevFreq);
+        }, timeOffset * 1000);
+        this.fluteTimeouts.push(tid);
+
+        prevFreq = note.freq;
+        timeOffset += note.dur - 0.15; // Smooth legato overlap
+      });
+
+      // Natural meditative pause (3.8s) between flute phrases
+      const phraseTotalTime = timeOffset + 3.8;
+      this.fluteTimer = setTimeout(playNextPhrase, phraseTotalTime * 1000);
+    };
+
+    // Begin flute 1.5 seconds after Tanpura starts
+    this.fluteTimer = setTimeout(playNextPhrase, 1500);
+  }
+
+  // -------------------------------------------------------------
+  // 3. TIBETAN SINGING BOWL & OM RESONATOR (Gentle periodic resonance)
+  // -------------------------------------------------------------
+  startSingingBowlCycle() {
+    const playBowl = () => {
+      if (!this.isMusicPlaying || !this.ctx || !this.masterMusicGain) return;
+      const now = this.ctx.currentTime;
+      // Sacred planetary Om fundamental 136.1 Hz + harmonics
+      const bowlFreqs = [136.1, 272.2, 408.3];
+      bowlFreqs.forEach((freq, i) => {
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+
+        g.gain.setValueAtTime(0.0001, now);
+        g.gain.linearRampToValueAtTime(0.07 / (i + 1), now + 1.2);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 9.0);
+
+        osc.connect(g);
+        g.connect(this.masterMusicGain);
+        if (this.reverbInput) {
+          g.connect(this.reverbInput);
+        }
+
+        osc.start(now);
+        osc.stop(now + 9.0);
+      });
+
+      // Periodic chime every 18 to 25 seconds
+      const nextDelay = (18 + Math.random() * 7) * 1000;
+      this.bowlTimer = setTimeout(playBowl, nextDelay);
+    };
+
+    this.bowlTimer = setTimeout(playBowl, 5000);
+  }
+
+  // Start complete spiritual music ambience
+  startSpiritualMusic() {
+    if (this.isMusicPlaying) return;
+    this.init();
+    if (!this.ctx) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      this.masterMusicGain = this.ctx.createGain();
+      this.masterMusicGain.gain.setValueAtTime(0.0001, now);
+      this.masterMusicGain.gain.linearRampToValueAtTime(
+        this.isMuted ? 0.0001 : 0.26,
+        now + 2.5
+      );
+      this.masterMusicGain.connect(this.ctx.destination);
+
+      this.setupTempleReverb();
+      this.isMusicPlaying = true;
+
+      // Start harmonious spiritual layers
+      this.startTanpuraCycle();
+      this.startBansuriMelody();
+      this.startSingingBowlCycle();
+    } catch {
+      // Autoplay policy handled on next user gesture
+    }
+  }
+
+  stopSpiritualMusic() {
+    if (!this.isMusicPlaying || !this.ctx) return;
+    this.isMusicPlaying = false;
+    clearTimeout(this.tanpuraTimer);
+    clearTimeout(this.fluteTimer);
+    clearTimeout(this.bowlTimer);
+    this.fluteTimeouts.forEach((t) => clearTimeout(t));
+    this.fluteTimeouts = [];
+
+    if (this.masterMusicGain) {
+      try {
+        const now = this.ctx.currentTime;
+        this.masterMusicGain.gain.cancelScheduledValues(now);
+        this.masterMusicGain.gain.setValueAtTime(this.masterMusicGain.gain.value, now);
+        this.masterMusicGain.gain.linearRampToValueAtTime(0.0001, now + 1.2);
+      } catch {}
+    }
+  }
+
+  // Ambience aliases
+  startAmbience() {
+    this.startSpiritualMusic();
+  }
+
+  stopAmbience() {
+    this.stopSpiritualMusic();
+  }
+
+  // -------------------------------------------------------------
+  // 4. INTERACTIVE TEMPLE SOUND EFFECTS
+  // -------------------------------------------------------------
 
   // Play realistic temple brass bell using additive partials + decay envelopes
   playBell(pitch = 587.33) {
@@ -76,7 +442,7 @@ class SoundEngine {
       osc.frequency.setValueAtTime(fundamental * ratio, now);
 
       // Bell envelope: sharp strike attack, lingering exponential decay
-      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.setValueAtTime(0.0001, now);
       gain.gain.linearRampToValueAtTime(amp, now + 0.008);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + decay);
 
@@ -109,7 +475,7 @@ class SoundEngine {
 
       const clickGain = this.ctx.createGain();
       clickGain.gain.setValueAtTime(0.15, now);
-      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+      clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
 
       noise.connect(filter);
       filter.connect(clickGain);
@@ -144,7 +510,7 @@ class SoundEngine {
     osc.frequency.setValueAtTime(fundamental, now);
     osc.frequency.exponentialRampToValueAtTime(fundamental * 1.35, now + 0.15);
 
-    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.setValueAtTime(0.0001, now);
     gain.gain.linearRampToValueAtTime(0.18, now + 0.025);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.85);
 
@@ -171,7 +537,7 @@ class SoundEngine {
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, startTime);
 
-      gain.gain.setValueAtTime(0.001, startTime);
+      gain.gain.setValueAtTime(0.0001, startTime);
       gain.gain.linearRampToValueAtTime(0.12, startTime + 0.03);
       gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 1.2);
 
@@ -188,19 +554,6 @@ class SoundEngine {
     if (this.isMuted) return;
     this.init();
     if (!this.ctx) return;
-
-    try {
-      const audio = new Audio('/audio/blessing.mp3');
-      audio.volume = 0.8;
-      const promise = audio.play();
-      if (promise !== undefined) {
-        promise.catch(() => this.synthesizeBlessingChord());
-        return;
-      }
-    } catch {
-      this.synthesizeBlessingChord();
-      return;
-    }
     this.synthesizeBlessingChord();
   }
 
@@ -211,7 +564,7 @@ class SoundEngine {
     const frequencies = [136.1, 272.2, 408.3, 544.4, 816.6, 1088.8];
 
     const masterGain = this.ctx.createGain();
-    masterGain.gain.setValueAtTime(0.001, now);
+    masterGain.gain.setValueAtTime(0.0001, now);
     masterGain.gain.linearRampToValueAtTime(0.4, now + 1.5);
     masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 6.0);
     masterGain.connect(this.ctx.destination);
@@ -231,70 +584,6 @@ class SoundEngine {
       osc.start(now);
       osc.stop(now + 6.0);
     });
-  }
-
-  // Soothing sacred temple drone (Tanpura / ambient resonance)
-  startAmbience() {
-    if (this.isAmbiencePlaying) return;
-    this.init();
-    if (!this.ctx) return;
-
-    try {
-      const now = this.ctx.currentTime;
-      this.ambienceGain = this.ctx.createGain();
-      this.ambienceGain.gain.setValueAtTime(0.001, now);
-      this.ambienceGain.gain.linearRampToValueAtTime(
-        this.isMuted ? 0 : 0.12,
-        now + 3.0
-      );
-      this.ambienceGain.connect(this.ctx.destination);
-
-      // Low frequency meditative drone (C#2 69.3Hz, G#2 103.8Hz, C#3 138.6Hz)
-      const droneFreqs = [69.3, 103.8, 138.6, 207.65];
-      this.ambienceOscillators = droneFreqs.map((freq, i) => {
-        const osc = this.ctx.createOscillator();
-        const subGain = this.ctx.createGain();
-        osc.type = i === 0 ? 'triangle' : 'sine';
-        osc.frequency.setValueAtTime(freq, now);
-
-        // Subtle slow pitch modulation for realistic organic tanpura shimmer
-        const lfo = this.ctx.createOscillator();
-        const lfoGain = this.ctx.createGain();
-        lfo.frequency.setValueAtTime(0.2 + i * 0.1, now);
-        lfoGain.gain.setValueAtTime(0.4, now);
-        lfo.connect(lfoGain);
-        lfoGain.connect(osc.frequency);
-        lfo.start(now);
-
-        subGain.gain.setValueAtTime(0.25 / (i + 1), now);
-        osc.connect(subGain);
-        subGain.connect(this.ambienceGain);
-        osc.start(now);
-        return { osc, lfo };
-      });
-
-      this.isAmbiencePlaying = true;
-    } catch {
-      // Audio autoplay blocked or unsupported
-    }
-  }
-
-  stopAmbience() {
-    if (!this.isAmbiencePlaying || !this.ambienceGain || !this.ctx) return;
-    try {
-      const now = this.ctx.currentTime;
-      this.ambienceGain.gain.linearRampToValueAtTime(0.0001, now + 1.5);
-      setTimeout(() => {
-        this.ambienceOscillators.forEach(({ osc, lfo }) => {
-          try {
-            osc.stop();
-            lfo.stop();
-          } catch {}
-        });
-        this.ambienceOscillators = [];
-        this.isAmbiencePlaying = false;
-      }, 1600);
-    } catch {}
   }
 }
 

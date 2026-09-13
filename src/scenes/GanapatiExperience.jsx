@@ -175,12 +175,29 @@ export default function GanapatiExperience() {
     return () => clearTimeout(safetyTimer);
   }, [sceneReady, active, progress]);
 
-  // Clean up audio on unmount
+  // Automatically initiate spiritual background music on user gesture or once loaded
   useEffect(() => {
-    return () => {
-      soundEngine.stopAmbience();
+    const startMusicOnGesture = () => {
+      soundEngine.init();
+      soundEngine.startSpiritualMusic();
+      window.removeEventListener('pointerdown', startMusicOnGesture);
+      window.removeEventListener('keydown', startMusicOnGesture);
     };
-  }, []);
+
+    window.addEventListener('pointerdown', startMusicOnGesture);
+    window.addEventListener('keydown', startMusicOnGesture);
+
+    if (isLoaded) {
+      soundEngine.init();
+      soundEngine.startSpiritualMusic();
+    }
+
+    return () => {
+      window.removeEventListener('pointerdown', startMusicOnGesture);
+      window.removeEventListener('keydown', startMusicOnGesture);
+      soundEngine.stopSpiritualMusic();
+    };
+  }, [isLoaded]);
 
   // Action 1: Toggle Diya
   const handleToggleDiya = useCallback(() => {
