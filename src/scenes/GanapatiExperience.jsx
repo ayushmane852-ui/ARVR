@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, Suspense, useCallback } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
-import { useProgress, useGLTF } from '@react-three/drei';
+import { useProgress, useGLTF, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import { AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
 
@@ -202,6 +202,9 @@ function ExperienceCanvas({
       }}
       className="w-full h-full"
     >
+      <AdaptiveDpr pixelated={false} />
+      <AdaptiveEvents />
+
       <SceneLighting blessingActive={blessingActive} isDiyaLit={isDiyaLit} arModeActive={arModeActive} />
 
       <CameraController
@@ -300,6 +303,8 @@ export default function GanapatiExperience() {
   const videoRef = useRef(null);
   const pointerStartX = useRef(0);
   const isPointerDragging = useRef(false);
+  const pinchStartDist = useRef(null);
+  const pinchStartScale = useRef(0.35);
 
   const [arStream, setArStream] = useState(null);
   const [arModeActive, setArModeActive] = useState(false);
@@ -634,25 +639,75 @@ export default function GanapatiExperience() {
     setArRotation([0, radians, 0]);
   }, []);
 
-  // Touch & Mouse Drag to Rotate Lord Ganesha 360° on canvas
-  const handlePointerDown = useCallback((e) => {
+  // Mobile Touch Gestures: 1-finger 360° swipe rotate & 2-finger pinch-to-scale in AR
+  const handleTouchStart = useCallback((e) => {
     if (!arModeActive || !arPlaced) return;
-    if (e.target.closest && (e.target.closest('button') || e.target.closest('header'))) return;
-    pointerStartX.current = e.clientX || (e.touches && e.touches[0]?.clientX) || 0;
+    if (e.target.closest && (e.target.closest('button') || e.target.closest('header') || e.target.closest('footer'))) return;
+
+    if (e.touches && e.touches.length === 2) {
+      isPointerDragging.current = false;
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      pinchStartDist.current = Math.hypot(dx, dy);
+      pinchStartScale.current = arScale;
+    } else if (e.touches && e.touches.length === 1) {
+      pinchStartDist.current = null;
+      pointerStartX.current = e.touches[0].clientX;
+      isPointerDragging.current = true;
+    }
+  }, [arModeActive, arPlaced, arScale]);
+
+  const handleTouchMove = useCallback((e) => {
+    if (!arModeActive || !arPlaced) return;
+
+    if (e.touches && e.touches.length === 2 && pinchStartDist.current) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const currentDist = Math.hypot(dx, dy);
+      if (pinchStartDist.current > 0) {
+        const factor = currentDist / pinchStartDist.current;
+        const newScale = Math.min(1.25, Math.max(0.12, pinchStartScale.current * factor));
+        setArScale(Number(newScale.toFixed(3)));
+      }
+    } else if (e.touches && e.touches.length === 1 && isPointerDragging.current) {
+      const clientX = e.touches[0].clientX;
+      const deltaX = clientX - pointerStartX.current;
+      pointerStartX.current = clientX;
+      if (Math.abs(deltaX) > 0.3) {
+        setArRotation((prev) => [0, prev[1] + deltaX * 0.012, 0]);
+      }
+    }
+  }, [arModeActive, arPlaced]);
+
+  const handleTouchEnd = useCallback((e) => {
+    if (!e.touches || e.touches.length === 0) {
+      isPointerDragging.current = false;
+      pinchStartDist.current = null;
+    } else if (e.touches.length === 1) {
+      pinchStartDist.current = null;
+      pointerStartX.current = e.touches[0].clientX;
+      isPointerDragging.current = true;
+    }
+  }, []);
+
+  // Desktop Mouse Drag to Rotate Lord Ganesha 360° on canvas
+  const handleMouseDown = useCallback((e) => {
+    if (!arModeActive || !arPlaced) return;
+    if (e.target.closest && (e.target.closest('button') || e.target.closest('header') || e.target.closest('footer'))) return;
+    pointerStartX.current = e.clientX;
     isPointerDragging.current = true;
   }, [arModeActive, arPlaced]);
 
-  const handlePointerMove = useCallback((e) => {
+  const handleMouseMove = useCallback((e) => {
     if (!isPointerDragging.current) return;
-    const clientX = e.clientX || (e.touches && e.touches[0]?.clientX) || 0;
-    const deltaX = clientX - pointerStartX.current;
-    pointerStartX.current = clientX;
+    const deltaX = e.clientX - pointerStartX.current;
+    pointerStartX.current = e.clientX;
     if (Math.abs(deltaX) > 0.4) {
       setArRotation((prev) => [0, prev[1] + deltaX * 0.012, 0]);
     }
   }, []);
 
-  const handlePointerUp = useCallback(() => {
+  const handleMouseUp = useCallback(() => {
     isPointerDragging.current = false;
   }, []);
 
@@ -697,10 +752,13 @@ export default function GanapatiExperience() {
 
       {/* 2. Interactive 3D Temple & Ganapati Canvas (smooth one-shot reveal once loaded & compiled) */}
       <div
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
         className={`relative z-10 w-full h-full transition-opacity duration-1000 ${
           isLoaded ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}

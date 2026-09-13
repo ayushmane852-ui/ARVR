@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -141,7 +141,86 @@ export default function ExperienceUI({
   const navigate = useNavigate();
   const [vrNotice, setVrNotice] = useState(null);
 
+  // Subtle mobile haptic feedback
+  const triggerHaptic = (duration = 20) => {
+    if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate(duration);
+      } catch {}
+    }
+  };
+
+  // Global Keyboard Shortcuts for Desktop PC
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (
+        e.target.tagName === 'INPUT' ||
+        e.target.tagName === 'TEXTAREA' ||
+        e.target.isContentEditable
+      ) {
+        return;
+      }
+
+      const key = e.key.toLowerCase();
+      if (e.code === 'Space' || key === 'r') {
+        e.preventDefault();
+        triggerHaptic(30);
+        onRingBell?.();
+      } else if (key === 'd') {
+        e.preventDefault();
+        triggerHaptic(25);
+        onToggleDiya?.();
+      } else if (key === 'f') {
+        e.preventDefault();
+        triggerHaptic(15);
+        onOfferFlowers?.();
+      } else if (key === 'm') {
+        e.preventDefault();
+        triggerHaptic(20);
+        onOfferModak?.();
+      } else if (key === 'b') {
+        e.preventDefault();
+        if (!blessingActive) {
+          triggerHaptic(35);
+          onTakeBlessings?.();
+        }
+      } else if (key === 'a') {
+        e.preventDefault();
+        if (!aartiActive) {
+          triggerHaptic(35);
+          onPerformAarti?.();
+        }
+      } else if (key === 'c') {
+        e.preventDefault();
+        triggerHaptic(40);
+        onCaptureDarshan?.();
+      } else if (key === 'escape') {
+        if (arModeActive) {
+          e.preventDefault();
+          triggerHaptic(20);
+          onToggleAR?.();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [
+    onRingBell,
+    onToggleDiya,
+    onOfferFlowers,
+    onOfferModak,
+    onTakeBlessings,
+    blessingActive,
+    onPerformAarti,
+    aartiActive,
+    onCaptureDarshan,
+    arModeActive,
+    onToggleAR,
+  ]);
+
   const handleVrClick = () => {
+    triggerHaptic(25);
     if (onEnterVR) {
       const started = onEnterVR();
       if (!started) {
@@ -152,6 +231,7 @@ export default function ExperienceUI({
   };
 
   const handleFullscreen = () => {
+    triggerHaptic(20);
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(() => {});
     } else {
@@ -161,7 +241,7 @@ export default function ExperienceUI({
 
   return (
     <div
-      className={`absolute inset-0 pointer-events-none z-30 flex flex-col justify-between p-3 sm:px-6 sm:pt-5 sm:pb-2.5 select-none transition-opacity duration-1000 ${
+      className={`absolute inset-0 pointer-events-none z-30 flex flex-col justify-between p-3 sm:px-6 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.6rem,env(safe-area-inset-bottom))] pl-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] select-none transition-opacity duration-1000 ${
         isLoaded ? 'opacity-100' : 'opacity-0'
       }`}
     >
@@ -203,7 +283,10 @@ export default function ExperienceUI({
         <div className="flex items-center gap-2 sm:gap-3 pointer-events-auto">
           {/* Audio Mute/Unmute */}
           <button
-            onClick={onToggleMute}
+            onClick={() => {
+              triggerHaptic(15);
+              onToggleMute();
+            }}
             className="p-2 sm:p-2.5 rounded-full bg-black/40 hover:bg-black/70 border border-amber-500/20 text-amber-200/80 hover:text-amber-100 transition-all backdrop-blur-md shadow-lg cursor-pointer"
             title={isMuted ? "Unmute Temple Audio" : "Mute Temple Audio"}
             aria-label="Toggle Audio"
@@ -217,15 +300,21 @@ export default function ExperienceUI({
 
           {/* Capture Darshan Snapshot Button */}
           <button
-            onClick={onCaptureDarshan}
+            onClick={() => {
+              triggerHaptic(40);
+              onCaptureDarshan();
+            }}
             className="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-black/40 hover:bg-black/70 border border-amber-500/20 hover:border-amber-400/50 text-amber-200/90 hover:text-amber-100 transition-all backdrop-blur-md shadow-lg cursor-pointer group"
-            title="Capture & Share Darshan"
+            title="Capture & Share Darshan (Key: C)"
             aria-label="Capture Darshan"
           >
             <Camera className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
             <span className="hidden sm:inline text-xs font-space font-medium tracking-wide">
               Capture
             </span>
+            <kbd className="hidden lg:inline-flex items-center justify-center min-w-[14px] h-[13px] px-1 text-[8px] font-mono text-amber-300/70 bg-black/60 border border-amber-500/25 rounded">
+              C
+            </kbd>
           </button>
 
           {/* Fullscreen Toggle */}
@@ -240,18 +329,26 @@ export default function ExperienceUI({
 
           {/* Enter AR / Exit AR Toggle Button */}
           <button
-            onClick={onToggleAR}
+            onClick={() => {
+              triggerHaptic(20);
+              onToggleAR();
+            }}
             className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full backdrop-blur-xl transition-all cursor-pointer group ${
               arModeActive
                 ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-semibold shadow-[0_0_20px_rgba(245,158,11,0.6)]'
                 : 'bg-black/50 hover:bg-amber-950/40 border border-amber-400/40 hover:border-amber-300 text-amber-100 shadow-[0_4px_20px_rgba(0,0,0,0.6)]'
             }`}
-            title={arModeActive ? "Exit AR Mode and return to Temple" : "Place Ganapati in your real room via AR"}
+            title={arModeActive ? "Exit AR Mode (Esc)" : "Place Ganapati in your real room via AR"}
           >
             <Sparkles className={`w-4 h-4 ${arModeActive ? 'text-black' : 'text-amber-400 group-hover:scale-110 transition-transform'}`} />
             <span className="text-xs sm:text-sm font-space font-medium tracking-wider">
               {arModeActive ? 'Exit AR' : 'Enter AR'}
             </span>
+            {arModeActive && (
+              <kbd className="hidden lg:inline-flex items-center justify-center px-1 text-[8px] font-mono text-black/80 bg-white/40 rounded">
+                Esc
+              </kbd>
+            )}
           </button>
 
           {/* Enter VR Pill Button matching mockup */}
@@ -335,7 +432,10 @@ export default function ExperienceUI({
           >
             {/* 360° Devotional Auto-Spin Toggle */}
             <button
-              onClick={onToggleAutoRotate360}
+              onClick={() => {
+                triggerHaptic(15);
+                onToggleAutoRotate360?.();
+              }}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all cursor-pointer font-medium ${
                 autoRotate360
                   ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-black shadow-[0_0_15px_rgba(245,158,11,0.6)] font-semibold'
@@ -350,21 +450,30 @@ export default function ExperienceUI({
             {/* Angle Presets */}
             <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-full border border-amber-500/20">
               <button
-                onClick={() => onSetPresetAngle && onSetPresetAngle(0)}
+                onClick={() => {
+                  triggerHaptic(15);
+                  onSetPresetAngle && onSetPresetAngle(0);
+                }}
                 className="px-2 py-1 rounded-full hover:bg-white/15 text-[10px] text-amber-300/90 font-medium cursor-pointer transition-colors"
                 title="Front Facing Darshan (0°)"
               >
                 Front
               </button>
               <button
-                onClick={() => onSetPresetAngle && onSetPresetAngle(Math.PI / 2)}
+                onClick={() => {
+                  triggerHaptic(15);
+                  onSetPresetAngle && onSetPresetAngle(Math.PI / 2);
+                }}
                 className="px-2 py-1 rounded-full hover:bg-white/15 text-[10px] text-amber-300/90 font-medium cursor-pointer transition-colors"
                 title="Side Profile View (90°)"
               >
                 Side
               </button>
               <button
-                onClick={() => onSetPresetAngle && onSetPresetAngle(Math.PI)}
+                onClick={() => {
+                  triggerHaptic(15);
+                  onSetPresetAngle && onSetPresetAngle(Math.PI);
+                }}
                 className="px-2 py-1 rounded-full hover:bg-white/15 text-[10px] text-amber-300/90 font-medium cursor-pointer transition-colors"
                 title="Rear Crown View (180°)"
               >
@@ -377,7 +486,10 @@ export default function ExperienceUI({
             {/* Size Scaling Controls */}
             <div className="flex items-center gap-1">
               <button
-                onClick={onScaleDown}
+                onClick={() => {
+                  triggerHaptic(15);
+                  onScaleDown?.();
+                }}
                 className="px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-amber-500/30 cursor-pointer font-medium text-[11px]"
                 title="Smaller Size"
               >
@@ -387,7 +499,10 @@ export default function ExperienceUI({
                 {Math.round(arScale * 100)}%
               </span>
               <button
-                onClick={onScaleUp}
+                onClick={() => {
+                  triggerHaptic(15);
+                  onScaleUp?.();
+                }}
                 className="px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-amber-500/30 cursor-pointer font-medium text-[11px]"
                 title="Larger Size"
               >
@@ -399,7 +514,10 @@ export default function ExperienceUI({
 
             {/* Reposition / Pick Up Button */}
             <button
-              onClick={onReposition}
+              onClick={() => {
+                triggerHaptic(20);
+                onReposition?.();
+              }}
               className="px-2.5 py-1 rounded-full bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 cursor-pointer text-amber-300 font-medium text-[11px]"
               title="Pick up Lord Ganesha to reposition on a new surface"
             >
@@ -507,15 +625,19 @@ export default function ExperienceUI({
       {/* ============================================================ */}
       <footer className="w-full flex flex-col items-center gap-1.5 sm:gap-2 pointer-events-auto">
         
-        {/* Floating Glassmorphic Pill Toolbar (compact height, positioned lower) */}
-        <div className="flex items-center justify-center gap-2.5 sm:gap-5 lg:gap-6 px-3.5 sm:px-6 py-1.5 sm:py-2 rounded-full bg-[#120e0b]/80 border border-amber-500/25 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.85),inset_0_0_15px_rgba(245,158,11,0.08)] transition-all max-w-full overflow-x-auto">
+        {/* Floating Glassmorphic Pill Toolbar (compact height, positioned lower, safe-area aware) */}
+        <div className="flex items-center justify-center gap-2 sm:gap-4 lg:gap-5 px-3 sm:px-5 py-1.5 rounded-full bg-[#120e0b]/85 border border-amber-500/25 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.85),inset_0_0_15px_rgba(245,158,11,0.08)] transition-all max-w-full overflow-x-auto">
           
           {/* Action 1: Light Diya */}
           <button
-            onClick={onToggleDiya}
-            className={`flex flex-col items-center gap-0.5 sm:gap-1 transition-all group cursor-pointer ${
+            onClick={() => {
+              triggerHaptic(25);
+              onToggleDiya();
+            }}
+            className={`flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 transition-all group cursor-pointer ${
               isDiyaLit ? 'text-amber-300' : 'text-amber-200/90 hover:text-amber-100'
             }`}
+            title="Light Diyas (Key: D)"
           >
             <div
               className={`w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center transition-all ${
@@ -529,12 +651,19 @@ export default function ExperienceUI({
             <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
               {isDiyaLit ? 'Diyas Lit' : 'Light Diya'}
             </span>
+            <kbd className="hidden lg:inline-flex items-center justify-center min-w-[15px] h-[13px] px-1 text-[8px] font-mono text-amber-300/70 bg-black/60 border border-amber-500/30 rounded">
+              D
+            </kbd>
           </button>
 
           {/* Action 2: Ring Bell */}
           <button
-            onClick={onRingBell}
-            className="flex flex-col items-center gap-0.5 sm:gap-1 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer"
+            onClick={() => {
+              triggerHaptic(30);
+              onRingBell();
+            }}
+            className="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer"
+            title="Ring Sacred Bell (Key: Space or R)"
           >
             <div className="w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95 transition-all">
               <BellIcon className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover:rotate-12 transition-transform text-amber-400/90" />
@@ -542,12 +671,19 @@ export default function ExperienceUI({
             <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
               Ring Bell
             </span>
+            <kbd className="hidden lg:inline-flex items-center justify-center min-w-[15px] h-[13px] px-1 text-[8px] font-mono text-amber-300/70 bg-black/60 border border-amber-500/30 rounded">
+              Space
+            </kbd>
           </button>
 
           {/* Action 3: Offer Flowers */}
           <button
-            onClick={onOfferFlowers}
-            className="flex flex-col items-center gap-0.5 sm:gap-1 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer"
+            onClick={() => {
+              triggerHaptic(15);
+              onOfferFlowers();
+            }}
+            className="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer"
+            title="Offer Fragrant Flowers (Key: F)"
           >
             <div className="w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95 transition-all">
               <Flower2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover:rotate-45 transition-transform text-rose-400/90" />
@@ -555,12 +691,19 @@ export default function ExperienceUI({
             <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
               Offer Flowers
             </span>
+            <kbd className="hidden lg:inline-flex items-center justify-center min-w-[15px] h-[13px] px-1 text-[8px] font-mono text-amber-300/70 bg-black/60 border border-amber-500/30 rounded">
+              F
+            </kbd>
           </button>
 
           {/* Action 4: Offer Modak */}
           <button
-            onClick={onOfferModak}
-            className="flex flex-col items-center gap-0.5 sm:gap-1 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer"
+            onClick={() => {
+              triggerHaptic(20);
+              onOfferModak();
+            }}
+            className="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer"
+            title="Offer Sweet Modak (Key: M)"
           >
             <div className="w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95 transition-all">
               <ModakIcon className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover:scale-110 transition-transform text-yellow-400/90" />
@@ -568,15 +711,24 @@ export default function ExperienceUI({
             <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
               Offer Modak
             </span>
+            <kbd className="hidden lg:inline-flex items-center justify-center min-w-[15px] h-[13px] px-1 text-[8px] font-mono text-amber-300/70 bg-black/60 border border-amber-500/30 rounded">
+              M
+            </kbd>
           </button>
 
           {/* Action 5: Take Blessings */}
           <button
-            onClick={onTakeBlessings}
+            onClick={() => {
+              if (!blessingActive) {
+                triggerHaptic(35);
+                onTakeBlessings();
+              }
+            }}
             disabled={blessingActive}
-            className={`flex flex-col items-center gap-0.5 sm:gap-1 transition-all group cursor-pointer ${
+            className={`flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 transition-all group cursor-pointer ${
               blessingActive ? 'opacity-60 cursor-not-allowed' : 'text-neutral-400 hover:text-amber-200'
             }`}
+            title="Receive Divine Blessings (Key: B)"
           >
             <div className={`w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center border transition-all ${
               blessingActive
@@ -588,15 +740,24 @@ export default function ExperienceUI({
             <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
               Take Blessings
             </span>
+            <kbd className="hidden lg:inline-flex items-center justify-center min-w-[15px] h-[13px] px-1 text-[8px] font-mono text-amber-300/70 bg-black/60 border border-amber-500/30 rounded">
+              B
+            </kbd>
           </button>
 
           {/* Action 6: Perform Aarti */}
           <button
-            onClick={onPerformAarti}
+            onClick={() => {
+              if (!aartiActive) {
+                triggerHaptic(35);
+                onPerformAarti();
+              }
+            }}
             disabled={aartiActive}
-            className={`flex flex-col items-center gap-0.5 sm:gap-1 transition-all group cursor-pointer ${
+            className={`flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 transition-all group cursor-pointer ${
               aartiActive ? 'text-amber-300' : 'text-neutral-400 hover:text-amber-200'
             }`}
+            title="Perform Sacred Aarti (Key: A)"
           >
             <div
               className={`w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center transition-all ${
@@ -610,6 +771,9 @@ export default function ExperienceUI({
             <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
               {aartiActive ? 'Aarti Live' : 'Perform Aarti'}
             </span>
+            <kbd className="hidden lg:inline-flex items-center justify-center min-w-[15px] h-[13px] px-1 text-[8px] font-mono text-amber-300/70 bg-black/60 border border-amber-500/30 rounded">
+              A
+            </kbd>
           </button>
         </div>
 
@@ -621,11 +785,17 @@ export default function ExperienceUI({
               🪷
             </span>
             <span className="hidden sm:inline">Feel the peace in every moment</span>
+            <span className="hidden lg:inline text-amber-300/40">• Shortcuts: Space, D, F, M, B, A, C</span>
           </div>
 
-          {/* Bottom Right: Swipe helper */}
+          {/* Bottom Right: Swipe / Navigation Helper */}
           <div className="flex items-center gap-1 text-amber-300/50">
-            <span>{arModeActive ? "Swipe anywhere to rotate 360°" : "Swipe to explore"}</span>
+            <span className="hidden sm:inline">
+              {arModeActive ? "Swipe horizontally to rotate 360° • Pinch to scale" : "Drag to orbit view"}
+            </span>
+            <span className="sm:hidden">
+              {arModeActive ? "Swipe 360° • Pinch scale" : "Swipe to explore"}
+            </span>
             <span>›</span>
           </div>
         </div>
