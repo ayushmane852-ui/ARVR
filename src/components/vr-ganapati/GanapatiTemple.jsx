@@ -383,11 +383,19 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false, arMo
       <TempleThroneSteps />
 
       {/* 4. Royal Brass Chhatra (Canopy) suspended high above Lord Ganesha's Crown */}
-      <GoldenChhatra position={[0, 6.45, 0.3]} />
+      <GoldenChhatra position={[0, arModeActive ? 7.5 : 6.45, 0.3]} />
 
       {/* 5. Vertical Marigold Flower Garlands framing the sanctum pillars */}
-      <MarigoldGarland position={[-3.8, 6.4, 1.6]} height={7.8} count={30} />
-      <MarigoldGarland position={[3.8, 6.4, 1.6]} height={7.8} count={30} />
+      <MarigoldGarland 
+        position={[arModeActive ? -4.3 : -3.8, arModeActive ? 6.8 : 6.4, arModeActive ? 1.2 : 1.6]} 
+        height={arModeActive ? 6.4 : 7.8} 
+        count={30} 
+      />
+      <MarigoldGarland 
+        position={[arModeActive ? 4.3 : 3.8, arModeActive ? 6.8 : 6.4, arModeActive ? 1.2 : 1.6]} 
+        height={arModeActive ? 6.4 : 7.8} 
+        count={30} 
+      />
 
       {/* Outer pillar garlands (kept in VR, minimal in AR) */}
       {!arModeActive && (

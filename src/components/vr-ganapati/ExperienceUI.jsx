@@ -422,13 +422,13 @@ export default function ExperienceUI({
           </motion.div>
         )}
 
-        {/* State 3: Anchored AR Controls Bar (360° Darshan, Angle Presets, Size, Reposition) */}
+        {/* State 3: Anchored AR Controls Bar (Single sleek non-wrapping row on mobile) */}
         {arModeActive && arPlaced && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed top-20 left-1/2 -translate-x-1/2 z-40 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 bg-[#160f0b]/92 border border-amber-400/40 p-1.5 sm:px-3 sm:py-1.5 rounded-2xl sm:rounded-full shadow-2xl backdrop-blur-xl pointer-events-auto text-xs text-amber-200"
+            className="fixed top-[4.9rem] sm:top-20 left-1/2 -translate-x-1/2 z-40 flex items-center justify-center gap-1 sm:gap-2 bg-[#160f0b]/94 border border-amber-400/40 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-2xl backdrop-blur-xl pointer-events-auto text-xs text-amber-200 max-w-[96vw] whitespace-nowrap overflow-x-auto"
           >
             {/* 360° Devotional Auto-Spin Toggle */}
             <button
@@ -436,25 +436,26 @@ export default function ExperienceUI({
                 triggerHaptic(15);
                 onToggleAutoRotate360?.();
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all cursor-pointer font-medium ${
+              className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full transition-all cursor-pointer font-medium focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none ${
                 autoRotate360
                   ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-black shadow-[0_0_15px_rgba(245,158,11,0.6)] font-semibold'
                   : 'bg-white/10 hover:bg-white/20 border border-amber-500/30 text-amber-200'
               }`}
               title={autoRotate360 ? "Pause 360° Rotation" : "Start Serene 360° Darshan Rotation"}
             >
-              <RotateCw className={`w-3.5 h-3.5 ${autoRotate360 ? 'animate-spin' : ''}`} />
-              <span className="text-[11px] tracking-wide">360° Darshan</span>
+              <RotateCw className={`w-3.5 h-3.5 shrink-0 ${autoRotate360 ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline text-[11px] tracking-wide">360° Darshan</span>
+              <span className="sm:hidden text-[10px] tracking-wide font-medium">360°</span>
             </button>
 
             {/* Angle Presets */}
-            <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-full border border-amber-500/20">
+            <div className="flex items-center gap-0.5 sm:gap-1 bg-black/40 p-0.5 rounded-full border border-amber-500/20 shrink-0">
               <button
                 onClick={() => {
                   triggerHaptic(15);
                   onSetPresetAngle && onSetPresetAngle(0);
                 }}
-                className="px-2 py-1 rounded-full hover:bg-white/15 text-[10px] text-amber-300/90 font-medium cursor-pointer transition-colors"
+                className="px-1.5 sm:px-2 py-0.5 rounded-full hover:bg-white/15 text-[9.5px] sm:text-[10px] text-amber-300/90 font-medium cursor-pointer transition-colors focus-visible:ring-1 focus-visible:ring-amber-400"
                 title="Front Facing Darshan (0°)"
               >
                 Front
@@ -464,7 +465,7 @@ export default function ExperienceUI({
                   triggerHaptic(15);
                   onSetPresetAngle && onSetPresetAngle(Math.PI / 2);
                 }}
-                className="px-2 py-1 rounded-full hover:bg-white/15 text-[10px] text-amber-300/90 font-medium cursor-pointer transition-colors"
+                className="px-1.5 sm:px-2 py-0.5 rounded-full hover:bg-white/15 text-[9.5px] sm:text-[10px] text-amber-300/90 font-medium cursor-pointer transition-colors focus-visible:ring-1 focus-visible:ring-amber-400"
                 title="Side Profile View (90°)"
               >
                 Side
@@ -474,28 +475,29 @@ export default function ExperienceUI({
                   triggerHaptic(15);
                   onSetPresetAngle && onSetPresetAngle(Math.PI);
                 }}
-                className="px-2 py-1 rounded-full hover:bg-white/15 text-[10px] text-amber-300/90 font-medium cursor-pointer transition-colors"
+                className="px-1.5 sm:px-2 py-0.5 rounded-full hover:bg-white/15 text-[9.5px] sm:text-[10px] text-amber-300/90 font-medium cursor-pointer transition-colors focus-visible:ring-1 focus-visible:ring-amber-400"
                 title="Rear Crown View (180°)"
               >
                 Rear
               </button>
             </div>
 
-            <div className="hidden sm:block h-4 w-px bg-amber-500/30 mx-0.5" />
+            <div className="h-3.5 w-px bg-amber-500/30 mx-0.5 shrink-0" />
 
             {/* Size Scaling Controls */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
               <button
                 onClick={() => {
                   triggerHaptic(15);
                   onScaleDown?.();
                 }}
-                className="px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-amber-500/30 cursor-pointer font-medium text-[11px]"
+                className="w-5 h-5 sm:w-auto sm:px-2 sm:py-1 rounded-full bg-white/10 hover:bg-white/20 border border-amber-500/30 flex items-center justify-center cursor-pointer font-bold text-[11px] text-amber-200 transition-colors focus-visible:ring-1 focus-visible:ring-amber-400"
                 title="Smaller Size"
               >
-                − Size
+                <span className="sm:hidden">−</span>
+                <span className="hidden sm:inline">− Size</span>
               </button>
-              <span className="text-[11px] text-amber-300 font-mono px-1">
+              <span className="text-[10px] sm:text-[11px] text-amber-300 font-mono px-0.5 sm:px-1 min-w-[28px] text-center">
                 {Math.round(arScale * 100)}%
               </span>
               <button
@@ -503,14 +505,15 @@ export default function ExperienceUI({
                   triggerHaptic(15);
                   onScaleUp?.();
                 }}
-                className="px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-amber-500/30 cursor-pointer font-medium text-[11px]"
+                className="w-5 h-5 sm:w-auto sm:px-2 sm:py-1 rounded-full bg-white/10 hover:bg-white/20 border border-amber-500/30 flex items-center justify-center cursor-pointer font-bold text-[11px] text-amber-200 transition-colors focus-visible:ring-1 focus-visible:ring-amber-400"
                 title="Larger Size"
               >
-                + Size
+                <span className="sm:hidden">+</span>
+                <span className="hidden sm:inline">+ Size</span>
               </button>
             </div>
 
-            <div className="hidden sm:block h-4 w-px bg-amber-500/30 mx-0.5" />
+            <div className="h-3.5 w-px bg-amber-500/30 mx-0.5 shrink-0" />
 
             {/* Reposition / Pick Up Button */}
             <button
@@ -518,10 +521,11 @@ export default function ExperienceUI({
                 triggerHaptic(20);
                 onReposition?.();
               }}
-              className="px-2.5 py-1 rounded-full bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 cursor-pointer text-amber-300 font-medium text-[11px]"
+              className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 cursor-pointer text-amber-300 font-medium text-[10px] sm:text-[11px] shrink-0 transition-colors focus-visible:ring-1 focus-visible:ring-amber-400"
               title="Pick up Lord Ganesha to reposition on a new surface"
             >
-              Reposition
+              <span className="hidden sm:inline">Reposition</span>
+              <span className="sm:hidden">Move</span>
             </button>
           </motion.div>
         )}
@@ -625,7 +629,7 @@ export default function ExperienceUI({
         )}
         
         {/* Floating Glassmorphic Pill Toolbar (compact height, positioned lower, safe-area aware) */}
-        <div className="flex items-center justify-center gap-2 sm:gap-4 lg:gap-5 px-3 sm:px-5 py-1.5 rounded-full bg-[#120e0b]/85 border border-amber-500/25 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.85),inset_0_0_15px_rgba(245,158,11,0.08)] transition-all max-w-full overflow-x-auto">
+        <div className="flex items-center justify-between sm:justify-center gap-1 sm:gap-3.5 lg:gap-5 px-2.5 sm:px-5 py-1.5 rounded-full bg-[#120e0b]/85 border border-amber-500/25 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.85),inset_0_0_15px_rgba(245,158,11,0.08)] transition-all max-w-full overflow-x-auto">
           
           {/* Action 1: Light Diya */}
           <button
@@ -633,22 +637,23 @@ export default function ExperienceUI({
               triggerHaptic(25);
               onToggleDiya();
             }}
-            className={`flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 transition-all group cursor-pointer ${
+            className={`flex flex-col items-center justify-center min-w-[42px] sm:min-w-[56px] min-h-[44px] px-1 sm:px-2 gap-0.5 transition-all group cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none ${
               isDiyaLit ? 'text-amber-300' : 'text-amber-200/90 hover:text-amber-100'
             }`}
             title="Light Diyas (Key: D)"
           >
             <div
-              className={`w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center transition-all ${
+              className={`w-7.5 h-7.5 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center transition-all ${
                 isDiyaLit
                   ? 'bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-400 text-black shadow-[0_0_15px_rgba(245,158,11,0.7)] scale-105'
                   : 'bg-amber-500/15 hover:bg-amber-500/30 border border-amber-400/50 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.3)] animate-pulse'
               }`}
             >
-              <Flame className={`w-4 h-4 sm:w-4.5 sm:h-4.5 ${isDiyaLit ? 'fill-current animate-pulse' : 'text-amber-300'}`} />
+              <Flame className={`w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 ${isDiyaLit ? 'fill-current animate-pulse' : 'text-amber-300'}`} />
             </div>
-            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
-              {isDiyaLit ? 'Diyas Lit' : 'Light Diya'}
+            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap text-center">
+              <span className="hidden sm:inline">{isDiyaLit ? 'Diyas Lit' : 'Light Diya'}</span>
+              <span className="sm:hidden">{isDiyaLit ? 'Lit' : 'Diya'}</span>
             </span>
             <kbd className="hidden lg:inline-flex items-center justify-center min-w-[15px] h-[13px] px-1 text-[8px] font-mono text-amber-300/70 bg-black/60 border border-amber-500/30 rounded">
               D
@@ -661,14 +666,15 @@ export default function ExperienceUI({
               triggerHaptic(30);
               onRingBell();
             }}
-            className="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer"
+            className="flex flex-col items-center justify-center min-w-[42px] sm:min-w-[56px] min-h-[44px] px-1 sm:px-2 gap-0.5 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none"
             title="Ring Sacred Bell (Key: Space or R)"
           >
-            <div className="w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95 transition-all">
-              <BellIcon className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover:rotate-12 transition-transform text-amber-400/90" />
+            <div className="w-7.5 h-7.5 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95 transition-all">
+              <BellIcon className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 group-hover:rotate-12 transition-transform text-amber-400/90" />
             </div>
-            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
-              Ring Bell
+            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap text-center">
+              <span className="hidden sm:inline">Ring Bell</span>
+              <span className="sm:hidden">Bell</span>
             </span>
             <kbd className="hidden lg:inline-flex items-center justify-center min-w-[15px] h-[13px] px-1 text-[8px] font-mono text-amber-300/70 bg-black/60 border border-amber-500/30 rounded">
               Space
@@ -681,14 +687,15 @@ export default function ExperienceUI({
               triggerHaptic(15);
               onOfferFlowers();
             }}
-            className="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer"
+            className="flex flex-col items-center justify-center min-w-[42px] sm:min-w-[56px] min-h-[44px] px-1 sm:px-2 gap-0.5 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none"
             title="Offer Fragrant Flowers (Key: F)"
           >
-            <div className="w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95 transition-all">
-              <Flower2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover:rotate-45 transition-transform text-rose-400/90" />
+            <div className="w-7.5 h-7.5 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95 transition-all">
+              <Flower2 className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 group-hover:rotate-45 transition-transform text-rose-400/90" />
             </div>
-            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
-              Offer Flowers
+            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap text-center">
+              <span className="hidden sm:inline">Offer Flowers</span>
+              <span className="sm:hidden">Flowers</span>
             </span>
             <kbd className="hidden lg:inline-flex items-center justify-center min-w-[15px] h-[13px] px-1 text-[8px] font-mono text-amber-300/70 bg-black/60 border border-amber-500/30 rounded">
               F
@@ -701,14 +708,15 @@ export default function ExperienceUI({
               triggerHaptic(20);
               onOfferModak();
             }}
-            className="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer"
+            className="flex flex-col items-center justify-center min-w-[42px] sm:min-w-[56px] min-h-[44px] px-1 sm:px-2 gap-0.5 text-neutral-400 hover:text-amber-200 transition-all group cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none"
             title="Offer Sweet Modak (Key: M)"
           >
-            <div className="w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95 transition-all">
-              <ModakIcon className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover:scale-110 transition-transform text-yellow-400/90" />
+            <div className="w-7.5 h-7.5 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95 transition-all">
+              <ModakIcon className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 group-hover:scale-110 transition-transform text-yellow-400/90" />
             </div>
-            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
-              Offer Modak
+            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap text-center">
+              <span className="hidden sm:inline">Offer Modak</span>
+              <span className="sm:hidden">Modak</span>
             </span>
             <kbd className="hidden lg:inline-flex items-center justify-center min-w-[15px] h-[13px] px-1 text-[8px] font-mono text-amber-300/70 bg-black/60 border border-amber-500/30 rounded">
               M
@@ -724,20 +732,21 @@ export default function ExperienceUI({
               }
             }}
             disabled={blessingActive}
-            className={`flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 transition-all group cursor-pointer ${
+            className={`flex flex-col items-center justify-center min-w-[42px] sm:min-w-[56px] min-h-[44px] px-1 sm:px-2 gap-0.5 transition-all group cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none ${
               blessingActive ? 'opacity-60 cursor-not-allowed' : 'text-neutral-400 hover:text-amber-200'
             }`}
             title="Receive Divine Blessings (Key: B)"
           >
-            <div className={`w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center border transition-all ${
+            <div className={`w-7.5 h-7.5 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center border transition-all ${
               blessingActive
                 ? 'bg-amber-500/20 border-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.5)]'
                 : 'bg-white/5 hover:bg-white/10 border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95'
             }`}>
-              <NamasteIcon className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-amber-300" />
+              <NamasteIcon className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 text-amber-300" />
             </div>
-            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
-              Take Blessings
+            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap text-center">
+              <span className="hidden sm:inline">Take Blessings</span>
+              <span className="sm:hidden">Blessings</span>
             </span>
             <kbd className="hidden lg:inline-flex items-center justify-center min-w-[15px] h-[13px] px-1 text-[8px] font-mono text-amber-300/70 bg-black/60 border border-amber-500/30 rounded">
               B
@@ -753,22 +762,23 @@ export default function ExperienceUI({
               }
             }}
             disabled={aartiActive}
-            className={`flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 transition-all group cursor-pointer ${
+            className={`flex flex-col items-center justify-center min-w-[42px] sm:min-w-[56px] min-h-[44px] px-1 sm:px-2 gap-0.5 transition-all group cursor-pointer focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none ${
               aartiActive ? 'text-amber-300' : 'text-neutral-400 hover:text-amber-200'
             }`}
             title="Perform Sacred Aarti (Key: A)"
           >
             <div
-              className={`w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center transition-all ${
+              className={`w-7.5 h-7.5 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center transition-all ${
                 aartiActive
                   ? 'bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-400 text-black shadow-[0_0_16px_rgba(245,158,11,0.8)] scale-105 animate-pulse'
                   : 'bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95'
               }`}
             >
-              <AartiIcon className={`w-4 h-4 sm:w-4.5 sm:h-4.5 ${aartiActive ? 'text-black' : 'text-amber-400/90 group-hover:scale-110 transition-transform'}`} />
+              <AartiIcon className={`w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 ${aartiActive ? 'text-black' : 'text-amber-400/90 group-hover:scale-110 transition-transform'}`} />
             </div>
-            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
-              {aartiActive ? 'Aarti Live' : 'Perform Aarti'}
+            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap text-center">
+              <span className="hidden sm:inline">{aartiActive ? 'Aarti Live' : 'Perform Aarti'}</span>
+              <span className="sm:hidden">{aartiActive ? 'Live' : 'Aarti'}</span>
             </span>
             <kbd className="hidden lg:inline-flex items-center justify-center min-w-[15px] h-[13px] px-1 text-[8px] font-mono text-amber-300/70 bg-black/60 border border-amber-500/30 rounded">
               A
