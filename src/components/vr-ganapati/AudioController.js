@@ -43,35 +43,17 @@ class SoundEngine {
   }
 
   // Play realistic temple brass bell using additive partials + decay envelopes
-  playBell() {
+  playBell(pitch = 587.33) {
     if (this.isMuted) return;
     this.init();
     if (!this.ctx) return;
-
-    // First try external audio file if available
-    try {
-      const audio = new Audio('/audio/bell.mp3');
-      audio.volume = 0.7;
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // Fallback to Web Audio synthesis
-          this.synthesizeTempleBell();
-        });
-        return;
-      }
-    } catch {
-      this.synthesizeTempleBell();
-      return;
-    }
-    this.synthesizeTempleBell();
+    this.synthesizeTempleBell(pitch);
   }
 
-  synthesizeTempleBell() {
+  synthesizeTempleBell(fundamental = 587.33) {
     if (!this.ctx) return;
     const now = this.ctx.currentTime;
     // Temple bell frequencies: fundamental + resonant strike harmonics
-    const fundamental = 587.33; // D5 note (sacred bell pitch)
     const partials = [
       { ratio: 0.5, amp: 0.4, decay: 4.5 },
       { ratio: 1.0, amp: 0.7, decay: 4.0 },
