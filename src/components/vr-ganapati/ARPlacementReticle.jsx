@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 const ARPlacementReticle = forwardRef(function ARPlacementReticle(
-  { visible = true, onPlace, isWebXR = false, surfaceDetected = false },
+  { visible = true, onPlace, isWebXR = false, surfaceDetected = false, surfaceType = 'none' },
   forwardedRef
 ) {
   const localRef = useRef();
@@ -23,6 +23,15 @@ const ARPlacementReticle = forwardRef(function ARPlacementReticle(
 
   if (!visible) return null;
 
+  const isValidHorizontal = !isWebXR || (surfaceDetected && surfaceType === 'horizontal');
+  const isWall = isWebXR && surfaceType === 'vertical_wall';
+
+  const ringColor = isWall ? '#f97316' : '#fbbf24';
+  const ringOpacity = isValidHorizontal ? 0.95 : (isWall ? 0.5 : 0.35);
+
+  const innerColor = isWall ? '#ea580c' : '#f59e0b';
+  const innerOpacity = isValidHorizontal ? 0.75 : (isWall ? 0.4 : 0.25);
+
   return (
     <group
       ref={groupRef}
@@ -31,16 +40,16 @@ const ARPlacementReticle = forwardRef(function ARPlacementReticle(
       rotation={!isWebXR ? [-Math.PI / 2, 0, 0] : undefined}
       onClick={(e) => {
         e.stopPropagation();
-        if (onPlace) onPlace();
+        if (isValidHorizontal && onPlace) onPlace();
       }}
     >
       {/* Outer Sacred Consecrated Ring */}
       <mesh ref={ringRef}>
         <ringGeometry args={[0.72, 0.82, 64]} />
         <meshBasicMaterial
-          color="#fbbf24"
+          color={ringColor}
           transparent
-          opacity={surfaceDetected || !isWebXR ? 0.95 : 0.4}
+          opacity={ringOpacity}
           side={THREE.DoubleSide}
         />
       </mesh>
@@ -49,9 +58,9 @@ const ARPlacementReticle = forwardRef(function ARPlacementReticle(
       <mesh ref={innerRef}>
         <ringGeometry args={[0.5, 0.65, 8]} />
         <meshBasicMaterial
-          color="#f59e0b"
+          color={innerColor}
           transparent
-          opacity={surfaceDetected || !isWebXR ? 0.75 : 0.3}
+          opacity={innerOpacity}
           side={THREE.DoubleSide}
         />
       </mesh>
@@ -60,9 +69,9 @@ const ARPlacementReticle = forwardRef(function ARPlacementReticle(
       <mesh>
         <circleGeometry args={[0.71, 48]} />
         <meshBasicMaterial
-          color="#d97706"
+          color={isWall ? '#c2410c' : '#d97706'}
           transparent
-          opacity={0.16}
+          opacity={isValidHorizontal ? 0.16 : 0.08}
           side={THREE.DoubleSide}
         />
       </mesh>
@@ -71,9 +80,9 @@ const ARPlacementReticle = forwardRef(function ARPlacementReticle(
       <mesh position={[0, 0, 0.005]}>
         <circleGeometry args={[0.12, 32]} />
         <meshBasicMaterial
-          color="#ffffff"
+          color={isWall ? '#ffedd5' : '#ffffff'}
           transparent
-          opacity={0.9}
+          opacity={isValidHorizontal ? 0.92 : 0.5}
           side={THREE.DoubleSide}
         />
       </mesh>

@@ -12,6 +12,7 @@ const _unitScale = new THREE.Vector3(1, 1, 1);
 const _selectPos = new THREE.Vector3();
 const _selectQuat = new THREE.Quaternion();
 const _selectScale = new THREE.Vector3();
+const _surfaceNormal = new THREE.Vector3();
 
 export default function WebXRHitTestManager({
   active,
@@ -34,7 +35,7 @@ export default function WebXRHitTestManager({
   const currentPos = useRef(new THREE.Vector3());
   const currentQuat = useRef(new THREE.Quaternion());
   const hasFirstPose = useRef(false);
-  const prevSurfaceDetected = useRef(false);
+  const prevSurfaceStatus = useRef('none');
 
   useEffect(() => {
     if (!active) {
@@ -73,6 +74,11 @@ export default function WebXRHitTestManager({
     // 3. Listen for screen tap to anchor Lord Ganesha onto the detected surface
     const handleSelect = () => {
       if (reticleRef.current && reticleRef.current.visible) {
+        // Enforce accurate plain surface calculation: only anchor on true horizontal floor/table surfaces
+        if (reticleRef.current.userData && reticleRef.current.userData.isValidSurface === false) {
+          return;
+        }
+
         reticleRef.current.matrix.decompose(_selectPos, _selectQuat, _selectScale);
 
         // Attempt WebXR Anchor creation for millimeter-precision drift-free anchoring
@@ -145,11 +151,14 @@ export default function WebXRHitTestManager({
         const pose = hit.getPose(referenceSpace);
 
         if (pose) {
-          reticleRef.current.visible = true;
-
           // Decompose pose matrix into position and orientation using reusable objects
           _rawMat.fromArray(pose.transform.matrix);
           _rawMat.decompose(_rawPos, _rawQuat, _rawScale);
+
+          // Calculate surface normal vector to distinguish horizontal floors/tables from vertical walls
+          _surfaceNormal.set(0, 1, 0).applyQuaternion(_rawQuat);
+          // Normal.y > 0.72 corresponds to within ~44° of true vertical ground
+          const isHorizontal = _surfaceNormal.y > 0.72;
 
           targetPos.current.copy(_rawPos);
           targetQuat.current.copy(_rawQuat);
@@ -169,18 +178,24 @@ export default function WebXRHitTestManager({
             currentQuat.current,
             _unitScale
           );
+          reticleRef.current.visible = true;
 
-          if (!prevSurfaceDetected.current) {
-            prevSurfaceDetected.current = true;
-            if (onSurfaceStatusChange) onSurfaceStatusChange(true);
+          if (!reticleRef.current.userData) reticleRef.current.userData = {};
+          reticleRef.current.userData.isValidSurface = isHorizontal;
+
+          const statusString = isHorizontal ? 'horizontal' : 'vertical_wall';
+          if (prevSurfaceStatus.current !== statusString) {
+            prevSurfaceStatus.current = statusString;
+            if (onSurfaceStatusChange) onSurfaceStatusChange(isHorizontal, statusString);
           }
         }
       } else {
         reticleRef.current.visible = false;
         hasFirstPose.current = false;
-        if (prevSurfaceDetected.current) {
-          prevSurfaceDetected.current = false;
-          if (onSurfaceStatusChange) onSurfaceStatusChange(false);
+        if (reticleRef.current.userData) reticleRef.current.userData.isValidSurface = false;
+        if (prevSurfaceStatus.current !== 'none') {
+          prevSurfaceStatus.current = 'none';
+          if (onSurfaceStatusChange) onSurfaceStatusChange(false, 'none');
         }
       }
     }

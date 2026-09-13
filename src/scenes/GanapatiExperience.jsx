@@ -20,12 +20,23 @@ import AartiAnimation from '../components/vr-ganapati/AartiAnimation';
 import ARPlacementReticle from '../components/vr-ganapati/ARPlacementReticle';
 import WebXRHitTestManager from '../components/vr-ganapati/WebXRHitTestManager';
 
-// Set local WebAssembly Draco decoder path and preload compressed 3D assets in parallel
+// Set local WebAssembly Draco decoder path and preload critical 3D assets
 useGLTF.setDecoderPath('/draco/');
 useGLTF.preload('/models/temple.glb', '/draco/');
 useGLTF.preload('/models/diya.glb', '/draco/');
-useGLTF.preload('/models/bell.glb', '/draco/');
 useGLTF.preload('/models/flower.glb', '/draco/');
+
+// Defer preloading secondary assets (bell.glb: 3.52MB, omitted in AR) until main thread is idle
+if (typeof window !== 'undefined') {
+  const preloadSecondary = () => {
+    useGLTF.preload('/models/bell.glb', '/draco/');
+  };
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(preloadSecondary, { timeout: 3500 });
+  } else {
+    setTimeout(preloadSecondary, 2000);
+  }
+}
 
 // WebGL Pre-compilation & Warm-up component:
 // Forces the GPU to compile all shader programs, bind textures, and render warmup frames
@@ -182,6 +193,7 @@ function ExperienceCanvas({
   onPlaceAR,
   onAnchorUpdate,
   surfaceDetected = false,
+  surfaceType = 'none',
   onSurfaceStatusChange,
   onTrackingStateChange,
   autoRotate360 = false,
@@ -239,6 +251,7 @@ function ExperienceCanvas({
             visible={true}
             isWebXR={isWebXRAR}
             surfaceDetected={surfaceDetected}
+            surfaceType={surfaceType}
             onPlace={() => onPlaceAR()}
           />
         )}
@@ -257,10 +270,10 @@ function ExperienceCanvas({
           position={arModeActive ? arPosition : [0, 0, 0]}
           scale={arModeActive ? arScale : 1}
         >
-          {/* Ground Contact Shadow (casts real soft shadows onto physical floor/table) */}
+          {/* Ground Contact Shadow (optimized 5x5m bounding footprint to eliminate mobile fill-rate overdraw) */}
           {arModeActive && (
             <mesh position={[0, 0.002, 0.8]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-              <planeGeometry args={[12, 12]} />
+              <planeGeometry args={[5, 5]} />
               <shadowMaterial opacity={0.42} />
             </mesh>
           )}
@@ -321,10 +334,16 @@ export default function GanapatiExperience() {
   const [isWebXRAR, setIsWebXRAR] = useState(false);
   const [arPlaced, setArPlaced] = useState(false);
   const [surfaceDetected, setSurfaceDetected] = useState(false);
+  const [surfaceType, setSurfaceType] = useState('none');
   const [trackingState, setTrackingState] = useState('tracking');
   const [autoRotate360, setAutoRotate360] = useState(false);
   const [arScale, setArScale] = useState(0.35);
   const [arPosition, setArPosition] = useState([0, -0.7, 0]);
+
+  const handleSurfaceStatusChange = useCallback((detected, type = 'none') => {
+    setSurfaceDetected(detected);
+    setSurfaceType(type);
+  }, []);
 
   const handleSceneReady = useCallback(() => {
     setSceneReady(true);
@@ -538,6 +557,7 @@ export default function GanapatiExperience() {
       setArPlaced(false);
       setIsWebXRAR(false);
       setSurfaceDetected(false);
+      setSurfaceType('none');
       setAutoRotate360(false);
       return;
     }
@@ -577,6 +597,7 @@ export default function GanapatiExperience() {
         setArModeActive(true);
         setArPlaced(true);
         setSurfaceDetected(false);
+        setSurfaceType('none');
         setAutoRotate360(false);
         soundEngine.init();
         soundEngine.playBell();
@@ -591,6 +612,7 @@ export default function GanapatiExperience() {
           setIsWebXRAR(false);
           setArPlaced(false);
           setSurfaceDetected(false);
+          setSurfaceType('none');
           setAutoRotate360(false);
         });
         return;
@@ -624,6 +646,7 @@ export default function GanapatiExperience() {
       setArModeActive(true);
       setArPlaced(true);
       setSurfaceDetected(false);
+      setSurfaceType('none');
       setAutoRotate360(false);
       soundEngine.init();
       soundEngine.playBell();
@@ -793,7 +816,7 @@ export default function GanapatiExperience() {
   }, [arModeActive]);
 
   return (
-    <div id="vr-ganapati-root" className="relative w-full h-screen h-[100dvh] overflow-hidden bg-[#070503]">
+    <div id="vr-ganapati-root" className="relative w-full h-screen h-[100dvh] overflow-hidden bg-[#070503] select-none touch-none overscroll-none">
       {/* 0. Live Camera Video Stream for Fallback AR Passthrough Mode (hidden in native WebXR) */}
       <video
         ref={videoRef}
@@ -844,7 +867,8 @@ export default function GanapatiExperience() {
           onPlaceAR={handlePlaceAR}
           onAnchorUpdate={handleAnchorUpdate}
           surfaceDetected={surfaceDetected}
-          onSurfaceStatusChange={setSurfaceDetected}
+          surfaceType={surfaceType}
+          onSurfaceStatusChange={handleSurfaceStatusChange}
           onTrackingStateChange={setTrackingState}
           autoRotate360={autoRotate360}
           reticleRef={reticleRef}
@@ -873,6 +897,7 @@ export default function GanapatiExperience() {
         arPlaced={arPlaced}
         arScale={arScale}
         surfaceDetected={surfaceDetected}
+        surfaceType={surfaceType}
         trackingState={trackingState}
         autoRotate360={autoRotate360}
         onToggleAutoRotate360={handleToggleAutoRotate360}

@@ -129,6 +129,7 @@ export default function ExperienceUI({
   arPlaced = false,
   arScale = 0.35,
   surfaceDetected = false,
+  surfaceType = 'none',
   trackingState = 'tracking',
   autoRotate360 = false,
   onToggleAutoRotate360,
@@ -372,10 +373,20 @@ export default function ExperienceUI({
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed top-20 left-1/2 -translate-x-1/2 z-40 max-w-sm sm:max-w-md w-[92%] sm:w-auto bg-[#160f0b]/94 border border-amber-400/50 px-4 py-2.5 rounded-2xl shadow-2xl backdrop-blur-xl text-center pointer-events-auto"
+            className="fixed top-[max(5rem,calc(4.2rem+env(safe-area-inset-top,0px)))] sm:top-20 left-1/2 -translate-x-1/2 z-40 max-w-sm sm:max-w-md w-[92%] sm:w-auto bg-[#160f0b]/94 border border-amber-400/50 px-4 py-2.5 rounded-2xl shadow-2xl backdrop-blur-xl text-center pointer-events-auto"
           >
             {isWebXRAR ? (
-              surfaceDetected ? (
+              surfaceType === 'vertical_wall' ? (
+                <div className="space-y-0.5">
+                  <p className="text-xs sm:text-sm text-orange-300 font-semibold flex items-center justify-center gap-1.5">
+                    <span>⚠️</span>
+                    Point camera down at floor or table
+                  </p>
+                  <p className="text-[10px] sm:text-[11px] text-amber-300/70 font-light">
+                    Wall detected • Lord Ganesha should be placed on a flat horizontal altar or floor
+                  </p>
+                </div>
+              ) : surfaceDetected && surfaceType === 'horizontal' ? (
                 <div className="space-y-0.5">
                   <p className="text-xs sm:text-sm text-amber-200 font-semibold flex items-center justify-center gap-1.5">
                     <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
@@ -414,7 +425,7 @@ export default function ExperienceUI({
             initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
-            className="fixed top-16 left-1/2 -translate-x-1/2 z-40 bg-amber-950/90 border border-amber-500/60 px-4 py-1.5 rounded-full shadow-lg backdrop-blur-lg text-center pointer-events-auto"
+            className="fixed top-[max(4.2rem,calc(3.5rem+env(safe-area-inset-top,0px)))] sm:top-16 left-1/2 -translate-x-1/2 z-40 bg-amber-950/90 border border-amber-500/60 px-4 py-1.5 rounded-full shadow-lg backdrop-blur-lg text-center pointer-events-auto"
           >
             <p className="text-xs text-amber-200">
               ⚠️ Visual tracking paused • Move phone slowly to relocalize
@@ -428,7 +439,7 @@ export default function ExperienceUI({
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed top-[4.9rem] sm:top-20 left-1/2 -translate-x-1/2 z-40 flex items-center justify-center gap-1 sm:gap-2 bg-[#160f0b]/94 border border-amber-400/40 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-2xl backdrop-blur-xl pointer-events-auto text-xs text-amber-200 max-w-[96vw] whitespace-nowrap overflow-x-auto"
+            className="fixed top-[max(4.8rem,calc(4.0rem+env(safe-area-inset-top,0px)))] sm:top-20 left-1/2 -translate-x-1/2 z-40 flex items-center justify-center gap-1 sm:gap-2 bg-[#160f0b]/94 border border-amber-400/40 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-2xl backdrop-blur-xl pointer-events-auto text-xs text-amber-200 max-w-[96vw] whitespace-nowrap overflow-x-auto"
           >
             {/* 360° Devotional Auto-Spin Toggle */}
             <button
@@ -491,13 +502,13 @@ export default function ExperienceUI({
                   triggerHaptic(15);
                   onScaleDown?.();
                 }}
-                className="w-5 h-5 sm:w-auto sm:px-2 sm:py-1 rounded-full bg-white/10 hover:bg-white/20 border border-amber-500/30 flex items-center justify-center cursor-pointer font-bold text-[11px] text-amber-200 transition-colors focus-visible:ring-1 focus-visible:ring-amber-400"
+                className="w-7 h-7 sm:w-auto sm:px-2.5 sm:py-1 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 border border-amber-500/30 flex items-center justify-center cursor-pointer font-bold text-xs text-amber-200 transition-colors focus-visible:ring-1 focus-visible:ring-amber-400"
                 title="Smaller Size"
               >
                 <span className="sm:hidden">−</span>
                 <span className="hidden sm:inline">− Size</span>
               </button>
-              <span className="text-[10px] sm:text-[11px] text-amber-300 font-mono px-0.5 sm:px-1 min-w-[28px] text-center">
+              <span className="text-[10.5px] sm:text-[11px] text-amber-300 font-mono px-0.5 sm:px-1 min-w-[28px] text-center font-medium">
                 {Math.round(arScale * 100)}%
               </span>
               <button
@@ -505,7 +516,7 @@ export default function ExperienceUI({
                   triggerHaptic(15);
                   onScaleUp?.();
                 }}
-                className="w-5 h-5 sm:w-auto sm:px-2 sm:py-1 rounded-full bg-white/10 hover:bg-white/20 border border-amber-500/30 flex items-center justify-center cursor-pointer font-bold text-[11px] text-amber-200 transition-colors focus-visible:ring-1 focus-visible:ring-amber-400"
+                className="w-7 h-7 sm:w-auto sm:px-2.5 sm:py-1 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 border border-amber-500/30 flex items-center justify-center cursor-pointer font-bold text-xs text-amber-200 transition-colors focus-visible:ring-1 focus-visible:ring-amber-400"
                 title="Larger Size"
               >
                 <span className="sm:hidden">+</span>
