@@ -118,6 +118,47 @@ function SceneLighting({ blessingActive, isDiyaLit, arModeActive = false }) {
   );
 }
 
+// Meditative 360° Devotional Auto-Spin in AR Mode
+function ARAutoRotator({ active, placed, autoRotate, onRotateDelta }) {
+  useFrame((state, delta) => {
+    if (!active || !placed || !autoRotate || !onRotateDelta) return;
+    onRotateDelta(delta * 0.32); // Smooth calm 360° rotation (1 full turn in ~20s)
+  });
+  return null;
+}
+
+// Optional WebXR Light Estimation to dynamically balance room illumination
+function ARLightEstimator({ active }) {
+  const { gl } = useThree();
+  const probeRef = useRef(null);
+  const lightRef = useRef();
+
+  useEffect(() => {
+    if (!active) return;
+    const session = gl.xr?.getSession?.();
+    if (session && typeof session.requestLightProbe === 'function') {
+      session.requestLightProbe().then((probe) => {
+        probeRef.current = probe;
+      }).catch(() => {});
+    }
+  }, [active, gl.xr]);
+
+  useFrame((state, delta, frame) => {
+    if (!active || !frame || !probeRef.current || !lightRef.current) return;
+    try {
+      const estimate = frame.getLightEstimate?.(probeRef.current);
+      if (estimate && estimate.primaryLightIntensity) {
+        const { x, y, z } = estimate.primaryLightIntensity;
+        const avg = (x + y + z) / 3;
+        lightRef.current.intensity = Math.min(3.2, Math.max(0.7, avg * 1.8));
+      }
+    } catch {}
+  });
+
+  if (!active) return null;
+  return <directionalLight ref={lightRef} intensity={1.6} color="#fff8e8" position={[0, 6, 4]} />;
+}
+
 function ExperienceCanvas({
   isLoaded,
   onSceneReady,
@@ -138,6 +179,12 @@ function ExperienceCanvas({
   arPosition = [0, -1.2, 5.0],
   arRotation = [0, 0, 0],
   onPlaceAR,
+  onAnchorUpdate,
+  surfaceDetected = false,
+  onSurfaceStatusChange,
+  onTrackingStateChange,
+  autoRotate360 = false,
+  onRotateDelta,
   reticleRef,
 }) {
   return (
@@ -164,6 +211,9 @@ function ExperienceCanvas({
         aartiActive={aartiActive}
         vrActive={vrSessionActive}
         arActive={arModeActive}
+        isWebXRAR={isWebXRAR}
+        arPosition={arPosition}
+        arScale={arScale}
         isDiyaLit={isDiyaLit}
       />
 
@@ -171,28 +221,55 @@ function ExperienceCanvas({
         <WebXRHitTestManager
           active={arModeActive && isWebXRAR}
           placed={arPlaced}
-          onPlace={(pos) => onPlaceAR(pos)}
+          onPlace={onPlaceAR}
+          onAnchorUpdate={onAnchorUpdate}
+          onSurfaceStatusChange={onSurfaceStatusChange}
+          onTrackingStateChange={onTrackingStateChange}
           reticleRef={reticleRef}
         />
         <ARPlacementReticle
           ref={reticleRef}
           visible={arModeActive && !arPlaced}
           isWebXR={isWebXRAR}
+          surfaceDetected={surfaceDetected}
           onPlace={() => onPlaceAR()}
         />
+        <ARAutoRotator
+          active={arModeActive}
+          placed={arPlaced}
+          autoRotate={autoRotate360}
+          onRotateDelta={onRotateDelta}
+        />
+        <ARLightEstimator active={arModeActive && isWebXRAR} />
+
         <group
           position={arModeActive ? arPosition : [0, 0, 0]}
           scale={arModeActive ? (arPlaced ? arScale : 0) : 1}
           rotation={arModeActive ? arRotation : [0, 0, 0]}
         >
-          <GanapatiTemple blessingActive={blessingActive} isDiyaLit={isDiyaLit} />
-          <Rangoli position={[0, -2.99, 3.8]} />
-          <Diya isLit={isDiyaLit} />
-          <Bell ringTriggerTime={ringTriggerTime} />
-          <FlowerOffering offerings={flowerOfferings} />
-          <ModakOffering modakOfferings={modakOfferings} />
-          <Particles blessingActive={blessingActive} isDiyaLit={isDiyaLit} />
-          <AartiAnimation active={aartiActive} onAartiComplete={onAartiComplete} />
+          {/* Ground Contact Shadow (casts real soft shadows onto physical floor/table) */}
+          {arModeActive && (
+            <mesh position={[0, 0.002, 0.8]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+              <planeGeometry args={[12, 12]} />
+              <shadowMaterial opacity={0.42} />
+            </mesh>
+          )}
+
+          {/* Calibrate base height: model base at y = -3.0 offset by +3.0 sits flush at y = 0.0 on floor/desk */}
+          <group position={arModeActive ? [0, 3.0, 0] : [0, 0, 0]}>
+            <GanapatiTemple
+              blessingActive={blessingActive}
+              isDiyaLit={isDiyaLit}
+              arModeActive={arModeActive}
+            />
+            <Rangoli position={[0, -2.99, 3.8]} />
+            <Diya isLit={isDiyaLit} />
+            <Bell ringTriggerTime={ringTriggerTime} />
+            <FlowerOffering offerings={flowerOfferings} />
+            <ModakOffering modakOfferings={modakOfferings} />
+            <Particles blessingActive={blessingActive} isDiyaLit={isDiyaLit} />
+            <AartiAnimation active={aartiActive} onAartiComplete={onAartiComplete} />
+          </group>
         </group>
         <SceneWarmup onReady={onSceneReady} onGLReady={onGLReady} />
       </Suspense>
@@ -221,10 +298,16 @@ export default function GanapatiExperience() {
   const glRef = useRef(null);
   const reticleRef = useRef(null);
   const videoRef = useRef(null);
+  const pointerStartX = useRef(0);
+  const isPointerDragging = useRef(false);
+
   const [arStream, setArStream] = useState(null);
   const [arModeActive, setArModeActive] = useState(false);
   const [isWebXRAR, setIsWebXRAR] = useState(false);
   const [arPlaced, setArPlaced] = useState(false);
+  const [surfaceDetected, setSurfaceDetected] = useState(false);
+  const [trackingState, setTrackingState] = useState('tracking');
+  const [autoRotate360, setAutoRotate360] = useState(false);
   const [arScale, setArScale] = useState(0.35);
   const [arPosition, setArPosition] = useState([0, -1.2, 5.0]);
   const [arRotation, setArRotation] = useState([0, 0, 0]);
@@ -435,6 +518,8 @@ export default function GanapatiExperience() {
       setArModeActive(false);
       setArPlaced(false);
       setIsWebXRAR(false);
+      setSurfaceDetected(false);
+      setAutoRotate360(false);
       return;
     }
 
@@ -453,7 +538,7 @@ export default function GanapatiExperience() {
         const rootEl = document.getElementById('vr-ganapati-root') || document.body;
         const session = await navigator.xr.requestSession('immersive-ar', {
           requiredFeatures: ['hit-test'],
-          optionalFeatures: ['dom-overlay', 'local-floor', 'light-estimation'],
+          optionalFeatures: ['dom-overlay', 'local-floor', 'anchors', 'plane-detection', 'light-estimation'],
           domOverlay: { root: rootEl },
         });
 
@@ -463,6 +548,8 @@ export default function GanapatiExperience() {
         setIsWebXRAR(true);
         setArModeActive(true);
         setArPlaced(false);
+        setSurfaceDetected(false);
+        setAutoRotate360(false);
         soundEngine.init();
         soundEngine.playBell();
 
@@ -470,6 +557,8 @@ export default function GanapatiExperience() {
           setArModeActive(false);
           setIsWebXRAR(false);
           setArPlaced(false);
+          setSurfaceDetected(false);
+          setAutoRotate360(false);
         });
         return;
       } catch (err) {
@@ -494,6 +583,8 @@ export default function GanapatiExperience() {
       setIsWebXRAR(false);
       setArModeActive(true);
       setArPlaced(false);
+      setSurfaceDetected(false);
+      setAutoRotate360(false);
       soundEngine.init();
       soundEngine.playBell();
     } catch (err) {
@@ -510,8 +601,15 @@ export default function GanapatiExperience() {
     soundEngine.playFlowerSound();
   }, []);
 
+  const handleAnchorUpdate = useCallback((pos) => {
+    if (pos) {
+      setArPosition(pos);
+    }
+  }, []);
+
   const handleRepositionAR = useCallback(() => {
     setArPlaced(false);
+    setAutoRotate360(false);
   }, []);
 
   const handleScaleUp = useCallback(() => {
@@ -520,6 +618,42 @@ export default function GanapatiExperience() {
 
   const handleScaleDown = useCallback(() => {
     setArScale((s) => Math.max(0.15, +(s - 0.05).toFixed(2)));
+  }, []);
+
+  // 360° Content Rotation Handlers (used in both native WebXR & fallback AR)
+  const handleRotateDelta = useCallback((delta) => {
+    setArRotation((prev) => [0, prev[1] + delta, 0]);
+  }, []);
+
+  const handleToggleAutoRotate360 = useCallback(() => {
+    setAutoRotate360((prev) => !prev);
+  }, []);
+
+  const handleSetPresetAngle = useCallback((radians) => {
+    setAutoRotate360(false);
+    setArRotation([0, radians, 0]);
+  }, []);
+
+  // Touch & Mouse Drag to Rotate Lord Ganesha 360° on canvas
+  const handlePointerDown = useCallback((e) => {
+    if (!arModeActive || !arPlaced) return;
+    if (e.target.closest && (e.target.closest('button') || e.target.closest('header'))) return;
+    pointerStartX.current = e.clientX || (e.touches && e.touches[0]?.clientX) || 0;
+    isPointerDragging.current = true;
+  }, [arModeActive, arPlaced]);
+
+  const handlePointerMove = useCallback((e) => {
+    if (!isPointerDragging.current) return;
+    const clientX = e.clientX || (e.touches && e.touches[0]?.clientX) || 0;
+    const deltaX = clientX - pointerStartX.current;
+    pointerStartX.current = clientX;
+    if (Math.abs(deltaX) > 0.4) {
+      setArRotation((prev) => [0, prev[1] + deltaX * 0.012, 0]);
+    }
+  }, []);
+
+  const handlePointerUp = useCallback(() => {
+    isPointerDragging.current = false;
   }, []);
 
   // Action: Capture Darshan Snapshot (supports live room video in AR mode)
@@ -563,6 +697,10 @@ export default function GanapatiExperience() {
 
       {/* 2. Interactive 3D Temple & Ganapati Canvas (smooth one-shot reveal once loaded & compiled) */}
       <div
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
         className={`relative z-10 w-full h-full transition-opacity duration-1000 ${
           isLoaded ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
@@ -587,6 +725,12 @@ export default function GanapatiExperience() {
           arPosition={arPosition}
           arRotation={arRotation}
           onPlaceAR={handlePlaceAR}
+          onAnchorUpdate={handleAnchorUpdate}
+          surfaceDetected={surfaceDetected}
+          onSurfaceStatusChange={setSurfaceDetected}
+          onTrackingStateChange={setTrackingState}
+          autoRotate360={autoRotate360}
+          onRotateDelta={handleRotateDelta}
           reticleRef={reticleRef}
         />
       </div>
@@ -611,6 +755,11 @@ export default function GanapatiExperience() {
         isWebXRAR={isWebXRAR}
         arPlaced={arPlaced}
         arScale={arScale}
+        surfaceDetected={surfaceDetected}
+        trackingState={trackingState}
+        autoRotate360={autoRotate360}
+        onToggleAutoRotate360={handleToggleAutoRotate360}
+        onSetPresetAngle={handleSetPresetAngle}
         onToggleAR={handleToggleAR}
         onScaleUp={handleScaleUp}
         onScaleDown={handleScaleDown}

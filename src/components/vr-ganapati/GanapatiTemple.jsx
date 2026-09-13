@@ -237,7 +237,7 @@ function TempleThroneSteps() {
   );
 }
 
-export default function GanapatiTemple({ blessingActive, isDiyaLit = false }) {
+export default function GanapatiTemple({ blessingActive, isDiyaLit = false, arModeActive = false }) {
   const { scene } = useGLTF('/models/temple.glb');
   const haloRef = useRef();
   const haloTexture = useMemo(() => createHaloTexture(), []);
@@ -299,8 +299,15 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false }) {
           return;
         }
 
-        // Only Lord Ganesha idol needs to cast shadows into shadow map; temple walls/floor only receive shadows
         const isIdol = child.name === 'Mesh_0' || child.material?.name === 'Material.006';
+
+        // In AR mode: hide outer temple walls and roof so Lord Ganesha is fully visible in 360° against real room
+        if (arModeActive && !isIdol) {
+          child.visible = false;
+          return;
+        }
+
+        // Only Lord Ganesha idol needs to cast shadows into shadow map; temple walls/floor only receive shadows
         child.castShadow = isIdol;
         child.receiveShadow = true;
 
@@ -323,7 +330,7 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false }) {
       }
     });
     return clone;
-  }, [scene]);
+  }, [scene, arModeActive]);
 
   return (
     <group>
@@ -347,9 +354,13 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false }) {
       <MarigoldGarland position={[-3.8, 6.4, 1.6]} height={7.8} count={30} />
       <MarigoldGarland position={[3.8, 6.4, 1.6]} height={7.8} count={30} />
 
-      {/* Outer pillar garlands */}
-      <MarigoldGarland position={[-5.4, 6.4, 1.0]} height={7.8} count={30} />
-      <MarigoldGarland position={[5.4, 6.4, 1.0]} height={7.8} count={30} />
+      {/* Outer pillar garlands (kept in VR, minimal in AR) */}
+      {!arModeActive && (
+        <>
+          <MarigoldGarland position={[-5.4, 6.4, 1.0]} height={7.8} count={30} />
+          <MarigoldGarland position={[5.4, 6.4, 1.0]} height={7.8} count={30} />
+        </>
+      )}
 
       {/* 6. Ornate Brass Offering Thali Platform in front of Lotus Feet */}
       <group position={[0, -2.86, 2.6]}>
@@ -372,35 +383,57 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false }) {
         </mesh>
       </group>
 
-      {/* 6. Polished Temple Floor (Reflective Dark Granite catching warm diya reflections) */}
-      <mesh position={[0, -3.01, 3.0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[26, 26]} />
-        <meshStandardMaterial
-          color="#160e0a"
-          roughness={0.18}
-          metalness={0.35}
-        />
-      </mesh>
+      {/* 7. Floor: In VR, full 26x26 reflective granite temple floor; in AR, compact consecrated dais */}
+      {arModeActive ? (
+        <group position={[0, -2.99, 1.2]}>
+          {/* Consecrated Sacred Dais Outer Rim */}
+          <mesh rotation={[-Math.PI / 2, 0, 0]}>
+            <ringGeometry args={[3.6, 4.0, 48]} />
+            <meshStandardMaterial color="#d4af37" metalness={0.88} roughness={0.24} />
+          </mesh>
+          {/* Dark Stone Pedestal Base */}
+          <mesh rotation={[-Math.PI / 2, 0, 0]}>
+            <circleGeometry args={[3.6, 48]} />
+            <meshStandardMaterial color="#1a120c" metalness={0.35} roughness={0.35} />
+          </mesh>
+        </group>
+      ) : (
+        <mesh position={[0, -3.01, 3.0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+          <planeGeometry args={[26, 26]} />
+          <meshStandardMaterial
+            color="#160e0a"
+            roughness={0.18}
+            metalness={0.35}
+          />
+        </mesh>
+      )}
 
       {/* 
-        7. Divine Radiant Halo Aura BEHIND Lord Ganesha's Head (z = -2.6)
-        Soft radial glow disc with Additive Blending.
-        Glows majestically in the dark, and brightens upon blessing.
+        8. Divine Radiant Halo Aura BEHIND Lord Ganesha's Head
+        In AR mode: FrontSide only so viewing the idol from rear is 100% unobstructed.
       */}
       <mesh
         ref={haloRef}
         position={[0, 3.8, -2.6]}
       >
-        <planeGeometry args={[7.2, 7.2]} />
+        <planeGeometry args={[arModeActive ? 5.2 : 7.2, arModeActive ? 5.2 : 7.2]} />
         <meshBasicMaterial
           map={haloTexture}
           transparent
           opacity={0.88}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
-          side={THREE.DoubleSide}
+          side={arModeActive ? THREE.FrontSide : THREE.DoubleSide}
         />
       </mesh>
+
+      {/* 3D Sacred Halo Ring around Crown in AR mode for radiant 360° darshan */}
+      {arModeActive && (
+        <mesh position={[0, 4.5, 0.2]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.85, 0.03, 16, 48]} />
+          <meshBasicMaterial color="#fbbf24" transparent opacity={0.65} />
+        </mesh>
+      )}
 
       {/* ============================================================ */}
       {/* SACRED TEMPLE ILLUMINATION                                   */}

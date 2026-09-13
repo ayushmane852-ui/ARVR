@@ -11,12 +11,31 @@ export default function CameraController({
   aartiActive = false,
   vrActive = false,
   arActive = false,
+  isWebXRAR = false,
+  arPosition = [0, -1.2, 5.0],
+  arScale = 0.35,
   isDiyaLit,
 }) {
   const { camera } = useThree();
   const controlsRef = useRef();
   const mouseParallaxRef = useRef({ x: 0, y: 0 });
   const hasAnimatedEntrance = useRef(false);
+
+  // Update OrbitControls target when switching to or moving in fallback AR mode
+  useEffect(() => {
+    if (!controlsRef.current) return;
+    if (arActive && !isWebXRAR) {
+      controlsRef.current.target.set(
+        arPosition[0],
+        arPosition[1] + 1.25 * arScale,
+        arPosition[2]
+      );
+      controlsRef.current.update();
+    } else if (!arActive) {
+      controlsRef.current.target.set(0, 1.45, 0.3);
+      controlsRef.current.update();
+    }
+  }, [arActive, isWebXRAR, arPosition, arScale]);
 
   // Keep camera locked at initial distance until scene is completely loaded and warmed up
   useEffect(() => {
@@ -184,19 +203,23 @@ export default function CameraController({
     controlsRef.current.update();
   });
 
+  // OrbitControls is strictly disabled during native WebXR to prevent fighting XRFrame.getViewerPose
+  // In fallback AR passthrough or normal 3D temple mode, OrbitControls is enabled with full 360° azimuth
+  const controlsEnabled = isLoaded && !vrActive && (!arActive || !isWebXRAR);
+
   return (
     <OrbitControls
       ref={controlsRef}
-      enabled={isLoaded && !arActive}
+      enabled={controlsEnabled}
       enableDamping
       dampingFactor={0.06}
       enablePan={false}
-      minDistance={3.5}
-      maxDistance={35.0}
-      minPolarAngle={Math.PI / 3.2}
+      minDistance={arActive ? 1.0 : 3.5}
+      maxDistance={arActive ? 20.0 : 35.0}
+      minPolarAngle={arActive ? 0.05 : Math.PI / 3.2}
       maxPolarAngle={Math.PI / 2 + 0.05}
-      minAzimuthAngle={-Math.PI / 3.2}
-      maxAzimuthAngle={Math.PI / 3.2}
+      minAzimuthAngle={arActive ? -Infinity : -Math.PI / 3.2}
+      maxAzimuthAngle={arActive ? Infinity : Math.PI / 3.2}
       rotateSpeed={0.65}
       zoomSpeed={0.6}
     />
