@@ -1,10 +1,15 @@
-import React, { useRef } from 'react';
+import React, { useRef, forwardRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-export default function ARPlacementReticle({ visible = true, onPlace }) {
+const ARPlacementReticle = forwardRef(function ARPlacementReticle(
+  { visible = true, onPlace, isWebXR = false },
+  forwardedRef
+) {
+  const localRef = useRef();
   const ringRef = useRef();
   const innerRef = useRef();
+  const groupRef = forwardedRef || localRef;
 
   useFrame((state) => {
     if (!ringRef.current || !visible) return;
@@ -20,8 +25,10 @@ export default function ARPlacementReticle({ visible = true, onPlace }) {
 
   return (
     <group
-      position={[0, -1.6, 5.0]}
-      rotation={[-Math.PI / 2.3, 0, 0]}
+      ref={groupRef}
+      matrixAutoUpdate={!isWebXR}
+      position={!isWebXR ? [0, -1.6, 5.0] : undefined}
+      rotation={!isWebXR ? [-Math.PI / 2.3, 0, 0] : undefined}
       onClick={(e) => {
         e.stopPropagation();
         if (onPlace) onPlace();
@@ -67,4 +74,6 @@ export default function ARPlacementReticle({ visible = true, onPlace }) {
       </mesh>
     </group>
   );
-}
+});
+
+export default ARPlacementReticle;

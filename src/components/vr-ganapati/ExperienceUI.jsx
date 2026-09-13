@@ -124,6 +124,7 @@ export default function ExperienceUI({
   onEnterVR,
   onCaptureDarshan,
   arModeActive = false,
+  isWebXRAR = false,
   arPlaced = false,
   arScale = 0.35,
   onToggleAR,
@@ -270,7 +271,9 @@ export default function ExperienceUI({
             className="fixed top-20 left-1/2 -translate-x-1/2 z-40 bg-[#160f0b]/92 border border-amber-400/50 px-5 py-2.5 rounded-2xl shadow-2xl backdrop-blur-xl text-center pointer-events-auto"
           >
             <p className="text-xs sm:text-sm text-amber-200 font-medium">
-              📱 Point camera at flat surface & Tap to Place Bappa
+              {isWebXRAR
+                ? "✨ ARCore Floor Tracking Active: Point at surface & Tap to Place Bappa"
+                : "📱 Point camera at flat surface & Tap to Place Bappa"}
             </p>
           </motion.div>
         )}

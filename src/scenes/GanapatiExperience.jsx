@@ -18,6 +18,7 @@ import { soundEngine } from '../components/vr-ganapati/AudioController';
 import CaptureModal, { generateDevotionalFrame } from '../components/vr-ganapati/CaptureModal';
 import AartiAnimation from '../components/vr-ganapati/AartiAnimation';
 import ARPlacementReticle from '../components/vr-ganapati/ARPlacementReticle';
+import WebXRHitTestManager from '../components/vr-ganapati/WebXRHitTestManager';
 
 // Preload heavy 3D assets immediately so the browser downloads and decodes them in parallel
 useGLTF.preload('/models/temple.glb');
@@ -28,9 +29,13 @@ useGLTF.preload('/models/flower.glb');
 // WebGL Pre-compilation & Warm-up component:
 // Forces the GPU to compile all shader programs, bind textures, and render warmup frames
 // BEFORE the temple scene is shown to the user, eliminating initial frame drops and lag completely.
-function SceneWarmup({ onReady }) {
+function SceneWarmup({ onReady, onGLReady }) {
   const { gl, scene, camera } = useThree();
   const warmedRef = useRef(false);
+
+  useEffect(() => {
+    if (onGLReady) onGLReady(gl);
+  }, [gl, onGLReady]);
 
   useEffect(() => {
     if (warmedRef.current) return;
@@ -116,6 +121,7 @@ function SceneLighting({ blessingActive, isDiyaLit, arModeActive = false }) {
 function ExperienceCanvas({
   isLoaded,
   onSceneReady,
+  onGLReady,
   blessingActive,
   onBlessingComplete,
   aartiActive,
@@ -126,11 +132,13 @@ function ExperienceCanvas({
   modakOfferings,
   vrSessionActive,
   arModeActive = false,
+  isWebXRAR = false,
   arPlaced = false,
   arScale = 0.35,
   arPosition = [0, -1.2, 5.0],
   arRotation = [0, 0, 0],
   onPlaceAR,
+  reticleRef,
 }) {
   return (
     <Canvas
@@ -160,7 +168,18 @@ function ExperienceCanvas({
       />
 
       <Suspense fallback={null}>
-        <ARPlacementReticle visible={arModeActive && !arPlaced} onPlace={onPlaceAR} />
+        <WebXRHitTestManager
+          active={arModeActive && isWebXRAR}
+          placed={arPlaced}
+          onPlace={(pos) => onPlaceAR(pos)}
+          reticleRef={reticleRef}
+        />
+        <ARPlacementReticle
+          ref={reticleRef}
+          visible={arModeActive && !arPlaced}
+          isWebXR={isWebXRAR}
+          onPlace={() => onPlaceAR()}
+        />
         <group
           position={arModeActive ? arPosition : [0, 0, 0]}
           scale={arModeActive ? (arPlaced ? arScale : 0) : 1}
@@ -175,7 +194,7 @@ function ExperienceCanvas({
           <Particles blessingActive={blessingActive} isDiyaLit={isDiyaLit} />
           <AartiAnimation active={aartiActive} onAartiComplete={onAartiComplete} />
         </group>
-        <SceneWarmup onReady={onSceneReady} />
+        <SceneWarmup onReady={onSceneReady} onGLReady={onGLReady} />
       </Suspense>
     </Canvas>
   );
@@ -199,9 +218,12 @@ export default function GanapatiExperience() {
   const [isFlashActive, setIsFlashActive] = useState(false);
 
   // AR Mode state
+  const glRef = useRef(null);
+  const reticleRef = useRef(null);
   const videoRef = useRef(null);
   const [arStream, setArStream] = useState(null);
   const [arModeActive, setArModeActive] = useState(false);
+  const [isWebXRAR, setIsWebXRAR] = useState(false);
   const [arPlaced, setArPlaced] = useState(false);
   const [arScale, setArScale] = useState(0.35);
   const [arPosition, setArPosition] = useState([0, -1.2, 5.0]);
@@ -394,9 +416,15 @@ export default function GanapatiExperience() {
     };
   }, [arStream]);
 
-  // AR Mode Handlers
+  // AR Mode Handlers: Native ARCore WebXR Hit-Testing with Universal Camera Fallback
   const handleToggleAR = useCallback(async () => {
     if (arModeActive) {
+      if (glRef.current?.xr?.isPresenting) {
+        const session = glRef.current.xr.getSession();
+        if (session) {
+          session.end().catch(() => {});
+        }
+      }
       if (arStream) {
         arStream.getTracks().forEach((t) => t.stop());
         setArStream(null);
@@ -406,32 +434,78 @@ export default function GanapatiExperience() {
       }
       setArModeActive(false);
       setArPlaced(false);
-    } else {
+      setIsWebXRAR(false);
+      return;
+    }
+
+    // 1. Check if device natively supports WebXR AR (ARCore on Android Chrome / Quest)
+    let hasNativeXR = false;
+    if (navigator.xr) {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: 'environment',
-            width: { ideal: 1920 },
-            height: { ideal: 1080 },
-          },
+        hasNativeXR = await navigator.xr.isSessionSupported('immersive-ar');
+      } catch {
+        hasNativeXR = false;
+      }
+    }
+
+    if (hasNativeXR && glRef.current) {
+      try {
+        const rootEl = document.getElementById('vr-ganapati-root') || document.body;
+        const session = await navigator.xr.requestSession('immersive-ar', {
+          requiredFeatures: ['hit-test'],
+          optionalFeatures: ['dom-overlay', 'local-floor', 'light-estimation'],
+          domOverlay: { root: rootEl },
         });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play().catch(() => {});
-        }
-        setArStream(stream);
+
+        glRef.current.xr.enabled = true;
+        await glRef.current.xr.setSession(session);
+
+        setIsWebXRAR(true);
         setArModeActive(true);
         setArPlaced(false);
         soundEngine.init();
         soundEngine.playBell();
+
+        session.addEventListener('end', () => {
+          setArModeActive(false);
+          setIsWebXRAR(false);
+          setArPlaced(false);
+        });
+        return;
       } catch (err) {
-        console.error('AR camera access error:', err);
-        alert('Camera access is required for AR mode. Please grant camera permission to place Lord Ganesha in your room.');
+        console.warn('Native WebXR session launch failed, falling back to camera stream:', err);
       }
+    }
+
+    // 2. Universal Camera Passthrough Fallback (iOS Safari, Desktop webcams, etc.)
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: 'environment',
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+        },
+      });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play().catch(() => {});
+      }
+      setArStream(stream);
+      setIsWebXRAR(false);
+      setArModeActive(true);
+      setArPlaced(false);
+      soundEngine.init();
+      soundEngine.playBell();
+    } catch (err) {
+      console.error('AR camera access error:', err);
+      alert('Camera access is required for AR mode. Please grant camera permission.');
     }
   }, [arModeActive, arStream]);
 
-  const handlePlaceAR = useCallback(() => {
+  const handlePlaceAR = useCallback((customPos = null) => {
+    if (customPos) {
+      setArPosition(customPos);
+    }
     setArPlaced(true);
     soundEngine.playFlowerSound();
   }, []);
@@ -470,15 +544,15 @@ export default function GanapatiExperience() {
   }, [arModeActive]);
 
   return (
-    <div className="relative w-full h-screen h-[100dvh] overflow-hidden bg-[#070503]">
-      {/* 0. Live Camera Video Stream for AR Passthrough Mode */}
+    <div id="vr-ganapati-root" className="relative w-full h-screen h-[100dvh] overflow-hidden bg-[#070503]">
+      {/* 0. Live Camera Video Stream for Fallback AR Passthrough Mode (hidden in native WebXR) */}
       <video
         ref={videoRef}
         autoPlay
         playsInline
         muted
         className={`absolute inset-0 w-full h-full object-cover z-0 pointer-events-none transition-opacity duration-700 ${
-          arModeActive ? 'opacity-100' : 'opacity-0'
+          arModeActive && !isWebXRAR ? 'opacity-100' : 'opacity-0 hidden'
         }`}
       />
 
@@ -496,6 +570,7 @@ export default function GanapatiExperience() {
         <ExperienceCanvas
           isLoaded={isLoaded}
           onSceneReady={handleSceneReady}
+          onGLReady={(gl) => { glRef.current = gl; }}
           blessingActive={blessingActive}
           onBlessingComplete={handleBlessingComplete}
           aartiActive={aartiActive}
@@ -506,11 +581,13 @@ export default function GanapatiExperience() {
           modakOfferings={modakOfferings}
           vrSessionActive={vrSessionActive}
           arModeActive={arModeActive}
+          isWebXRAR={isWebXRAR}
           arPlaced={arPlaced}
           arScale={arScale}
           arPosition={arPosition}
           arRotation={arRotation}
           onPlaceAR={handlePlaceAR}
+          reticleRef={reticleRef}
         />
       </div>
 
@@ -531,6 +608,7 @@ export default function GanapatiExperience() {
         onEnterVR={handleEnterVR}
         onCaptureDarshan={handleCaptureDarshan}
         arModeActive={arModeActive}
+        isWebXRAR={isWebXRAR}
         arPlaced={arPlaced}
         arScale={arScale}
         onToggleAR={handleToggleAR}
