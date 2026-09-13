@@ -255,7 +255,7 @@ function TravelingIgnitionSpark({ isLit, litTimeRef }) {
   );
 }
 
-export default function Diya({ isLit }) {
+export default function Diya({ isLit, arModeActive = false }) {
   const { scene } = useGLTF('/models/diya.glb');
   const litTimeRef = useRef(isLit ? 0 : -999);
   const prevIsLit = useRef(isLit);
@@ -338,54 +338,59 @@ export default function Diya({ isLit }) {
         />
       </group>
 
-      {/* 2. Mini Step Deepams — always lit */}
-      <group position={[-1.8, -2.88, 3.2]}>
-        <primitive object={diyaL2} scale={[medScale, medScale, medScale]} />
-        <DiyaFlame
-          isLit={isLit}
-          litTimeRef={litTimeRef}
-          alwaysLit={true}
-          position={[0, medFlameY, 0]}
-          scale={0.6}
-        />
-      </group>
+      {/* In AR mode, omit outer 4 background lamps for 60fps mobile rendering */}
+      {!arModeActive && (
+        <>
+          {/* 2. Mini Step Deepams — always lit */}
+          <group position={[-1.8, -2.88, 3.2]}>
+            <primitive object={diyaL2} scale={[medScale, medScale, medScale]} />
+            <DiyaFlame
+              isLit={isLit}
+              litTimeRef={litTimeRef}
+              alwaysLit={true}
+              position={[0, medFlameY, 0]}
+              scale={0.6}
+            />
+          </group>
 
-      <group position={[1.8, -2.88, 3.2]}>
-        <primitive object={diyaR2} scale={[medScale, medScale, medScale]} />
-        <DiyaFlame
-          isLit={isLit}
-          litTimeRef={litTimeRef}
-          alwaysLit={true}
-          position={[0, medFlameY, 0]}
-          scale={0.6}
-        />
-      </group>
+          <group position={[1.8, -2.88, 3.2]}>
+            <primitive object={diyaR2} scale={[medScale, medScale, medScale]} />
+            <DiyaFlame
+              isLit={isLit}
+              litTimeRef={litTimeRef}
+              alwaysLit={true}
+              position={[0, medFlameY, 0]}
+              scale={0.6}
+            />
+          </group>
 
-      {/* 3. Outer Sanctuary Deepams — Left (ignites at 0.55s) */}
-      <group position={[-5.0, -2.88, 2.6]}>
-        <primitive object={diyaL3} scale={[sideScale, sideScale, sideScale]} />
-        <DiyaFlame
-          isLit={isLit}
-          litTimeRef={litTimeRef}
-          delay={0.55}
-          step={3}
-          position={[0, sideFlameY, 0]}
-          scale={0.65}
-        />
-      </group>
+          {/* 3. Outer Sanctuary Deepams — Left (ignites at 0.55s) */}
+          <group position={[-5.0, -2.88, 2.6]}>
+            <primitive object={diyaL3} scale={[sideScale, sideScale, sideScale]} />
+            <DiyaFlame
+              isLit={isLit}
+              litTimeRef={litTimeRef}
+              delay={0.55}
+              step={3}
+              position={[0, sideFlameY, 0]}
+              scale={0.65}
+            />
+          </group>
 
-      {/* Outer Sanctuary Deepam — Right (ignites at 0.75s) */}
-      <group position={[5.0, -2.88, 2.6]}>
-        <primitive object={diyaR3} scale={[sideScale, sideScale, sideScale]} />
-        <DiyaFlame
-          isLit={isLit}
-          litTimeRef={litTimeRef}
-          delay={0.75}
-          step={4}
-          position={[0, sideFlameY, 0]}
-          scale={0.65}
-        />
-      </group>
+          {/* Outer Sanctuary Deepam — Right (ignites at 0.75s) */}
+          <group position={[5.0, -2.88, 2.6]}>
+            <primitive object={diyaR3} scale={[sideScale, sideScale, sideScale]} />
+            <DiyaFlame
+              isLit={isLit}
+              litTimeRef={litTimeRef}
+              delay={0.75}
+              step={4}
+              position={[0, sideFlameY, 0]}
+              scale={0.65}
+            />
+          </group>
+        </>
+      )}
     </group>
   );
 }

@@ -190,7 +190,7 @@ function ExperienceCanvas({
   return (
     <Canvas
       shadows
-      dpr={[1, 1.5]}
+      dpr={arModeActive ? [1, 1.1] : (typeof window !== 'undefined' && window.innerWidth < 768 ? [1, 1.2] : [1, 1.5])}
       camera={{ position: [0, 1.35, 20.0], fov: 55 }}
       gl={{
         antialias: true,
@@ -263,11 +263,11 @@ function ExperienceCanvas({
               arModeActive={arModeActive}
             />
             <Rangoli position={[0, -2.99, 3.8]} />
-            <Diya isLit={isDiyaLit} />
-            <Bell ringTriggerTime={ringTriggerTime} />
+            <Diya isLit={isDiyaLit} arModeActive={arModeActive} />
+            {!arModeActive && <Bell ringTriggerTime={ringTriggerTime} />}
             <FlowerOffering offerings={flowerOfferings} />
             <ModakOffering modakOfferings={modakOfferings} />
-            <Particles blessingActive={blessingActive} isDiyaLit={isDiyaLit} />
+            <Particles blessingActive={blessingActive} isDiyaLit={isDiyaLit} arModeActive={arModeActive} />
             <AartiAnimation active={aartiActive} onAartiComplete={onAartiComplete} />
           </group>
         </group>

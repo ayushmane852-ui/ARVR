@@ -449,7 +449,7 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false, arMo
         intensity={0.08}
         color="#fff4e0"
         castShadow
-        shadow-mapSize={[1024, 1024]}
+        shadow-mapSize={[arModeActive ? 512 : 1024, arModeActive ? 512 : 1024]}
         shadow-bias={-0.0002}
       />
 

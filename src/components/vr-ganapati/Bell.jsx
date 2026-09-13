@@ -130,7 +130,7 @@ export default function Bell({ ringTriggerTime }) {
     const clone = scene.clone(true);
     clone.traverse((child) => {
       if (child.isMesh) {
-        child.castShadow = true;
+        child.castShadow = false;
         child.receiveShadow = true;
         if (child.material) {
           child.material = child.material.clone();

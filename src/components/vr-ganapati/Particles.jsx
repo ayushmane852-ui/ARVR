@@ -296,12 +296,12 @@ function BlessingVortex({ active, count = 240 }) {
   );
 }
 
-export default function Particles({ blessingActive, isDiyaLit = false }) {
+export default function Particles({ blessingActive, isDiyaLit = false, arModeActive = false }) {
   return (
     <group>
-      <GoldenEmbers count={160} />
-      <FloatingPetals count={80} isDiyaLit={isDiyaLit} />
-      <BlessingVortex active={blessingActive} count={240} />
+      <GoldenEmbers count={arModeActive ? 48 : 160} />
+      <FloatingPetals count={arModeActive ? 28 : 80} isDiyaLit={isDiyaLit} />
+      <BlessingVortex active={blessingActive} count={arModeActive ? 100 : 240} />
     </group>
   );
 }
