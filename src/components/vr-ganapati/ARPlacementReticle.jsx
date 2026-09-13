@@ -27,7 +27,7 @@ const ARPlacementReticle = forwardRef(function ARPlacementReticle(
     <group
       ref={groupRef}
       matrixAutoUpdate={!isWebXR}
-      position={!isWebXR ? [0, -1.2, 4.2] : undefined}
+      position={!isWebXR ? [0, -0.7, 0] : undefined}
       rotation={!isWebXR ? [-Math.PI / 2, 0, 0] : undefined}
       onClick={(e) => {
         e.stopPropagation();

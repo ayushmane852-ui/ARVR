@@ -608,22 +608,21 @@ export default function ExperienceUI({
         )}
       </AnimatePresence>
 
-      {/* AR 360° Interaction Hint Toast */}
-      {arModeActive && arPlaced && (
-        <div className="w-full flex justify-center pointer-events-none mb-1">
-          <div className="bg-black/75 backdrop-blur-md border border-amber-500/30 px-3.5 py-1 rounded-full shadow-lg">
-            <p className="text-[10px] sm:text-xs text-amber-300/90 tracking-wide font-light flex items-center gap-1.5">
-              <RotateCw className="w-3 h-3 text-amber-400" />
-              Swipe horizontally to rotate Bappa • Walk around for 360° darshan
-            </p>
-          </div>
-        </div>
-      )}
-
       {/* ============================================================ */}
       {/* 4. BOTTOM BAR: FOOTER LABELS & GLASSMORPHIC INTERACTION DOCK */}
       {/* ============================================================ */}
       <footer className="w-full flex flex-col items-center gap-1.5 sm:gap-2 pointer-events-auto">
+        {/* AR 360° Interaction Hint Toast */}
+        {arModeActive && arPlaced && (
+          <div className="flex justify-center pointer-events-none mb-0.5">
+            <div className="bg-black/80 backdrop-blur-md border border-amber-500/30 px-3.5 py-0.5 rounded-full shadow-lg">
+              <p className="text-[10px] sm:text-xs text-amber-300/90 tracking-wide font-light flex items-center gap-1.5">
+                <RotateCw className="w-3 h-3 text-amber-400" />
+                Swipe horizontally to rotate Bappa • Walk around for 360° darshan
+              </p>
+            </div>
+          </div>
+        )}
         
         {/* Floating Glassmorphic Pill Toolbar (compact height, positioned lower, safe-area aware) */}
         <div className="flex items-center justify-center gap-2 sm:gap-4 lg:gap-5 px-3 sm:px-5 py-1.5 rounded-full bg-[#120e0b]/85 border border-amber-500/25 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.85),inset_0_0_15px_rgba(245,158,11,0.08)] transition-all max-w-full overflow-x-auto">

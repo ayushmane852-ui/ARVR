@@ -12,7 +12,7 @@ export default function CameraController({
   vrActive = false,
   arActive = false,
   isWebXRAR = false,
-  arPosition = [0, -1.2, 5.0],
+  arPosition = [0, -0.7, 0],
   arScale = 0.35,
   isDiyaLit,
 }) {
@@ -31,21 +31,47 @@ export default function CameraController({
   const baseZ = isDiyaLit ? 17.0 : 20.0;
   const targetZ = baseZ * distMultiplier;
 
-  // Update OrbitControls target when switching to or moving in fallback AR mode
+  // Update OrbitControls target and camera framing when switching to or moving in fallback AR mode
   useEffect(() => {
     if (!controlsRef.current) return;
     if (arActive && !isWebXRAR) {
-      controlsRef.current.target.set(
-        arPosition[0],
-        arPosition[1] + 1.25 * arScale,
-        arPosition[2]
-      );
+      // Base dais sits at arPosition[1]. Idol chest is centered at arPosition[1] + 4.45 * arScale
+      const targetY = arPosition[1] + 4.45 * arScale;
+      const targetZPos = arPosition[2] + 0.3 * arScale;
+      controlsRef.current.target.set(arPosition[0], targetY, targetZPos);
       controlsRef.current.update();
-    } else if (!arActive) {
+
+      const arCamZ = (isPortrait ? 4.2 : 3.5) * Math.max(0.7, arScale / 0.35);
+      gsap.to(camera.position, {
+        x: arPosition[0],
+        y: targetY + 0.15,
+        z: targetZPos + arCamZ,
+        duration: 1.0,
+        ease: 'power2.out',
+        onUpdate: () => {
+          if (controlsRef.current) {
+            controlsRef.current.update();
+          }
+        },
+      });
+    } else if (!arActive && hasAnimatedEntrance.current) {
       controlsRef.current.target.set(0, 1.45, 0.3);
       controlsRef.current.update();
+
+      gsap.to(camera.position, {
+        x: 0,
+        y: defaultY,
+        z: targetZ,
+        duration: 1.2,
+        ease: 'power2.out',
+        onUpdate: () => {
+          if (controlsRef.current) {
+            controlsRef.current.update();
+          }
+        },
+      });
     }
-  }, [arActive, isWebXRAR, arPosition, arScale]);
+  }, [arActive, isWebXRAR, arPosition, arScale, isPortrait, defaultY, targetZ, camera]);
 
   // Keep camera locked at initial distance until scene is completely loaded and warmed up
   useEffect(() => {
@@ -90,7 +116,7 @@ export default function CameraController({
 
   // Dolly closer when diyas are lit / dolly back when unlit
   useEffect(() => {
-    if (!controlsRef.current || !isLoaded || !hasAnimatedEntrance.current) return;
+    if (!controlsRef.current || !isLoaded || !hasAnimatedEntrance.current || arActive) return;
     const anim = gsap.to(camera.position, {
       y: defaultY,
       z: targetZ,
@@ -103,7 +129,7 @@ export default function CameraController({
       },
     });
     return () => anim.kill();
-  }, [targetZ, defaultY, isLoaded, camera]);
+  }, [targetZ, defaultY, isLoaded, arActive, camera]);
 
   // Responsive camera adaptation on window resize / orientation flip (portrait <-> landscape)
   useEffect(() => {
@@ -125,7 +151,7 @@ export default function CameraController({
 
   // Blessing camera sequence
   useEffect(() => {
-    if (!blessingActive || !controlsRef.current) return;
+    if (!blessingActive || !controlsRef.current || arActive) return;
 
     const tl = gsap.timeline({
       onComplete: () => {
@@ -166,11 +192,11 @@ export default function CameraController({
     });
 
     return () => tl.kill();
-  }, [blessingActive, camera, onBlessingComplete, defaultY, targetZ, isPortrait]);
+  }, [blessingActive, arActive, camera, onBlessingComplete, defaultY, targetZ, isPortrait]);
 
   // Aarti camera sequence
   useEffect(() => {
-    if (!aartiActive || !controlsRef.current) return;
+    if (!aartiActive || !controlsRef.current || arActive) return;
 
     const tl = gsap.timeline();
     const aartiZ = 14.5 * (isPortrait ? 1.2 : 1.0);
@@ -206,7 +232,7 @@ export default function CameraController({
     });
 
     return () => tl.kill();
-  }, [aartiActive, camera, defaultY, targetZ, isPortrait]);
+  }, [aartiActive, arActive, camera, defaultY, targetZ, isPortrait]);
 
   // Mouse Parallax on Desktop (disabled on touch devices to avoid touch jitter)
   useEffect(() => {
@@ -249,8 +275,8 @@ export default function CameraController({
       enableDamping
       dampingFactor={0.06}
       enablePan={false}
-      minDistance={arActive ? 1.0 : 3.5}
-      maxDistance={arActive ? 20.0 : 35.0}
+      minDistance={arActive ? 1.2 : 3.5}
+      maxDistance={arActive ? 10.0 : 35.0}
       minPolarAngle={arActive ? 0.05 : Math.PI / 3.2}
       maxPolarAngle={Math.PI / 2 + 0.05}
       minAzimuthAngle={arActive ? -Infinity : -Math.PI / 3.2}

@@ -178,7 +178,7 @@ function ExperienceCanvas({
   isWebXRAR = false,
   arPlaced = false,
   arScale = 0.35,
-  arPosition = [0, -1.2, 5.0],
+  arPosition = [0, -0.7, 0],
   onPlaceAR,
   onAnchorUpdate,
   surfaceDetected = false,
@@ -255,7 +255,7 @@ function ExperienceCanvas({
         <group
           ref={arGroupRef}
           position={arModeActive ? arPosition : [0, 0, 0]}
-          scale={arModeActive ? (arPlaced ? arScale : 0) : 1}
+          scale={arModeActive ? arScale : 1}
         >
           {/* Ground Contact Shadow (casts real soft shadows onto physical floor/table) */}
           {arModeActive && (
@@ -324,7 +324,7 @@ export default function GanapatiExperience() {
   const [trackingState, setTrackingState] = useState('tracking');
   const [autoRotate360, setAutoRotate360] = useState(false);
   const [arScale, setArScale] = useState(0.35);
-  const [arPosition, setArPosition] = useState([0, -1.2, 5.0]);
+  const [arPosition, setArPosition] = useState([0, -0.7, 0]);
 
   const handleSceneReady = useCallback(() => {
     setSceneReady(true);
@@ -564,13 +564,18 @@ export default function GanapatiExperience() {
         glRef.current.xr.enabled = true;
         await glRef.current.xr.setSession(session);
 
+        // WebXR coordinates: viewer is at (0, 0, 0) looking along -Z. Place Lord Ganesha right in front of viewer!
+        const initialWebXRPos = [0, -0.8, -1.8];
+        setArPosition(initialWebXRPos);
         if (arGroupRef.current) {
+          arGroupRef.current.position.set(...initialWebXRPos);
           arGroupRef.current.rotation.set(0, 0, 0);
+          arGroupRef.current.scale.setScalar(currentScaleRef.current);
         }
 
         setIsWebXRAR(true);
         setArModeActive(true);
-        setArPlaced(false);
+        setArPlaced(true);
         setSurfaceDetected(false);
         setAutoRotate360(false);
         soundEngine.init();
@@ -607,13 +612,17 @@ export default function GanapatiExperience() {
         videoRef.current.srcObject = stream;
         videoRef.current.play().catch(() => {});
       }
+      const fallbackARPos = [0, -0.7, 0];
+      setArPosition(fallbackARPos);
       if (arGroupRef.current) {
+        arGroupRef.current.position.set(...fallbackARPos);
         arGroupRef.current.rotation.set(0, 0, 0);
+        arGroupRef.current.scale.setScalar(currentScaleRef.current);
       }
       setArStream(stream);
       setIsWebXRAR(false);
       setArModeActive(true);
-      setArPlaced(false);
+      setArPlaced(true);
       setSurfaceDetected(false);
       setAutoRotate360(false);
       soundEngine.init();

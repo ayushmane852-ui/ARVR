@@ -281,21 +281,27 @@ export default function GanapatiTemple({ blessingActive, isDiyaLit = false, arMo
     const p = lightProgress.current;
 
     if (keyLightRef.current) {
-      keyLightRef.current.intensity = THREE.MathUtils.lerp(0.08, blessingActive ? 5.8 : 4.0, p);
+      keyLightRef.current.intensity = THREE.MathUtils.lerp(
+        arModeActive ? 1.6 : 0.08,
+        blessingActive ? 4.2 : 2.8,
+        p
+      );
     }
     if (fillLightRef.current) {
-      fillLightRef.current.intensity = THREE.MathUtils.lerp(0.05, blessingActive ? 3.8 : 2.8, p);
+      fillLightRef.current.intensity = THREE.MathUtils.lerp(
+        arModeActive ? 1.2 : 0.05,
+        blessingActive ? 2.6 : 1.8,
+        p
+      );
     }
     if (pillarLeftRef.current) {
-      const pLeft = Math.max(0, (p - 0.15) / 0.85);
-      pillarLeftRef.current.intensity = THREE.MathUtils.lerp(0.0, 2.6, pLeft);
+      pillarLeftRef.current.intensity = THREE.MathUtils.lerp(0.0, 1.4, p);
     }
     if (pillarRightRef.current) {
-      const pRight = Math.max(0, (p - 0.35) / 0.65);
-      pillarRightRef.current.intensity = THREE.MathUtils.lerp(0.0, 2.6, pRight);
+      pillarRightRef.current.intensity = THREE.MathUtils.lerp(0.0, 1.4, p);
     }
     if (backLight1Ref.current) {
-      backLight1Ref.current.intensity = THREE.MathUtils.lerp(8.5, blessingActive ? 5.8 : 3.2, p);
+      backLight1Ref.current.intensity = THREE.MathUtils.lerp(8.5, blessingActive ? 4.0 : 2.2, p);
     }
     if (backLight2Ref.current) {
       backLight2Ref.current.intensity = THREE.MathUtils.lerp(5.5, blessingActive ? 2.4 : 1.6, p);
