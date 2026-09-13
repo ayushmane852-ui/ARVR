@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, Share2, X, Check, Sparkles } from 'lucide-react';
 
-export async function generateDevotionalFrame(sourceCanvas) {
+export async function generateDevotionalFrame(sourceCanvas, videoElement = null) {
   const width = 1920;
   const height = 1080;
   const offscreen = document.createElement('canvas');
@@ -10,16 +10,15 @@ export async function generateDevotionalFrame(sourceCanvas) {
   offscreen.height = height;
   const ctx = offscreen.getContext('2d');
 
-  // 1. Deep sacred sanctum background
-  ctx.fillStyle = '#0c0704';
-  ctx.fillRect(0, 0, width, height);
-
-  // 2. Aspect-ratio preserving 3D canvas rendering
+  // 1. Background: Live real-room camera feed if in AR mode, else deep sacred sanctum
   const marginX = 64;
   const marginTop = 104;
   const marginBottom = 88;
   const photoW = width - marginX * 2;
   const photoH = height - marginTop - marginBottom;
+
+  ctx.fillStyle = '#0c0704';
+  ctx.fillRect(0, 0, width, height);
 
   const srcW = sourceCanvas.width;
   const srcH = sourceCanvas.height;
@@ -35,7 +34,23 @@ export async function generateDevotionalFrame(sourceCanvas) {
     sy = (srcH - sHeight) / 2;
   }
 
-  // Draw 3D scene photo
+  // If live camera video is active in AR mode, draw real-world camera room background
+  if (videoElement && videoElement.videoWidth > 0) {
+    const vW = videoElement.videoWidth;
+    const vH = videoElement.videoHeight;
+    const vAspect = vW / vH;
+    let vsx = 0, vsy = 0, vsWidth = vW, vsHeight = vH;
+    if (vAspect > targetAspect) {
+      vsWidth = vH * targetAspect;
+      vsx = (vW - vsWidth) / 2;
+    } else {
+      vsHeight = vW / targetAspect;
+      vsy = (vH - vsHeight) / 2;
+    }
+    ctx.drawImage(videoElement, vsx, vsy, vsWidth, vsHeight, marginX, marginTop, photoW, photoH);
+  }
+
+  // Draw 3D scene (Lord Ganesha idol, offerings, lamps) on top
   ctx.drawImage(sourceCanvas, sx, sy, sWidth, sHeight, marginX, marginTop, photoW, photoH);
 
   // 3. Golden double border around the photo

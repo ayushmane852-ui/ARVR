@@ -10,7 +10,8 @@ import {
   Glasses, 
   ArrowLeft,
   Maximize2,
-  Camera
+  Camera,
+  Sparkles
 } from 'lucide-react';
 
 // Custom Modak SVG Icon
@@ -122,6 +123,13 @@ export default function ExperienceUI({
   onToggleMute,
   onEnterVR,
   onCaptureDarshan,
+  arModeActive = false,
+  arPlaced = false,
+  arScale = 0.35,
+  onToggleAR,
+  onScaleUp,
+  onScaleDown,
+  onReposition,
 }) {
   const navigate = useNavigate();
   const [vrNotice, setVrNotice] = useState(null);
@@ -223,6 +231,22 @@ export default function ExperienceUI({
             <Maximize2 className="w-4 h-4" />
           </button>
 
+          {/* Enter AR / Exit AR Toggle Button */}
+          <button
+            onClick={onToggleAR}
+            className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full backdrop-blur-xl transition-all cursor-pointer group ${
+              arModeActive
+                ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-semibold shadow-[0_0_20px_rgba(245,158,11,0.6)]'
+                : 'bg-black/50 hover:bg-amber-950/40 border border-amber-400/40 hover:border-amber-300 text-amber-100 shadow-[0_4px_20px_rgba(0,0,0,0.6)]'
+            }`}
+            title={arModeActive ? "Exit AR Mode and return to Temple" : "Place Ganapati in your real room via AR"}
+          >
+            <Sparkles className={`w-4 h-4 ${arModeActive ? 'text-black' : 'text-amber-400 group-hover:scale-110 transition-transform'}`} />
+            <span className="text-xs sm:text-sm font-space font-medium tracking-wider">
+              {arModeActive ? 'Exit AR' : 'Enter AR'}
+            </span>
+          </button>
+
           {/* Enter VR Pill Button matching mockup */}
           <button
             onClick={handleVrClick}
@@ -235,6 +259,56 @@ export default function ExperienceUI({
           </button>
         </div>
       </header>
+
+      {/* AR Mode Surface Placement & Scaling HUD */}
+      <AnimatePresence>
+        {arModeActive && !arPlaced && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-40 bg-[#160f0b]/92 border border-amber-400/50 px-5 py-2.5 rounded-2xl shadow-2xl backdrop-blur-xl text-center pointer-events-auto"
+          >
+            <p className="text-xs sm:text-sm text-amber-200 font-medium">
+              📱 Point camera at flat surface & Tap to Place Bappa
+            </p>
+          </motion.div>
+        )}
+
+        {arModeActive && arPlaced && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 bg-[#160f0b]/92 border border-amber-400/40 px-4 py-1.5 rounded-full shadow-2xl backdrop-blur-xl pointer-events-auto text-xs text-amber-200"
+          >
+            <button
+              onClick={onScaleDown}
+              className="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-amber-500/30 cursor-pointer font-medium"
+              title="Smaller Idol"
+            >
+              − Size
+            </button>
+            <span className="text-[11px] text-amber-300 font-mono px-1">
+              {Math.round(arScale * 100)}%
+            </span>
+            <button
+              onClick={onScaleUp}
+              className="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-amber-500/30 cursor-pointer font-medium"
+              title="Larger Idol"
+            >
+              + Size
+            </button>
+            <div className="h-4 w-px bg-amber-500/30 mx-1" />
+            <button
+              onClick={onReposition}
+              className="px-3 py-1 rounded-full bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 cursor-pointer text-amber-300 font-medium"
+            >
+              Reposition
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ============================================================ */}
       {/* 2. LEFT SIDE DEVOTIONAL CHANT */}

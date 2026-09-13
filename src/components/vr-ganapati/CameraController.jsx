@@ -9,7 +9,8 @@ export default function CameraController({
   blessingActive,
   onBlessingComplete,
   aartiActive = false,
-  vrActive,
+  vrActive = false,
+  arActive = false,
   isDiyaLit,
 }) {
   const { camera } = useThree();
@@ -169,7 +170,7 @@ export default function CameraController({
   }, []);
 
   useFrame(() => {
-    if (!isLoaded || blessingActive || aartiActive || vrActive || !controlsRef.current) return;
+    if (!isLoaded || blessingActive || aartiActive || vrActive || arActive || !controlsRef.current) return;
     camera.position.x = THREE.MathUtils.lerp(
       camera.position.x,
       mouseParallaxRef.current.x,
@@ -186,7 +187,7 @@ export default function CameraController({
   return (
     <OrbitControls
       ref={controlsRef}
-      enabled={isLoaded}
+      enabled={isLoaded && !arActive}
       enableDamping
       dampingFactor={0.06}
       enablePan={false}

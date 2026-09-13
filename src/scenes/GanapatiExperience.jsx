@@ -17,6 +17,7 @@ import LoadingOverlay from '../components/vr-ganapati/LoadingOverlay';
 import { soundEngine } from '../components/vr-ganapati/AudioController';
 import CaptureModal, { generateDevotionalFrame } from '../components/vr-ganapati/CaptureModal';
 import AartiAnimation from '../components/vr-ganapati/AartiAnimation';
+import ARPlacementReticle from '../components/vr-ganapati/ARPlacementReticle';
 
 // Preload heavy 3D assets immediately so the browser downloads and decodes them in parallel
 useGLTF.preload('/models/temple.glb');
@@ -59,7 +60,26 @@ function SceneWarmup({ onReady }) {
   return null;
 }
 
-function SceneLighting({ blessingActive, isDiyaLit }) {
+function SceneLighting({ blessingActive, isDiyaLit, arModeActive = false }) {
+  if (arModeActive) {
+    return (
+      <>
+        {/* Bright, balanced natural ambient lighting for real-room camera passthrough */}
+        <ambientLight color="#ffffff" intensity={1.8} />
+        <directionalLight position={[3, 10, 5]} intensity={2.6} color="#fff6e8" />
+        <directionalLight position={[-3, 6, -3]} intensity={1.2} color="#fed7aa" />
+        {isDiyaLit && (
+          <pointLight
+            position={[0, -0.5, 2.0]}
+            color="#ff8800"
+            intensity={3.8}
+            distance={10.0}
+          />
+        )}
+      </>
+    );
+  }
+
   return (
     <>
       {/* Deep Temple Atmospheric Fog */}
@@ -105,6 +125,12 @@ function ExperienceCanvas({
   flowerOfferings,
   modakOfferings,
   vrSessionActive,
+  arModeActive = false,
+  arPlaced = false,
+  arScale = 0.35,
+  arPosition = [0, -1.2, 5.0],
+  arRotation = [0, 0, 0],
+  onPlaceAR,
 }) {
   return (
     <Canvas
@@ -113,6 +139,7 @@ function ExperienceCanvas({
       camera={{ position: [0, 1.35, 20.0], fov: 55 }}
       gl={{
         antialias: true,
+        alpha: true,
         preserveDrawingBuffer: true,
         toneMapping: THREE.ACESFilmicToneMapping,
         toneMappingExposure: 1.25,
@@ -120,7 +147,7 @@ function ExperienceCanvas({
       }}
       className="w-full h-full"
     >
-      <SceneLighting blessingActive={blessingActive} isDiyaLit={isDiyaLit} />
+      <SceneLighting blessingActive={blessingActive} isDiyaLit={isDiyaLit} arModeActive={arModeActive} />
 
       <CameraController
         isLoaded={isLoaded}
@@ -128,18 +155,26 @@ function ExperienceCanvas({
         onBlessingComplete={onBlessingComplete}
         aartiActive={aartiActive}
         vrActive={vrSessionActive}
+        arActive={arModeActive}
         isDiyaLit={isDiyaLit}
       />
 
       <Suspense fallback={null}>
-        <GanapatiTemple blessingActive={blessingActive} isDiyaLit={isDiyaLit} />
-        <Rangoli position={[0, -2.99, 3.8]} />
-        <Diya isLit={isDiyaLit} />
-        <Bell ringTriggerTime={ringTriggerTime} />
-        <FlowerOffering offerings={flowerOfferings} />
-        <ModakOffering modakOfferings={modakOfferings} />
-        <Particles blessingActive={blessingActive} isDiyaLit={isDiyaLit} />
-        <AartiAnimation active={aartiActive} onAartiComplete={onAartiComplete} />
+        <ARPlacementReticle visible={arModeActive && !arPlaced} onPlace={onPlaceAR} />
+        <group
+          position={arModeActive ? arPosition : [0, 0, 0]}
+          scale={arModeActive ? (arPlaced ? arScale : 0) : 1}
+          rotation={arModeActive ? arRotation : [0, 0, 0]}
+        >
+          <GanapatiTemple blessingActive={blessingActive} isDiyaLit={isDiyaLit} />
+          <Rangoli position={[0, -2.99, 3.8]} />
+          <Diya isLit={isDiyaLit} />
+          <Bell ringTriggerTime={ringTriggerTime} />
+          <FlowerOffering offerings={flowerOfferings} />
+          <ModakOffering modakOfferings={modakOfferings} />
+          <Particles blessingActive={blessingActive} isDiyaLit={isDiyaLit} />
+          <AartiAnimation active={aartiActive} onAartiComplete={onAartiComplete} />
+        </group>
         <SceneWarmup onReady={onSceneReady} />
       </Suspense>
     </Canvas>
@@ -162,6 +197,15 @@ export default function GanapatiExperience() {
   const [captureModalOpen, setCaptureModalOpen] = useState(false);
   const [capturedImageUrl, setCapturedImageUrl] = useState(null);
   const [isFlashActive, setIsFlashActive] = useState(false);
+
+  // AR Mode state
+  const videoRef = useRef(null);
+  const [arStream, setArStream] = useState(null);
+  const [arModeActive, setArModeActive] = useState(false);
+  const [arPlaced, setArPlaced] = useState(false);
+  const [arScale, setArScale] = useState(0.35);
+  const [arPosition, setArPosition] = useState([0, -1.2, 5.0]);
+  const [arRotation, setArRotation] = useState([0, 0, 0]);
 
   const handleSceneReady = useCallback(() => {
     setSceneReady(true);
@@ -341,7 +385,70 @@ export default function GanapatiExperience() {
     return false;
   }, []);
 
-  // Action: Capture Darshan Snapshot
+  // Clean up AR camera stream on unmount
+  useEffect(() => {
+    return () => {
+      if (arStream) {
+        arStream.getTracks().forEach((t) => t.stop());
+      }
+    };
+  }, [arStream]);
+
+  // AR Mode Handlers
+  const handleToggleAR = useCallback(async () => {
+    if (arModeActive) {
+      if (arStream) {
+        arStream.getTracks().forEach((t) => t.stop());
+        setArStream(null);
+      }
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
+      setArModeActive(false);
+      setArPlaced(false);
+    } else {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: 'environment',
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+          },
+        });
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          videoRef.current.play().catch(() => {});
+        }
+        setArStream(stream);
+        setArModeActive(true);
+        setArPlaced(false);
+        soundEngine.init();
+        soundEngine.playBell();
+      } catch (err) {
+        console.error('AR camera access error:', err);
+        alert('Camera access is required for AR mode. Please grant camera permission to place Lord Ganesha in your room.');
+      }
+    }
+  }, [arModeActive, arStream]);
+
+  const handlePlaceAR = useCallback(() => {
+    setArPlaced(true);
+    soundEngine.playFlowerSound();
+  }, []);
+
+  const handleRepositionAR = useCallback(() => {
+    setArPlaced(false);
+  }, []);
+
+  const handleScaleUp = useCallback(() => {
+    setArScale((s) => Math.min(1.2, +(s + 0.05).toFixed(2)));
+  }, []);
+
+  const handleScaleDown = useCallback(() => {
+    setArScale((s) => Math.max(0.15, +(s - 0.05).toFixed(2)));
+  }, []);
+
+  // Action: Capture Darshan Snapshot (supports live room video in AR mode)
   const handleCaptureDarshan = useCallback(async () => {
     soundEngine.init();
     soundEngine.playCameraShutter();
@@ -351,16 +458,30 @@ export default function GanapatiExperience() {
     try {
       const canvas = document.querySelector('canvas');
       if (!canvas) return;
-      const framedUrl = await generateDevotionalFrame(canvas);
+      const framedUrl = await generateDevotionalFrame(
+        canvas,
+        arModeActive ? videoRef.current : null
+      );
       setCapturedImageUrl(framedUrl);
       setCaptureModalOpen(true);
     } catch (err) {
       console.error('Error capturing darshan:', err);
     }
-  }, []);
+  }, [arModeActive]);
 
   return (
     <div className="relative w-full h-screen h-[100dvh] overflow-hidden bg-[#070503]">
+      {/* 0. Live Camera Video Stream for AR Passthrough Mode */}
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted
+        className={`absolute inset-0 w-full h-full object-cover z-0 pointer-events-none transition-opacity duration-700 ${
+          arModeActive ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
+
       {/* 1. Loading Overlay with smooth fade-out exit */}
       <AnimatePresence>
         {!isLoaded && <LoadingOverlay progress={progress} />}
@@ -368,7 +489,7 @@ export default function GanapatiExperience() {
 
       {/* 2. Interactive 3D Temple & Ganapati Canvas (smooth one-shot reveal once loaded & compiled) */}
       <div
-        className={`w-full h-full transition-opacity duration-1000 ${
+        className={`relative z-10 w-full h-full transition-opacity duration-1000 ${
           isLoaded ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       >
@@ -384,6 +505,12 @@ export default function GanapatiExperience() {
           flowerOfferings={flowerOfferings}
           modakOfferings={modakOfferings}
           vrSessionActive={vrSessionActive}
+          arModeActive={arModeActive}
+          arPlaced={arPlaced}
+          arScale={arScale}
+          arPosition={arPosition}
+          arRotation={arRotation}
+          onPlaceAR={handlePlaceAR}
         />
       </div>
 
@@ -403,6 +530,13 @@ export default function GanapatiExperience() {
         onToggleMute={handleToggleMute}
         onEnterVR={handleEnterVR}
         onCaptureDarshan={handleCaptureDarshan}
+        arModeActive={arModeActive}
+        arPlaced={arPlaced}
+        arScale={arScale}
+        onToggleAR={handleToggleAR}
+        onScaleUp={handleScaleUp}
+        onScaleDown={handleScaleDown}
+        onReposition={handleRepositionAR}
       />
 
       {/* 4. Camera Shutter Flash Effect */}
