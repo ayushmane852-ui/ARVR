@@ -623,6 +623,70 @@ class SoundEngine {
     bellOsc.start(now + 0.04);
     bellOsc.stop(now + 0.5);
   }
+
+  // Sacred Aarti Ceremonial Music: Rhythmic temple ghanti + devotional drone
+  startAartiMusic() {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    this.stopAartiMusic();
+    this.isAartiPlaying = true;
+
+    // 1. Harmonium Sa-Pa devotional drone (D3 146.83Hz, A3 220Hz, D4 293.66Hz)
+    const now = this.ctx.currentTime;
+    const droneGain = this.ctx.createGain();
+    droneGain.gain.setValueAtTime(0.0001, now);
+    droneGain.gain.linearRampToValueAtTime(0.2, now + 1.5);
+    droneGain.connect(this.masterMusicGain || this.ctx.destination);
+    this.aartiDroneGain = droneGain;
+
+    const freqs = [146.83, 220.0, 293.66];
+    this.aartiOscs = freqs.map((f) => {
+      const osc = this.ctx.createOscillator();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(f, now);
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(600, now);
+
+      osc.connect(filter);
+      filter.connect(droneGain);
+      osc.start(now);
+      return osc;
+    });
+
+    // 2. Rhythmic Temple Aarti Ghanti / Bell chime (strikes every 700ms)
+    const strikeAartiBell = () => {
+      if (!this.isAartiPlaying) return;
+      this.playBell(783.99); // G5 sacred Aarti pitch
+      this.aartiBellTimer = setTimeout(strikeAartiBell, 700);
+    };
+    this.aartiBellTimer = setTimeout(strikeAartiBell, 500);
+  }
+
+  stopAartiMusic() {
+    this.isAartiPlaying = false;
+    if (this.aartiBellTimer) {
+      clearTimeout(this.aartiBellTimer);
+      this.aartiBellTimer = null;
+    }
+    if (this.aartiDroneGain && this.ctx) {
+      const now = this.ctx.currentTime;
+      this.aartiDroneGain.gain.cancelScheduledValues(now);
+      this.aartiDroneGain.gain.setValueAtTime(this.aartiDroneGain.gain.value, now);
+      this.aartiDroneGain.gain.linearRampToValueAtTime(0.0001, now + 1.2);
+      setTimeout(() => {
+        if (this.aartiOscs) {
+          this.aartiOscs.forEach((o) => {
+            try { o.stop(); } catch {}
+          });
+          this.aartiOscs = null;
+        }
+      }, 1300);
+    }
+  }
 }
 
 export const soundEngine = new SoundEngine();

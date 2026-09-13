@@ -16,6 +16,7 @@ import ExperienceUI from '../components/vr-ganapati/ExperienceUI';
 import LoadingOverlay from '../components/vr-ganapati/LoadingOverlay';
 import { soundEngine } from '../components/vr-ganapati/AudioController';
 import CaptureModal, { generateDevotionalFrame } from '../components/vr-ganapati/CaptureModal';
+import AartiAnimation from '../components/vr-ganapati/AartiAnimation';
 
 // Preload heavy 3D assets immediately so the browser downloads and decodes them in parallel
 useGLTF.preload('/models/temple.glb');
@@ -97,6 +98,8 @@ function ExperienceCanvas({
   onSceneReady,
   blessingActive,
   onBlessingComplete,
+  aartiActive,
+  onAartiComplete,
   isDiyaLit,
   ringTriggerTime,
   flowerOfferings,
@@ -123,6 +126,7 @@ function ExperienceCanvas({
         isLoaded={isLoaded}
         blessingActive={blessingActive}
         onBlessingComplete={onBlessingComplete}
+        aartiActive={aartiActive}
         vrActive={vrSessionActive}
         isDiyaLit={isDiyaLit}
       />
@@ -135,6 +139,7 @@ function ExperienceCanvas({
         <FlowerOffering offerings={flowerOfferings} />
         <ModakOffering modakOfferings={modakOfferings} />
         <Particles blessingActive={blessingActive} isDiyaLit={isDiyaLit} />
+        <AartiAnimation active={aartiActive} onAartiComplete={onAartiComplete} />
         <SceneWarmup onReady={onSceneReady} />
       </Suspense>
     </Canvas>
@@ -151,6 +156,7 @@ export default function GanapatiExperience() {
   const [flowerOfferings, setFlowerOfferings] = useState([]);
   const [modakOfferings, setModakOfferings] = useState([]);
   const [blessingActive, setBlessingActive] = useState(false);
+  const [aartiActive, setAartiActive] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [vrSessionActive, setVrSessionActive] = useState(false);
   const [captureModalOpen, setCaptureModalOpen] = useState(false);
@@ -290,6 +296,24 @@ export default function GanapatiExperience() {
     setBlessingActive(false);
   }, []);
 
+  // Action 6: Perform Aarti
+  const handlePerformAarti = useCallback(() => {
+    if (aartiActive) return;
+    soundEngine.init();
+    soundEngine.startAmbience();
+    if (!isDiyaLit) {
+      setIsDiyaLit(true);
+      soundEngine.playDiyaSound();
+    }
+    soundEngine.startAartiMusic();
+    setAartiActive(true);
+  }, [aartiActive, isDiyaLit]);
+
+  const handleAartiComplete = useCallback(() => {
+    soundEngine.stopAartiMusic();
+    setAartiActive(false);
+  }, []);
+
   // Audio mute/unmute
   const handleToggleMute = useCallback(() => {
     const muted = soundEngine.toggleMute();
@@ -353,6 +377,8 @@ export default function GanapatiExperience() {
           onSceneReady={handleSceneReady}
           blessingActive={blessingActive}
           onBlessingComplete={handleBlessingComplete}
+          aartiActive={aartiActive}
+          onAartiComplete={handleAartiComplete}
           isDiyaLit={isDiyaLit}
           ringTriggerTime={ringTriggerTime}
           flowerOfferings={flowerOfferings}
@@ -371,6 +397,8 @@ export default function GanapatiExperience() {
         onOfferModak={handleOfferModak}
         onTakeBlessings={handleTakeBlessings}
         blessingActive={blessingActive}
+        aartiActive={aartiActive}
+        onPerformAarti={handlePerformAarti}
         isMuted={isMuted}
         onToggleMute={handleToggleMute}
         onEnterVR={handleEnterVR}

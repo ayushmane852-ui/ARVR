@@ -8,6 +8,7 @@ export default function CameraController({
   isLoaded = false,
   blessingActive,
   onBlessingComplete,
+  aartiActive = false,
   vrActive,
   isDiyaLit,
 }) {
@@ -117,6 +118,44 @@ export default function CameraController({
     return () => tl.kill();
   }, [blessingActive, camera, onBlessingComplete, isDiyaLit]);
 
+  // Aarti camera sequence
+  useEffect(() => {
+    if (!aartiActive || !controlsRef.current) return;
+
+    const tl = gsap.timeline();
+
+    // Cinematic push to intimate Aarti perspective
+    tl.to(camera.position, {
+      x: 0,
+      y: 1.45,
+      z: 14.5,
+      duration: 2.2,
+      ease: 'power2.inOut',
+      onUpdate: () => {
+        controlsRef.current.target.set(0, 1.45, 0.4);
+        controlsRef.current.update();
+      },
+    });
+
+    // Hold steady during the 22s aarti
+    tl.to({}, { duration: 17.5 });
+
+    // Smoothly return to hero frame
+    tl.to(camera.position, {
+      x: 0,
+      y: 1.35,
+      z: isDiyaLit ? 17.0 : 20.0,
+      duration: 2.5,
+      ease: 'power2.out',
+      onUpdate: () => {
+        controlsRef.current.target.set(0, 1.45, 0.3);
+        controlsRef.current.update();
+      },
+    });
+
+    return () => tl.kill();
+  }, [aartiActive, camera, isDiyaLit]);
+
   // Mouse Parallax on Desktop
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -130,7 +169,7 @@ export default function CameraController({
   }, []);
 
   useFrame(() => {
-    if (!isLoaded || blessingActive || vrActive || !controlsRef.current) return;
+    if (!isLoaded || blessingActive || aartiActive || vrActive || !controlsRef.current) return;
     camera.position.x = THREE.MathUtils.lerp(
       camera.position.x,
       mouseParallaxRef.current.x,

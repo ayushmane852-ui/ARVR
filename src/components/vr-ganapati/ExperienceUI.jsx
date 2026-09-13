@@ -86,6 +86,27 @@ function GaneshaEmblem({ className = "w-9 h-9" }) {
   );
 }
 
+// Custom Aarti Thali & Flame SVG Icon
+function AartiIcon({ className = "w-6 h-6" }) {
+  return (
+    <svg 
+      className={className} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="1.8" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    >
+      <ellipse cx="12" cy="18" rx="9" ry="3.5" />
+      <path d="M12 4C10 7 9 10 9 13C9 14.7 10.3 16 12 16C13.7 16 15 14.7 15 13C15 10 14 7 12 4Z" />
+      <path d="M6 10L4 9" />
+      <path d="M18 10L20 9" />
+      <path d="M12 1.5V3" />
+    </svg>
+  );
+}
+
 export default function ExperienceUI({
   isLoaded = false,
   isDiyaLit,
@@ -95,6 +116,8 @@ export default function ExperienceUI({
   onOfferModak,
   onTakeBlessings,
   blessingActive,
+  aartiActive = false,
+  onPerformAarti,
   isMuted,
   onToggleMute,
   onEnterVR,
@@ -253,6 +276,33 @@ export default function ExperienceUI({
         )}
       </AnimatePresence>
 
+      {/* ============================================================ */}
+      {/* 3B. AARTI SEQUENCE SACRED BANNER                             */}
+      {/* ============================================================ */}
+      <AnimatePresence>
+        {aartiActive && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.8 }}
+            className="absolute inset-0 flex flex-col items-center justify-end pb-32 sm:pb-36 pointer-events-none text-center px-4 z-40"
+          >
+            <div className="bg-[#120e0b]/85 backdrop-blur-2xl border border-amber-400/40 px-6 sm:px-8 py-3.5 sm:py-4 rounded-3xl shadow-[0_12px_40px_rgba(0,0,0,0.85),0_0_30px_rgba(245,158,11,0.25)] max-w-md">
+              <span className="text-[11px] sm:text-xs font-serif tracking-[0.3em] text-amber-400/90 uppercase block mb-1">
+                ॥ सुखकर्ता दुःखहर्ता ॥
+              </span>
+              <h2 className="text-xl sm:text-2xl font-serif font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-400 tracking-wider drop-shadow-[0_0_15px_rgba(251,191,36,0.6)]">
+                जय देव जय मंगलमूर्ति
+              </h2>
+              <p className="text-[11px] sm:text-xs text-amber-200/80 font-light tracking-wide mt-1">
+                Performing sacred Aarti • May divine light illuminate your path
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* WebXR Notice Toast */}
       <AnimatePresence>
         {vrNotice && (
@@ -352,6 +402,28 @@ export default function ExperienceUI({
             </div>
             <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
               Take Blessings
+            </span>
+          </button>
+
+          {/* Action 6: Perform Aarti */}
+          <button
+            onClick={onPerformAarti}
+            disabled={aartiActive}
+            className={`flex flex-col items-center gap-0.5 sm:gap-1 transition-all group cursor-pointer ${
+              aartiActive ? 'text-amber-300' : 'text-neutral-400 hover:text-amber-200'
+            }`}
+          >
+            <div
+              className={`w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full flex items-center justify-center transition-all ${
+                aartiActive
+                  ? 'bg-gradient-to-tr from-amber-600 via-amber-500 to-yellow-400 text-black shadow-[0_0_16px_rgba(245,158,11,0.8)] scale-105 animate-pulse'
+                  : 'bg-white/5 hover:bg-white/10 border border-amber-500/20 group-hover:border-amber-500/50 group-active:scale-95'
+              }`}
+            >
+              <AartiIcon className={`w-4 h-4 sm:w-4.5 sm:h-4.5 ${aartiActive ? 'text-black' : 'text-amber-400/90 group-hover:scale-110 transition-transform'}`} />
+            </div>
+            <span className="text-[9px] sm:text-[10.5px] font-medium tracking-wide whitespace-nowrap">
+              {aartiActive ? 'Aarti Live' : 'Perform Aarti'}
             </span>
           </button>
         </div>
